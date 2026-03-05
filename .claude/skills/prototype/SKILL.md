@@ -67,6 +67,7 @@ spec의 시나리오를 UI 구조로 변환하고, DESIGN.md의 디자인 시스
    - spec.md의 시나리오에서 UI 구조를 도출합니다.
    - DESIGN.md Section 6의 디자인 시스템 블록을 주입합니다.
    - UI/UX 키워드를 추가하고 페이지 구조를 정리합니다.
+   - spec.md의 시나리오와 전제 조건에서 명시된 UI 요소만 스코프로 설정하고, 스코프 밖의 요소를 생성하지 않도록 Scope Constraint를 프롬프트에 포함합니다.
 3. 산출물을 `artifacts/<feature>/prompt.md`에 저장합니다.
 
 ### 사용자 확인
