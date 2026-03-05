@@ -33,8 +33,6 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# mcp config (contains API keys)
-.mcp.json
 
 # vercel
 .vercel
