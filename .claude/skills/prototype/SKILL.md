@@ -78,18 +78,38 @@ spec의 시나리오를 UI 구조로 변환하고, DESIGN.md의 디자인 시스
 
 승인받은 프롬프트로 Stitch MCP를 호출하여 화면을 생성합니다.
 
-### 워크플로우
+### 모드 결정
 
-이 작업은 `stitch-loop` 스킬의 워크플로우를 따릅니다.
+prompt.md에 정의된 블록 기준으로 생성할 모드를 결정합니다.
+- Light 블록만 있으면 Light만 생성
+- Light, Dark 블록 모두 있으면 둘 다 생성
 
-1. `.agents/skills/stitch-loop/SKILL.md`를 읽습니다.
-2. 해당 스킬의 Execution Protocol 중 Step 3(Generate with Stitch) 절차대로 수행합니다.
-   - `stitch.json`에서 projectId를 확인하거나 새로 생성합니다.
-   - `generate_screen_from_text`로 화면을 생성합니다.
-   - `get_screen`으로 HTML/PNG를 다운로드합니다.
-3. DESIGN.md Section 6에 정의된 블록 기준으로 생성할 모드를 결정합니다.
-   - Light 블록만 있으면 Light만 생성
-   - Light, Dark 블록 모두 있으면 둘 다 생성
+### 프로젝트 확인
+
+- `stitch.json`이 있으면 `projectId`를 사용합니다.
+- 없으면 `create_project`로 새 프로젝트를 생성하고 `stitch.json`에 저장합니다.
+
+### deviceType 결정
+
+prompt.md의 `Platform` 필드에서 deviceType을 결정합니다.
+
+| Platform 필드 | deviceType |
+|--------------|------------|
+| Desktop-first | `DESKTOP` |
+| Mobile-first | `MOBILE` |
+| 명시 없음 | `DESKTOP` (기본값) |
+
+### 화면 생성 (모드별 반복)
+
+각 모드(Light, Dark)에 대해 다음을 수행합니다:
+
+1. `generate_screen_from_text` 호출:
+   - `projectId`: 위에서 확인한 ID
+   - `prompt`: prompt.md의 해당 모드 프롬프트 전체
+   - `deviceType`: 위에서 결정한 값
+   - `modelId`: `GEMINI_3_PRO`
+2. `get_screen`으로 `htmlCode.downloadUrl`, `screenshot.downloadUrl`을 획득합니다.
+3. `curl -L -o`로 HTML과 PNG를 다운로드합니다.
 
 ### 산출물
 
