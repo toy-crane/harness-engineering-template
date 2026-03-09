@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Harness Engineering Template
 
-## Getting Started
+Next.js 16 + React 19 프로젝트 템플릿
 
-First, run the development server:
+## 기술 스택
+
+- **Framework**: Next.js 16 (App Router)
+- **UI**: React 19, Tailwind CSS 4, shadcn/ui
+- **Testing**: Vitest, Testing Library
+- **Lint**: ESLint
+
+## 시작하기
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000](http://localhost:3000)에서 결과를 확인할 수 있습니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 스크립트
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| 명령어 | 설명 |
+|---|---|
+| `npm run dev` | 개발 서버 실행 |
+| `npm run build` | 프로덕션 빌드 |
+| `npm run start` | 프로덕션 서버 실행 |
+| `npm run lint` | ESLint 실행 |
+| `npm test` | 테스트 실행 |
+| `npm run test:watch` | 테스트 워치 모드 |
 
-## Learn More
+## Claude Code 워크플로우
 
-To learn more about Next.js, take a look at the following resources:
+이 프로젝트는 `/spec` → `/wireframe` → `Plan Mode` → `Implementation` 순서로 개발합니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 1. Spec (`/spec`)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+기능의 요구사항을 구조화합니다. 시나리오, 성공 기준, 전제 조건을 정의하고 `artifacts/<feature>/spec.md`에 저장합니다.
 
-## Deploy on Vercel
+### 2. Wireframe (`/wireframe`)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+spec을 기반으로 ASCII 와이어프레임을 생성합니다. 레이아웃과 컴포넌트 구조를 빠르게 검증하고 `artifacts/<feature>/wireframe.md`에 저장합니다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 3. Plan Mode
+
+spec과 wireframe을 참조하여 구현 계획을 수립합니다. Spec 테스트(`*.spec.test.tsx`) 작성을 첫 번째 태스크로 배치하고, 각 태스크에 수용 기준을 포함합니다.
+
+### 4. Implementation
+
+TDD로 구현합니다.
+
+1. Spec 테스트 작성 (`*.spec.test.tsx`) — 수용 기준 정의 (Red)
+2. 구현 테스트 작성 (`*.test.tsx`) — 단위 로직 검증 (Red)
+3. 최소 코드 구현 (Green)
+4. 리팩터링
