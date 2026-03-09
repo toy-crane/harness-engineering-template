@@ -6,7 +6,7 @@ allowed-tools:
   - "Read"
   - "Write"
   - "Glob"
-  - "mcp__conductor__AskUserQuestion"
+  - "AskUserQuestion"
 ---
 
 # Wireframe: Spec → ASCII 와이어프레임
