@@ -1,9 +1,10 @@
 ## 개발 워크플로우
 
 ### TDD (테스트 주도 개발)
-1. 수용 기준을 바탕으로 실패하는 테스트를 먼저 작성한다
-2. 테스트를 통과하는 최소한의 코드를 구현한다
-3. 테스트가 통과하는 상태를 유지하면서 리팩터링한다
+1. spec 테스트(*.spec.test.tsx)로 수용 기준을 먼저 정의한다 (Red)
+2. 구현 테스트(*.test.tsx)로 순수 로직(reducer, hook 등)의 단위 테스트를 작성한다 (Red)
+3. 테스트를 통과하는 최소한의 코드를 구현한다 (Green)
+4. 양쪽 테스트가 통과하는 상태를 유지하면서 리팩터링한다
 4. 테스트 실행: `bun run test`
 
 ### 테스트 파일 컨벤션
@@ -20,6 +21,7 @@
 ## Plan Mode 규칙
 
 - 수용 기준이 정의되어 있으면, spec 테스트(`*.spec.test.tsx`) 작성을 첫 번째 task로 배치한다. 선행 작업이 필요하여 불가능한 경우 사유를 명시한다.
+- 순수 로직(reducer, hook, 유틸 등)에 대한 구현 테스트(*.test.tsx) 작성을 구현 task에 포함한다
 - 모든 계획의 마지막에 미결정 질문 목록을 추가한다
 
 ### 참조할 artifacts
@@ -27,7 +29,7 @@
 - `artifacts/<feature>/wireframe.md` — 배치와 컴포넌트 인벤토리
 
 ### React/Next.js Best Practices 참조
-- 필요 시 `.claude/skills/vercel-react-best-practices/rules/` 카테고리를 참조한다
+- 계획 수립 시 `vercel-react-best-practices` skill에서 해당 기능에 관련된 규칙을 식별하고 계획에 반영한다
 
 ## 작업 규칙
 - 모든 작업에 수용 기준(Acceptance Criteria)을 반드시 포함한다:
