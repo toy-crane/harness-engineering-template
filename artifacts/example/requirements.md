@@ -1,12 +1,5 @@
 Trello 스타일의 칸반 Todo 앱을 만들어줘.
 
-## 기술 스택
-- Next.js (App Router)
-- TypeScript
-- shadcn/ui
-- Vitest + React Testing Library
-- 데이터 저장: localStorage (DB 없음)
-
 ## 칸반 보드
 
 3개의 고정 칼럼으로 구성된다:
