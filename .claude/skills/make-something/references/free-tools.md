@@ -9,11 +9,15 @@
 - **Firebase** — Firestore + Auth + Hosting. 무료 티어: Spark 플랜
 - **Convex** — 리액티브 백엔드. 무료 티어 제공
 - **Appwrite** — 셀프호스트 가능한 오픈소스 BaaS
+- **Neon** — Serverless Postgres, 0.5GB storage
+- **Upstash** — Serverless Redis, 500K commands/월
 
 ### 배포 / 호스팅
 - **Vercel** — Next.js 최적화 배포. 무료 Hobby 플랜
 - **Cloudflare Pages** — 정적/SSR 배포. 무료 무제한 bandwidth
 - **Netlify** — 정적 사이트 + Serverless Functions. 무료 티어
+- **Cloudflare Workers** — Edge 서버리스 컴퓨팅, 100K requests/일
+- **Render** — 웹 서비스 + 정적 사이트, 750시간/월
 
 ### 인증
 - **Clerk** — 무료 10,000 MAU
@@ -28,10 +32,14 @@
 - **REST Countries** — 국가 정보
 - **TMDB** — 영화/TV 데이터
 - **Unsplash API** — 무료 이미지
+- **Firecrawl** — 웹 스크래핑 (Markdown 변환), 500 pages 무료
+- **Open-Meteo** — 날씨 API, 10K calls/일, 가입 불필요
+- **Supadata** — 웹/YouTube 콘텐츠를 텍스트로 변환 (트랜스크립트 등), 100 requests 무료 (카드 불필요)
 
 ### AI / ML
 - **Hugging Face** — 무료 모델 호스팅 + Inference API
 - **Google AI Studio** — Gemini API 무료 티어
+- **Groq** — 빠른 LLM 추론 (Llama, Mixtral). 무료 tier (rate limit)
 
 ## npm 패키지
 
