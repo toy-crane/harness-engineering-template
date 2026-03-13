@@ -11,4 +11,8 @@ scenarios:
     then: "기대 결과"             # 확인 가능한 결과
     examples:                    # 구체적 입력/출력 쌍 (1개 이상 필수)
       - input: { key: "value" }  # 사용자가 넣는 값
-        expect: { key: "value" } # 화면에서 확인 가능한 상태
+        expect:                  # 화면에서 확인 가능한 상태 (다중 필드 가능)
+          text: "표시될 텍스트"     # 화면 텍스트
+          count: 3                # 요소 개수
+          visible: true           # 존재 여부
+          items: ["A", "B"]       # 목록/순서

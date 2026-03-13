@@ -10,6 +10,16 @@ argument-hint: "기능 설명"
 
 ## 1단계: 반복 질문
 
+### 사전 탐색 (기능 확장 시)
+
+질문을 시작하기 전에, 기존 기능을 확장하는 경우 다음을 탐색한다:
+
+- 기존 `artifacts/spec.yaml`에서 관련 시나리오 읽기
+- 기존 `artifacts/<feature>/spec.md` 확인
+- 관련 컴포넌트의 현재 구현 확인
+
+**판단 기준**: 사용자가 기존 기능명을 언급하거나, `artifacts/` 폴더가 존재하거나, `spec.yaml`에 매칭 ID 접두사가 있으면 기능 확장으로 판단한다. 완전히 새로운 기능이면 이 단계를 건너뛴다.
+
 `$ARGUMENTS`에 대해 빈칸과 약한 부분을 찾아 **한 번에 하나씩** 질문합니다.
 
 ### 질문 규칙
@@ -70,9 +80,19 @@ spec.md 저장 후, 시나리오를 `artifacts/spec.yaml`에 구조화하여 추
 ### 추출 규칙
 
 1. `references/spec-schema.yaml`을 읽어 형식을 참조한다
-2. spec.md의 각 시나리오/성공 기준에서 구조화된 시나리오를 추출한다
-3. ID는 `{FEATURE}-{NNN}` 형식 (피처명 대문자, 예: `KANBAN-001`)
-4. 기존 `artifacts/spec.yaml`이 있으면 scenarios에 append한다
-5. 없으면 `version: 1`로 새로 생성한다
-6. examples의 input은 사용자가 넣는 값, expect는 화면에서 확인 가능한 상태만 쓴다
-7. 사용자에게 추출 결과를 보여주고 확인 후 저장한다
+2. 기존 `artifacts/spec.yaml`이 있으면 읽어 기존 시나리오를 파악한다
+3. 기존 ID 목록을 확인하고 중복 시나리오를 식별한다
+4. spec.md의 각 시나리오/성공 기준에서 구조화된 시나리오를 추출한다
+5. ID는 `{FEATURE}-{NNN}` 형식 (피처명 대문자, 예: `KANBAN-001`). 기존 번호와 충돌하지 않도록 이어서 부여한다
+6. `references/examples-guide.md`를 읽고 examples 작성 기준을 따른다
+7. 기존 `artifacts/spec.yaml`이 있으면 scenarios에 append한다. 없으면 `version: 1`로 새로 생성한다
+8. 사용자에게 추출 결과를 보여주고 확인 후 저장한다
+
+### spec.yaml 검증 체크리스트 (저장 전 검증)
+
+- [ ] input이 구체적 값인가 (변수나 플레이스홀더가 아닌 실제 값)
+- [ ] expect가 화면에서 단언 가능한 값인가 (내부 상태/함수 호출 아님)
+- [ ] given/when/then이 사용자 관점인가 (구현 용어 아님)
+- [ ] ID가 기존 시나리오와 충돌하지 않는가
+- [ ] 동일한 의미의 중복 시나리오가 없는가
+- [ ] examples가 1개 이상인가
