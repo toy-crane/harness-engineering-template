@@ -65,3 +65,17 @@ argument-hint: "기능 설명"
 
 - 파일명: `artifacts/<feature-name>/spec.md`
 - 저장 전 사용자에게 파일명 확인
+
+## 4단계: spec.yaml 추출
+
+spec.md 저장 후, 시나리오를 `artifacts/spec.yaml`에 구조화하여 추출합니다.
+
+### 추출 규칙
+
+1. `references/spec-schema.yaml`을 읽어 형식을 참조한다
+2. spec.md의 각 시나리오/성공 기준에서 구조화된 시나리오를 추출한다
+3. ID는 `{FEATURE}-{NNN}` 형식 (피처명 대문자, 예: `KANBAN-001`)
+4. 기존 `artifacts/spec.yaml`이 있으면 scenarios에 append한다
+5. 없으면 `version: 1`로 새로 생성한다
+6. examples의 input은 사용자가 넣는 값, expect는 화면에서 확인 가능한 상태만 쓴다
+7. 사용자에게 추출 결과를 보여주고 확인 후 저장한다
