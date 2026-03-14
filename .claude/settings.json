@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path' | xargs bunx eslint --fix"
+            "command": "\"$(git rev-parse --show-toplevel)\"/.claude/hooks/lint.sh"
           },
           {
             "type": "command",
