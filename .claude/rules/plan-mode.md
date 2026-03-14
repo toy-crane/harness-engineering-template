@@ -23,7 +23,7 @@ artifacts를 읽고, 구현에 필요하지만 아직 결정되지 않은 사항
 ## 참조할 artifacts
 - `artifacts/spec.yaml` — 전체 앱의 불변 계약 (시나리오와 성공 기준)
 - `artifacts/<feature>/spec.md` — 행동 명세 (설계 문서)
-- `artifacts/<feature>/wireframe.md` — 배치와 컴포넌트 인벤토리
+- `artifacts/<feature>/wireframe.html` — 배치와 컴포넌트 인벤토리
 
 ## React/Next.js Best Practices
 - 계획 수립 시 `vercel-react-best-practices` skill에서 관련 규칙을 식별하고 반영한다

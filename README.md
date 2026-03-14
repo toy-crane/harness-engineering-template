@@ -48,7 +48,7 @@ Claude Code hooks 기반 자동 품질 게이트 (`.claude/settings.json`)
 
 ### 2. Wireframe (`/wireframe`)
 
-spec을 기반으로 ASCII 와이어프레임을 생성합니다. 레이아웃과 컴포넌트 구조를 빠르게 검증하고 `artifacts/<feature>/wireframe.md`에 저장합니다.
+spec을 기반으로 HTML 와이어프레임을 생성합니다. 레이아웃과 컴포넌트 구조를 브라우저에서 빠르게 검증하고 `artifacts/<feature>/wireframe.html`에 저장합니다.
 
 ### 3. Plan Mode
 
