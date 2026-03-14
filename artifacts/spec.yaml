@@ -1,0 +1,358 @@
+version: 1
+
+scenarios:
+  - id: "KANBAN-001"
+    name: "칸반 보드 초기 표시"
+    given: "앱을 처음 열었을 때"
+    when: "페이지가 로드되면"
+    then: "3개 칼럼이 좌에서 우로 표시된다"
+    examples:
+      - input: {}
+        expect:
+          columns: ["To Do", "In Progress", "Done"]
+
+  - id: "KANBAN-002"
+    name: "카드 생성 - 정상"
+    given: "To Do 칼럼이 비어 있을 때"
+    when: "제목을 입력하고 저장하면"
+    then: "To Do 칼럼에 새 카드가 표시된다"
+    examples:
+      - input: { title: "회의록 작성" }
+        expect:
+          cardText: "회의록 작성"
+          column: "To Do"
+          cardCount: 1
+
+  - id: "KANBAN-003"
+    name: "카드 생성 - 제목 없이"
+    given: "카드 추가 모드일 때"
+    when: "제목을 비우고 저장하면"
+    then: "에러 메시지가 표시된다"
+    examples:
+      - input: { title: "" }
+        expect:
+          errorMessage: "제목을 입력해주세요"
+
+  - id: "KANBAN-004"
+    name: "카드 생성 - 제목만 입력"
+    given: "카드 추가 모드일 때"
+    when: "제목만 입력하고 나머지 필드를 비운 채 저장하면"
+    then: "카드가 정상 생성된다"
+    examples:
+      - input: { title: "장보기", description: "", priority: "", tags: [], dueDate: "" }
+        expect:
+          cardText: "장보기"
+          column: "To Do"
+
+  - id: "KANBAN-005"
+    name: "카드 미리보기 - 모든 필드"
+    given: "우선순위, 태그, 마감일이 설정된 카드가 있을 때"
+    when: "보드에 카드가 표시되면"
+    then: "제목, 우선순위 뱃지, 태그 칩, 마감일이 표시된다"
+    examples:
+      - input: { title: "버그 수정", priority: "High", tags: ["버그"], dueDate: "2026-03-20" }
+        expect:
+          cardText: "버그 수정"
+          priorityBadge: "High"
+          tagChips: ["버그"]
+          dueDateText: "2026-03-20"
+
+  - id: "KANBAN-006"
+    name: "카드 미리보기 - 제목만"
+    given: "우선순위, 태그, 마감일이 없는 카드가 있을 때"
+    when: "보드에 카드가 표시되면"
+    then: "제목만 표시된다"
+    examples:
+      - input: { title: "장보기", priority: "", tags: [], dueDate: "" }
+        expect:
+          cardText: "장보기"
+          priorityBadge: false
+          tagChips: []
+          dueDateText: false
+
+  - id: "KANBAN-007"
+    name: "카드 상세 조회"
+    given: "카드가 존재할 때"
+    when: "카드를 클릭하면"
+    then: "모달에 모든 필드가 표시된다"
+    examples:
+      - input: { clickCard: "회의록 작성" }
+        expect:
+          modalVisible: true
+          titleField: "회의록 작성"
+          descriptionField: true
+          priorityField: true
+          tagsField: true
+          dueDateField: true
+
+  - id: "KANBAN-008"
+    name: "카드 제목 편집"
+    given: "카드 모달이 열려 있을 때"
+    when: "제목을 변경하고 저장하면"
+    then: "보드에 변경된 제목이 반영된다"
+    examples:
+      - input: { originalTitle: "회의록 작성", newTitle: "주간 회의록 작성" }
+        expect:
+          cardText: "주간 회의록 작성"
+
+  - id: "KANBAN-009"
+    name: "카드 우선순위 변경"
+    given: "카드 모달이 열려 있을 때"
+    when: "우선순위를 변경하면"
+    then: "카드에 변경된 우선순위가 표시된다"
+    examples:
+      - input: { card: "회의록 작성", priority: "High" }
+        expect:
+          priorityBadge: "High"
+
+  - id: "KANBAN-010"
+    name: "모달 닫기 시 변경 폐기"
+    given: "카드 모달에서 제목을 수정한 후"
+    when: "저장하지 않고 모달을 닫으면"
+    then: "보드에 원래 제목이 유지된다"
+    examples:
+      - input: { originalTitle: "회의록 작성", editedTitle: "주간 회의록 작성", saveBeforeClose: false }
+        expect:
+          cardText: "회의록 작성"
+
+  - id: "KANBAN-011"
+    name: "카드 삭제"
+    given: "카드 3개가 존재할 때"
+    when: "카드 1개를 삭제하면"
+    then: "해당 카드가 사라지고 2개만 남는다"
+    examples:
+      - input: { deleteCard: "회의록 작성", totalBefore: 3 }
+        expect:
+          cardCount: 2
+          deletedCardVisible: false
+
+  - id: "KANBAN-012"
+    name: "칼럼 간 드래그&드롭"
+    given: "To Do에 카드가 있을 때"
+    when: "카드를 In Progress로 드래그하면"
+    then: "카드가 In Progress에 표시되고 To Do에서 사라진다"
+    examples:
+      - input: { card: "회의록 작성", from: "To Do", to: "In Progress" }
+        expect:
+          inProgressCards: ["회의록 작성"]
+          toDoCards: []
+
+  - id: "KANBAN-013"
+    name: "칼럼 내 순서 변경"
+    given: "To Do에 카드 A, B, C가 순서대로 있을 때"
+    when: "C를 A 위로 드래그하면"
+    then: "순서가 C, A, B로 변경된다"
+    examples:
+      - input: { column: "To Do", dragCard: "C", dropBefore: "A" }
+        expect:
+          columnCards: ["C", "A", "B"]
+
+  - id: "KANBAN-014"
+    name: "제목 검색 - 일치"
+    given: "회의록 작성, 장보기 카드가 있을 때"
+    when: "검색창에 키워드를 입력하면"
+    then: "제목에 키워드를 포함하는 카드만 표시된다"
+    examples:
+      - input: { searchKeyword: "회의" }
+        expect:
+          visibleCards: ["회의록 작성"]
+          hiddenCards: ["장보기"]
+
+  - id: "KANBAN-015"
+    name: "제목 검색 - 결과 없음"
+    given: "카드가 존재할 때"
+    when: "일치하는 카드가 없는 키워드를 검색하면"
+    then: "빈 상태 메시지가 표시된다"
+    examples:
+      - input: { searchKeyword: "없는키워드" }
+        expect:
+          emptyMessage: true
+          visibleCardCount: 0
+
+  - id: "KANBAN-016"
+    name: "제목 검색 - 초기화"
+    given: "검색어가 입력된 상태일 때"
+    when: "검색어를 삭제하면"
+    then: "모든 카드가 다시 표시된다"
+    examples:
+      - input: { searchKeyword: "" }
+        expect:
+          allCardsVisible: true
+
+  - id: "KANBAN-017"
+    name: "우선순위 필터"
+    given: "High, Medium, Low 우선순위 카드가 섞여 있을 때"
+    when: "우선순위 필터를 선택하면"
+    then: "해당 우선순위 카드만 표시된다"
+    examples:
+      - input: { priorityFilter: "High" }
+        expect:
+          visibleCardsPriority: "High"
+          otherPriorityVisible: false
+
+  - id: "KANBAN-018"
+    name: "태그 필터"
+    given: "다양한 태그의 카드가 있을 때"
+    when: "태그 필터를 선택하면"
+    then: "해당 태그를 포함하는 카드만 표시된다"
+    examples:
+      - input: { tagFilter: "버그" }
+        expect:
+          visibleCardsTag: "버그"
+
+  - id: "KANBAN-019"
+    name: "복합 필터 (AND)"
+    given: "다양한 우선순위와 태그의 카드가 있을 때"
+    when: "우선순위와 태그 필터를 동시에 선택하면"
+    then: "두 조건을 모두 만족하는 카드만 표시된다"
+    examples:
+      - input: { priorityFilter: "High", tagFilter: "버그" }
+        expect:
+          visibleCardsPriority: "High"
+          visibleCardsTag: "버그"
+
+  - id: "KANBAN-020"
+    name: "필터 해제"
+    given: "우선순위 필터가 적용된 상태일 때"
+    when: "필터를 해제하면"
+    then: "모든 카드가 다시 표시된다"
+    examples:
+      - input: { priorityFilter: "" }
+        expect:
+          allCardsVisible: true
+
+  - id: "KANBAN-021"
+    name: "검색과 필터 동시 적용"
+    given: "다양한 카드가 있을 때"
+    when: "검색어와 우선순위 필터를 동시에 사용하면"
+    then: "두 조건을 모두 만족하는 카드만 표시된다"
+    examples:
+      - input: { searchKeyword: "회의", priorityFilter: "High" }
+        expect:
+          visibleCardsContainKeyword: "회의"
+          visibleCardsPriority: "High"
+
+  - id: "KANBAN-022"
+    name: "마감일 경과 - overdue 표시"
+    given: "마감일이 어제인 카드가 있을 때"
+    when: "보드에 카드가 표시되면"
+    then: "마감일에 overdue 시각적 강조가 표시된다"
+    examples:
+      - input: { dueDate: "2026-03-13" }
+        expect:
+          overdueHighlight: true
+
+  - id: "KANBAN-023"
+    name: "마감일 경과 - 정상 표시"
+    given: "마감일이 내일인 카드가 있을 때"
+    when: "보드에 카드가 표시되면"
+    then: "일반 마감일 텍스트만 표시된다"
+    examples:
+      - input: { dueDate: "2026-03-15" }
+        expect:
+          overdueHighlight: false
+          dueDateText: "2026-03-15"
+
+  - id: "KANBAN-024"
+    name: "다크모드 전환"
+    given: "라이트 테마 상태일 때"
+    when: "다크모드 토글을 클릭하면"
+    then: "다크 테마로 전환된다"
+    examples:
+      - input: { toggleDarkMode: true }
+        expect:
+          theme: "dark"
+
+  - id: "KANBAN-025"
+    name: "다크모드 복원"
+    given: "다크 테마 상태일 때"
+    when: "다크모드 토글을 다시 클릭하면"
+    then: "라이트 테마로 복원된다"
+    examples:
+      - input: { toggleDarkMode: true }
+        expect:
+          theme: "light"
+
+  - id: "KANBAN-026"
+    name: "다크모드 상태 유지"
+    given: "다크 테마 상태에서"
+    when: "페이지를 새로고침하면"
+    then: "다크 테마가 유지된다"
+    examples:
+      - input: { reload: true }
+        expect:
+          theme: "dark"
+
+  - id: "KANBAN-027"
+    name: "localStorage 자동 저장 - 생성"
+    given: "카드를 생성한 후"
+    when: "페이지를 새로고침하면"
+    then: "생성한 카드가 유지된다"
+    examples:
+      - input: { createCard: "회의록 작성", reload: true }
+        expect:
+          cardText: "회의록 작성"
+          cardVisible: true
+
+  - id: "KANBAN-028"
+    name: "localStorage 자동 저장 - 이동"
+    given: "카드를 다른 칼럼으로 이동한 후"
+    when: "페이지를 새로고침하면"
+    then: "이동한 위치가 유지된다"
+    examples:
+      - input: { movedCard: "회의록 작성", movedTo: "In Progress", reload: true }
+        expect:
+          column: "In Progress"
+          cardText: "회의록 작성"
+
+  - id: "KANBAN-029"
+    name: "JSON 내보내기"
+    given: "보드에 카드가 있을 때"
+    when: "내보내기를 실행하면"
+    then: "JSON 파일이 다운로드된다"
+    examples:
+      - input: { exportAction: true }
+        expect:
+          fileDownloaded: true
+          fileExtension: ".json"
+
+  - id: "KANBAN-030"
+    name: "JSON 가져오기 - 정상"
+    given: "기존 보드에 데이터가 있을 때"
+    when: "유효한 JSON 파일을 가져오면"
+    then: "기존 데이터가 대체되고 가져온 데이터가 표시된다"
+    examples:
+      - input: { importFile: "valid-board.json" }
+        expect:
+          dataReplaced: true
+          boardUpdated: true
+
+  - id: "KANBAN-031"
+    name: "JSON 가져오기 - 잘못된 형식"
+    given: "가져오기를 시도할 때"
+    when: "잘못된 형식의 JSON 파일을 선택하면"
+    then: "에러 메시지가 표시된다"
+    examples:
+      - input: { importFile: "invalid.json" }
+        expect:
+          errorMessage: "올바른 형식의 파일이 아닙니다"
+
+  - id: "KANBAN-032"
+    name: "태그 자동완성 - 기존 태그"
+    given: "버그 태그를 사용한 카드가 있을 때"
+    when: "새 카드에서 태그 입력란에 접두사를 입력하면"
+    then: "기존 태그가 자동완성으로 제안된다"
+    examples:
+      - input: { tagInput: "버" }
+        expect:
+          suggestions: ["버그"]
+
+  - id: "KANBAN-033"
+    name: "태그 자동완성 - 새 태그"
+    given: "태그 자동완성 목록에 없는 값을 입력할 때"
+    when: "새 태그를 입력하고 확정하면"
+    then: "새 태그로 저장된다"
+    examples:
+      - input: { tagInput: "신규기능" }
+        expect:
+          tagSaved: "신규기능"
