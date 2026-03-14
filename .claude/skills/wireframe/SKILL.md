@@ -56,6 +56,7 @@ Layout Structure 규칙:
    - `{{FEATURE_NAME}}`을 실제 feature명으로 치환
    - 각 화면 상단에 매핑된 시나리오 번호를 표시
    - style-guide.md의 컴포넌트 패턴을 사용하여 HTML 작성
+   - style-guide.md의 컴포넌트 패턴을 사용할 때, 해당 요소 직전에 `<!-- [패턴명] 용도 -->` 주석을 추가한다
    - spec.md에서 구체적인 예시 데이터를 사용
 
 4. 브라우저에서 파일을 연다:
