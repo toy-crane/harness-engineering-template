@@ -107,22 +107,17 @@ spec.yaml 저장 후, 독립 리뷰어로 누락 시나리오를 검증한다.
 
 ### 실행
 
-1. 다음 파일을 읽는다:
-   - `agents/reviewer.md`
-   - `references/examples-guide.md`
-   - `references/spec-schema.yaml`
+1. Agent 도구로 `spec-reviewer` 커스텀 에이전트를 실행한다:
 
-2. Agent 도구로 서브에이전트를 생성한다. 프롬프트:
+   ```
+   subagent_type: "spec-reviewer"
+   prompt: |
+     ## 리뷰 대상
+     - 원본 요구사항: artifacts/<feature>/spec.md
+     - spec.yaml: artifacts/spec.yaml
+   ```
 
-   {agents/reviewer.md 전체 내용}
-
-   ## 리뷰 대상
-   - 원본 요구사항: artifacts/<feature>/spec.md
-   - spec.yaml: artifacts/spec.yaml
-   - expect 작성 기준: references/examples-guide.md
-   - 시나리오 형식: references/spec-schema.yaml
-
-3. 결과 처리:
+2. 결과 처리:
 
    **갭이 있는 경우:**
    - 리뷰어가 제안한 시나리오 목록을 사용자에게 보여준다
