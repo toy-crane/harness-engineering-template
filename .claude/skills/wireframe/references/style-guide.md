@@ -46,10 +46,9 @@
 
 와이어프레임에서 데스크톱/모바일 레이아웃을 동시에 지원한다. template의 뷰포트 토글로 전환.
 
-- **모바일 우선**: 기본 스타일은 모바일, `md:` 이상에서 데스크톱 레이아웃
-- Tailwind 반응형 접두사 사용: `flex-col md:flex-row`, `w-full md:w-1/3`, `hidden md:block`
-- 모바일에서 다단 레이아웃 → 단일 칼럼으로 스택: `grid grid-cols-1 md:grid-cols-3`
-- 모바일에서 Sidebar → Bottom Sheet 또는 Drawer로 전환: `hidden md:block` / `block md:hidden`
+- 모바일 우선으로 작성하고 `md:` 접두사로 데스크톱 레이아웃 적용
+- 모바일에서 다단 레이아웃 → 단일 칼럼으로 스택
+- 모바일에서 Sidebar → Bottom Sheet 또는 Drawer로 전환
 - 모바일에서 테이블 → 카드 리스트로 전환 고려
 
 ---
