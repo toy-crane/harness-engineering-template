@@ -21,6 +21,7 @@ export function KanbanBoard() {
   const cards = useKanbanStore((s) => s.cards);
   const deleteCard = useKanbanStore((s) => s.deleteCard);
 
+  const [editingCardId, setEditingCardId] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{
     cardId: string;
     columnId: ColumnId;
@@ -43,7 +44,9 @@ export function KanbanBoard() {
             key={col}
             columnId={col}
             cardIds={columns[col]}
-            onCardClick={() => {}}
+            editingCardId={editingCardId}
+            onCardEdit={setEditingCardId}
+            onCardEditEnd={() => setEditingCardId(null)}
             onDeleteRequest={(cardId, columnId) =>
               setDeleteTarget({ cardId, columnId })
             }

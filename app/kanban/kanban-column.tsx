@@ -16,11 +16,13 @@ const COLUMN_NAMES: Record<ColumnId, string> = {
 interface KanbanColumnProps {
   columnId: ColumnId;
   cardIds: string[];
-  onCardClick: (cardId: string) => void;
+  editingCardId: string | null;
+  onCardEdit: (cardId: string) => void;
+  onCardEditEnd: () => void;
   onDeleteRequest: (cardId: string, columnId: ColumnId) => void;
 }
 
-export function KanbanColumn({ columnId, cardIds, onCardClick, onDeleteRequest }: KanbanColumnProps) {
+export function KanbanColumn({ columnId, cardIds, editingCardId, onCardEdit, onCardEditEnd, onDeleteRequest }: KanbanColumnProps) {
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
   const cards = useKanbanStore((s) => s.cards);
@@ -51,7 +53,9 @@ export function KanbanColumn({ columnId, cardIds, onCardClick, onDeleteRequest }
               key={id}
               card={card}
               column={columnId}
-              onClick={() => onCardClick(id)}
+              isEditing={editingCardId === id}
+              onEdit={() => onCardEdit(id)}
+              onEditEnd={onCardEditEnd}
               onDelete={() => onDeleteRequest(id, columnId)}
             />
           );
