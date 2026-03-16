@@ -70,4 +70,4 @@ spec.yaml 저장 후, `spec-reviewer` 에이전트에 원본(`artifacts/<feature
 
 갭이 있으면 사용자에게 보여주고, 반영할 갭을 선택받아 Step 3의 추출 규칙·체크리스트를 적용하여 spec.md와 spec.yaml에 추가한다. 기존 시나리오는 수정하지 않는다 (추가만 가능).
 
-완료 후 `Skill` 도구로 `/sketching-wireframe <feature>`를 실행한다.
+완료 후 사용자에게 `/sketching-wireframe <feature>` 진행 여부를 물어본다.

@@ -156,5 +156,156 @@ document.addEventListener('keydown', function(e) {
   }
 });
 </script>
+<script>
+// Wireframe feedback overlay
+// Provides: feedback mode toggle, element highlighting, clipboard copy of selector path
+(function() {
+  var root = document.createElement('div');
+  root.id = 'wf-feedback-root';
+  document.body.appendChild(root);
+  var shadow = root.attachShadow({ mode: 'open' });
+
+  shadow.innerHTML = '<style>' +
+    ':host { all: initial; }' +
+    '.wf-toggle { position: fixed; bottom: 20px; right: 20px; z-index: 99999; ' +
+      'width: 44px; height: 44px; border-radius: 12px; border: 1px solid hsl(214.3 31.8% 91.4%); ' +
+      'background: hsl(0 0% 100%); cursor: pointer; display: flex; align-items: center; ' +
+      'justify-content: center; font-family: sans-serif; color: hsl(215.4 16.3% 46.9%); ' +
+      'box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06); ' +
+      'transition: all 0.15s ease; }' +
+    '.wf-toggle:hover { background: hsl(210 40% 96.1%); color: hsl(222.2 47.4% 11.2%); }' +
+    '.wf-toggle.active { background: hsl(222.2 47.4% 11.2%); color: hsl(210 40% 98%); ' +
+      'border-color: hsl(222.2 47.4% 11.2%); }' +
+    '.wf-toggle.active svg { stroke: hsl(210 40% 98%); }' +
+    '.wf-highlight { position: absolute; background: rgba(59,130,246,0.15); ' +
+      'border: 2px solid rgba(59,130,246,0.5); pointer-events: none; z-index: 99990; ' +
+      'border-radius: 2px; transition: all 0.1s; }' +
+    '.wf-toast { position: fixed; bottom: 72px; right: 20px; z-index: 99999; ' +
+      'background: hsl(222.2 47.4% 11.2%); color: #fff; font-family: sans-serif; ' +
+      'font-size: 13px; padding: 8px 16px; border-radius: 8px; ' +
+      'box-shadow: 0 4px 12px rgba(0,0,0,0.15); opacity: 0; ' +
+      'transition: opacity 0.2s ease; pointer-events: none; max-width: 320px; ' +
+      'word-break: break-all; }' +
+    '.wf-toast.visible { opacity: 1; }' +
+  '</style>' +
+  '<div class="wf-toggle" id="wf-toggle-btn" title="Feedback mode">' +
+    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.855z"/>' +
+    '</svg>' +
+  '</div>' +
+  '<div class="wf-highlight" id="wf-highlight" style="display:none"></div>' +
+  '<div class="wf-toast" id="wf-toast"></div>';
+
+  var toggleBtn = shadow.getElementById('wf-toggle-btn');
+  var highlightEl = shadow.getElementById('wf-highlight');
+  var toastEl = shadow.getElementById('wf-toast');
+  var feedbackMode = false;
+  var toastTimer;
+
+  function showToast(text) {
+    toastEl.textContent = text;
+    toastEl.classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(function() {
+      toastEl.classList.remove('visible');
+    }, 2000);
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() {
+        showToast('Copied: ' + text);
+      }, function() {
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast('Copied: ' + text);
+    } catch (_) {
+      showToast('Copy failed — select manually');
+    }
+    document.body.removeChild(ta);
+  }
+
+  toggleBtn.addEventListener('click', function() {
+    feedbackMode = !feedbackMode;
+    toggleBtn.classList.toggle('active', feedbackMode);
+    if (!feedbackMode) {
+      highlightEl.style.display = 'none';
+    }
+  });
+
+  function buildSelector(el) {
+    var parts = [];
+    var cur = el;
+    while (cur && cur !== document.body && cur !== document.documentElement) {
+      if (cur.id) {
+        parts.unshift('#' + cur.id);
+        break;
+      }
+      var tag = cur.tagName;
+      var parent = cur.parentElement;
+      if (parent) {
+        var siblings = Array.from(parent.children);
+        var idx = siblings.indexOf(cur) + 1;
+        parts.unshift(tag + ':nth-child(' + idx + ')');
+      } else {
+        parts.unshift(tag);
+      }
+      cur = parent;
+    }
+    return parts.join(' > ');
+  }
+
+  function getScreenId() {
+    var active = document.querySelector('.screen.active');
+    return active ? active.id.replace('screen-', '') : 'unknown';
+  }
+
+  document.addEventListener('mousemove', function(e) {
+    if (!feedbackMode) return;
+    var target = e.target;
+    if (!target || target.closest('#wf-feedback-root') || target.closest('nav')) {
+      highlightEl.style.display = 'none';
+      return;
+    }
+    var screen = target.closest('.screen.active');
+    if (!screen) { highlightEl.style.display = 'none'; return; }
+    var rect = target.getBoundingClientRect();
+    highlightEl.style.display = 'block';
+    highlightEl.style.top = (rect.top + window.scrollY) + 'px';
+    highlightEl.style.left = (rect.left + window.scrollX) + 'px';
+    highlightEl.style.width = rect.width + 'px';
+    highlightEl.style.height = rect.height + 'px';
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!feedbackMode) return;
+    var target = e.target;
+    if (!target || target.closest('#wf-feedback-root')) return;
+    if (target.closest('nav')) return;
+    var screen = target.closest('.screen.active');
+    if (!screen) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var selector = buildSelector(target);
+    var path = '[screen-' + getScreenId() + ' > ' + selector + ']';
+    copyToClipboard(path);
+  }, true);
+
+})();
+</script>
 </body>
 </html>

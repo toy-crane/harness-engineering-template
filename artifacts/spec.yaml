@@ -1,0 +1,300 @@
+version: 1
+
+scenarios:
+  - id: "KANBAN-001"
+    name: "칸반 보드 초기 표시"
+    given: "localStorage에 데이터가 없는 상태"
+    when: "사용자가 앱을 처음 연다"
+    then: "3개 칼럼이 Todo, In Progress, Done 순서로 표시되고 카드는 0개"
+    examples:
+      - input: { localStorage: "empty" }
+        expect:
+          columns: ["Todo", "In Progress", "Done"]
+          totalCardCount: 0
+
+  - id: "KANBAN-002"
+    name: "카드 생성 성공"
+    given: "Todo 칼럼이 비어 있는 상태"
+    when: "사용자가 Todo 칼럼의 추가 버튼을 클릭하고 제목을 입력한다"
+    then: "Todo 칼럼 하단에 새 카드가 표시된다"
+    examples:
+      - input: { column: "Todo", title: "회의록 작성" }
+        expect:
+          cardTitle: "회의록 작성"
+          todoCardCount: 1
+
+  - id: "KANBAN-003"
+    name: "카드 생성 실패 — 빈 제목"
+    given: "Todo 칼럼에서 추가 버튼을 클릭한 상태"
+    when: "사용자가 제목을 비워둔 채 확인한다"
+    then: "에러 메시지가 표시되고 카드는 생성되지 않는다"
+    examples:
+      - input: { column: "Todo", title: "" }
+        expect:
+          errorMessage: "제목을 입력해주세요"
+          todoCardCount: 0
+
+  - id: "KANBAN-004"
+    name: "카드 인라인 편집 — 제목 수정"
+    given: "Todo 칼럼에 '회의록 작성' 카드가 있는 상태"
+    when: "사용자가 카드 제목을 클릭하고 '주간 회의록 작성'으로 수정한다"
+    then: "카드 제목이 '주간 회의록 작성'으로 변경된다"
+    examples:
+      - input: { currentTitle: "회의록 작성", newTitle: "주간 회의록 작성" }
+        expect:
+          cardTitle: "주간 회의록 작성"
+
+  - id: "KANBAN-005"
+    name: "카드 상세 모달 — 우선순위 설정"
+    given: "카드 상세 모달이 열린 상태"
+    when: "사용자가 우선순위에서 High를 선택한다"
+    then: "카드에 High 우선순위가 표시된다"
+    examples:
+      - input: { priority: "High" }
+        expect:
+          priority: "High"
+
+  - id: "KANBAN-006"
+    name: "카드 상세 모달 — 태그 추가"
+    given: "카드 상세 모달이 열린 상태"
+    when: "사용자가 태그 영역에 '긴급'을 입력하고 확인한다"
+    then: "카드에 '긴급' 태그가 표시된다"
+    examples:
+      - input: { tag: "긴급" }
+        expect:
+          tags: ["긴급"]
+
+  - id: "KANBAN-007"
+    name: "카드 삭제 — 확인"
+    given: "Todo 칼럼에 카드가 1개 있는 상태"
+    when: "사용자가 삭제 버튼을 클릭하고 확인한다"
+    then: "카드가 칼럼에서 사라진다"
+    examples:
+      - input: { action: "delete", confirm: true }
+        expect:
+          confirmDialog: "삭제하시겠습니까?"
+          todoCardCount: 0
+
+  - id: "KANBAN-008"
+    name: "카드 삭제 — 취소"
+    given: "Todo 칼럼에 카드가 1개 있는 상태"
+    when: "사용자가 삭제 버튼을 클릭하고 취소한다"
+    then: "카드가 유지된다"
+    examples:
+      - input: { action: "delete", confirm: false }
+        expect:
+          todoCardCount: 1
+
+  - id: "KANBAN-009"
+    name: "서브태스크 추가"
+    given: "카드가 존재하고 서브태스크가 없는 상태"
+    when: "사용자가 서브태스크 '자료 준비'를 추가한다"
+    then: "체크리스트에 '자료 준비' 항목이 표시된다"
+    examples:
+      - input: { subtask: "자료 준비" }
+        expect:
+          subtaskText: "자료 준비"
+          subtaskCount: 1
+
+  - id: "KANBAN-010"
+    name: "서브태스크 체크 — 진행률 표시"
+    given: "카드에 서브태스크 2개가 있고 모두 미완료인 상태"
+    when: "사용자가 서브태스크 1개를 체크한다"
+    then: "진행률이 1/2로 표시된다"
+    examples:
+      - input: { checkIndex: 0, totalSubtasks: 2 }
+        expect:
+          progress: "1/2"
+
+  - id: "KANBAN-011"
+    name: "카드 드래그&드롭 — 칼럼 간 이동"
+    given: "Todo 칼럼에 '회의록 작성' 카드가 있는 상태"
+    when: "사용자가 카드를 In Progress 칼럼으로 드래그한다"
+    then: "카드가 In Progress 칼럼에 표시된다"
+    examples:
+      - input: { card: "회의록 작성", from: "Todo", to: "In Progress" }
+        expect:
+          todoCardCount: 0
+          inProgressCardCount: 1
+
+  - id: "KANBAN-012"
+    name: "카드 드래그&드롭 — 위치 영속"
+    given: "카드를 In Progress로 이동한 상태"
+    when: "사용자가 페이지를 새로고침한다"
+    then: "카드가 In Progress 칼럼에 그대로 표시된다"
+    examples:
+      - input: { action: "reload" }
+        expect:
+          inProgressCardCount: 1
+
+  - id: "KANBAN-013"
+    name: "제목 검색 — 매칭"
+    given: "보드에 '회의록 작성', '보고서 작성', '점심 주문' 카드가 있는 상태"
+    when: "사용자가 검색창에 '작성'을 입력한다"
+    then: "제목에 '작성'이 포함된 카드만 표시된다"
+    examples:
+      - input: { searchQuery: "작성" }
+        expect:
+          visibleCardCount: 2
+
+  - id: "KANBAN-014"
+    name: "제목 검색 — 매칭 없음"
+    given: "보드에 카드가 있는 상태"
+    when: "사용자가 검색창에 '존재하지않는단어'를 입력한다"
+    then: "표시되는 카드가 없다"
+    examples:
+      - input: { searchQuery: "존재하지않는단어" }
+        expect:
+          visibleCardCount: 0
+
+  - id: "KANBAN-015"
+    name: "우선순위 필터"
+    given: "High 카드 1개, Medium 카드 2개가 있는 상태"
+    when: "사용자가 우선순위 'High' 필터를 선택한다"
+    then: "High 카드만 표시된다"
+    examples:
+      - input: { priorityFilter: "High" }
+        expect:
+          visibleCardCount: 1
+
+  - id: "KANBAN-016"
+    name: "태그 필터"
+    given: "'긴급' 태그 카드 1개, '일반' 태그 카드 1개가 있는 상태"
+    when: "사용자가 태그 '긴급' 필터를 선택한다"
+    then: "'긴급' 태그가 있는 카드만 표시된다"
+    examples:
+      - input: { tagFilter: "긴급" }
+        expect:
+          visibleCardCount: 1
+
+  - id: "KANBAN-017"
+    name: "다크모드 토글"
+    given: "라이트 테마 상태"
+    when: "사용자가 다크모드 토글을 클릭한다"
+    then: "UI가 다크 테마로 전환된다"
+    examples:
+      - input: { action: "toggleDarkMode" }
+        expect:
+          theme: "dark"
+
+  - id: "KANBAN-018"
+    name: "다크모드 영속"
+    given: "다크 테마를 선택한 상태"
+    when: "사용자가 페이지를 새로고침한다"
+    then: "다크 테마가 유지된다"
+    examples:
+      - input: { action: "reload" }
+        expect:
+          theme: "dark"
+
+  - id: "KANBAN-019"
+    name: "데이터 내보내기"
+    given: "보드에 카드가 있는 상태"
+    when: "사용자가 내보내기 버튼을 클릭한다"
+    then: "전체 보드 데이터가 JSON 파일로 다운로드된다"
+    examples:
+      - input: { action: "export" }
+        expect:
+          downloadTriggered: true
+          fileExtension: ".json"
+
+  - id: "KANBAN-020"
+    name: "데이터 가져오기 — 성공"
+    given: "보드에 기존 카드가 있는 상태"
+    when: "사용자가 유효한 JSON 파일을 가져온다"
+    then: "기존 데이터가 교체되고 보드가 갱신된다"
+    examples:
+      - input: { action: "import", fileValid: true, importedCardCount: 5 }
+        expect:
+          totalCardCount: 5
+
+  - id: "KANBAN-021"
+    name: "데이터 가져오기 — 잘못된 형식"
+    given: "보드 상태"
+    when: "사용자가 잘못된 형식의 파일을 가져온다"
+    then: "에러 메시지가 표시되고 기존 데이터는 유지된다"
+    examples:
+      - input: { action: "import", fileValid: false }
+        expect:
+          errorMessage: "올바른 형식이 아닙니다"
+
+  - id: "KANBAN-022"
+    name: "카드 상세 모달 열기"
+    given: "칼럼에 카드가 있는 상태"
+    when: "사용자가 카드를 클릭한다"
+    then: "카드 상세 모달이 열린다"
+    examples:
+      - input: { action: "clickCard", cardTitle: "회의록 작성" }
+        expect:
+          modalVisible: true
+          modalTitle: "회의록 작성"
+
+  - id: "KANBAN-023"
+    name: "카드 상세 모달 — 제목 편집"
+    given: "카드 상세 모달이 열린 상태"
+    when: "사용자가 모달에서 제목을 '주간 회의록 작성'으로 수정한다"
+    then: "카드 제목이 '주간 회의록 작성'으로 변경된다"
+    examples:
+      - input: { currentTitle: "회의록 작성", newTitle: "주간 회의록 작성" }
+        expect:
+          modalTitle: "주간 회의록 작성"
+
+  - id: "KANBAN-024"
+    name: "카드 상세 모달 — 설명 편집"
+    given: "카드 상세 모달이 열린 상태"
+    when: "사용자가 설명에 '회의 안건 정리'를 입력하고 저장한다"
+    then: "카드 설명이 '회의 안건 정리'로 저장된다"
+    examples:
+      - input: { description: "회의 안건 정리" }
+        expect:
+          description: "회의 안건 정리"
+
+  - id: "KANBAN-025"
+    name: "서브태스크 삭제"
+    given: "카드에 서브태스크 '자료 준비'가 1개 있는 상태"
+    when: "사용자가 서브태스크의 삭제 버튼을 클릭한다"
+    then: "해당 서브태스크가 체크리스트에서 사라진다"
+    examples:
+      - input: { subtask: "자료 준비", action: "delete" }
+        expect:
+          subtaskCount: 0
+
+  - id: "KANBAN-026"
+    name: "카드 드래그&드롭 — 같은 칼럼 내 순서 변경"
+    given: "Todo 칼럼에 '카드A', '카드B', '카드C'가 순서대로 있는 상태"
+    when: "사용자가 '카드C'를 '카드A' 위로 드래그한다"
+    then: "Todo 칼럼의 카드 순서가 '카드C', '카드A', '카드B'로 변경된다"
+    examples:
+      - input: { column: "Todo", dragCard: "카드C", targetPosition: 0 }
+        expect:
+          todoCardOrder: ["카드C", "카드A", "카드B"]
+
+  - id: "KANBAN-027"
+    name: "제목 검색 — 검색어 초기화"
+    given: "검색창에 '작성'이 입력되어 2개 카드만 표시된 상태"
+    when: "사용자가 검색창의 텍스트를 모두 지운다"
+    then: "모든 카드가 다시 표시된다"
+    examples:
+      - input: { searchQuery: "" }
+        expect:
+          visibleCardCount: 3
+
+  - id: "KANBAN-028"
+    name: "필터 해제"
+    given: "High 우선순위 필터가 적용되어 1개 카드만 표시된 상태"
+    when: "사용자가 필터를 해제한다"
+    then: "모든 카드가 다시 표시된다"
+    examples:
+      - input: { priorityFilter: "none" }
+        expect:
+          visibleCardCount: 3
+
+  - id: "KANBAN-029"
+    name: "다크모드 — 시스템 설정 초기값 적용"
+    given: "localStorage에 테마 설정이 없고 시스템이 다크 모드인 상태"
+    when: "사용자가 앱을 처음 연다"
+    then: "다크 테마가 적용된 상태로 표시된다"
+    examples:
+      - input: { systemTheme: "dark", localStorageTheme: "none" }
+        expect:
+          theme: "dark"
