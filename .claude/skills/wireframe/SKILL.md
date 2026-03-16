@@ -68,13 +68,25 @@ N개 화면으로 구성합니다:
 
    `references/style-guide.md`의 **반응형 규칙** 섹션을 적용한다. Step 2에서 식별한 반응형 전환 지점 각각에 대응하는 반응형 패턴을 적용한다.
 
-4. 브라우저에서 파일을 연다
+4. 피드백 서버를 백그라운드로 실행한다:
+   ```
+   Bash(run_in_background): bun run .claude/skills/wireframe/assets/feedback-server.ts <feature>
+   ```
 
-5. `AskUserQuestion`으로 피드백을 수집한다
-6. 피드백이 있으면 수정 후 재생성하고 다시 브라우저에서 연다
+5. 브라우저에서 연다:
+   ```
+   open http://localhost:3456
+   ```
+
+6. 실시간 피드백 루프 (유저가 터미널에 입력할 때까지 자동 반복):
+   a. `curl -s http://localhost:3456/api/next-feedback` (블로킹 대기)
+   b. 피드백 JSON 수신 → selector + comment 기반으로 wireframe.html 수정
+   c. `curl -s -X POST http://localhost:3456/api/reload` → 브라우저 자동 리로드
+   d. 6a로 돌아감
+   * 유저가 터미널에 새 메시지를 입력하면 blocking curl이 중단되며 루프 종료
 
 ## Step 4: 완료
 
-산출물: `artifacts/<feature>/wireframe.html`
+산출물: `artifacts/<feature>/wireframe.html` + `artifacts/<feature>/feedback.json`
 
 다음 단계 안내: "구현을 시작하려면 plan mode로 전환하세요."
