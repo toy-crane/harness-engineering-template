@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe: Kanban Board</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style>
+  :root {
+    --w-bg: #f5f5f5;
+    --w-border: #ccc;
+    --w-text: #555;
+    --w-muted: #aaa;
+    --w-fill: #eee;
+  }
+
+  * {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    color: var(--w-text);
+  }
+
+  body { background: var(--w-bg); }
+
+  /* Screen nav */
+  nav { position: sticky; top: 0; z-index: 40; background: var(--w-bg); border-bottom: 1px solid var(--w-border); }
+  nav button { cursor: pointer; font-size: 13px; }
+  nav button:hover { background: var(--w-fill); border-radius: 4px; }
+  nav button.active { font-weight: bold; border-bottom: 2px solid var(--w-text); }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Viewport toggle */
+  .vp-toggle button {
+    font-size: 12px; padding: 2px 8px;
+    border: 1px solid var(--w-border); cursor: pointer; background: white;
+  }
+  .vp-toggle button:first-child { border-radius: 4px 0 0 4px; }
+  .vp-toggle button:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+  .vp-toggle button.active { background: var(--w-text); color: white; }
+
+  /* Mobile viewport frame */
+  body.viewport-mobile .screen-content {
+    max-width: 375px !important;
+    margin: 24px auto !important;
+    border: 2px solid var(--w-border);
+    border-radius: 24px;
+    min-height: 667px;
+    background: white;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 32px 16px !important;
+  }
+
+  /* Screen notes — AI annotation area */
+  .screen-notes {
+    background: #fffde7;
+    border-left: 3px solid #ffd54f;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    border-radius: 0 4px 4px 0;
+  }
+  .screen-notes summary {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    color: #b0a050;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .screen-notes p { margin: 6px 0 2px; color: #777; }
+  .screen-notes ul { margin: 4px 0 0 16px; padding: 0; color: #777; }
+  .screen-notes li { margin: 2px 0; }
+</style>
+</head>
+<body class="p-0 m-0 viewport-desktop">
+
+<nav class="flex items-center gap-4 px-6 py-2">
+  <span class="text-xs" style="color:var(--w-muted)">wireframe</span>
+  <button id="nav-0" onclick="show(0)" class="px-2 py-1">기본 화면</button>
+  <button id="nav-1" onclick="show(1)" class="px-2 py-1">카드 생성</button>
+  <button id="nav-2" onclick="show(2)" class="px-2 py-1">카드 상세 모달</button>
+  <button id="nav-3" onclick="show(3)" class="px-2 py-1">삭제 확인</button>
+  <button id="nav-4" onclick="show(4)" class="px-2 py-1">검색 & 필터</button>
+  <button id="nav-5" onclick="show(5)" class="px-2 py-1">다크모드 & 내보내기</button>
+  <div class="vp-toggle flex ml-auto">
+    <button id="vp-desktop" onclick="setViewport('desktop')" class="active">Desktop</button>
+    <button id="vp-mobile" onclick="setViewport('mobile')">Mobile</button>
+  </div>
+</nav>
+
+<!-- Screen 0: 기본 화면 -->
+<div id="screen-0" class="screen">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      기본 화면
+    </h2>
+
+    <!-- App Header -->
+    <div class="flex items-center justify-between mb-5">
+      <h1 class="text-base font-bold">Kanban Board</h1>
+      <div class="flex items-center gap-2">
+        <!-- Dark mode toggle -->
+        <div class="border rounded-full" style="width:32px;height:16px;background:var(--w-fill);border-color:var(--w-border);position:relative;">
+          <div style="width:12px;height:12px;border-radius:50%;background:white;border:1px solid var(--w-border);position:absolute;top:1px;left:2px;"></div>
+        </div>
+        <span class="text-xs" style="color:var(--w-muted)">🌙</span>
+        <!-- Export / Import -->
+        <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>내보내기</button>
+        <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>가져오기</button>
+      </div>
+    </div>
+
+    <!-- Search & Filter bar -->
+    <div class="flex @md:flex-row flex-col gap-3 mb-5">
+      <div class="flex-1 flex items-center border rounded px-3 py-1.5 gap-2" style="border-color:var(--w-border); background:var(--w-fill);">
+        <span class="text-sm">🔍</span>
+        <input class="w-full text-sm border-0 outline-none" style="background:transparent; color:var(--w-muted)" placeholder="카드 검색..." disabled>
+      </div>
+      <div class="border rounded px-3 py-1.5 text-sm flex items-center justify-between shrink-0 @md:w-32" style="border-color:var(--w-border); background:var(--w-fill)">
+        <span style="color:var(--w-muted)">우선순위</span>
+        <span style="color:var(--w-muted)">▾</span>
+      </div>
+      <div class="border rounded px-3 py-1.5 text-sm flex items-center justify-between shrink-0 @md:w-28" style="border-color:var(--w-border); background:var(--w-fill)">
+        <span style="color:var(--w-muted)">태그</span>
+        <span style="color:var(--w-muted)">▾</span>
+      </div>
+    </div>
+
+    <!-- Kanban Columns -->
+    <div class="grid @md:grid-cols-3 grid-cols-1 gap-4">
+
+      <!-- Todo Column -->
+      <div class="border rounded-lg overflow-hidden" style="border-color:var(--w-border); background:white;">
+        <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid var(--w-border);">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold">Todo</span>
+            <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">3</span>
+          </div>
+          <button class="border rounded p-1.5 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>＋</button>
+        </div>
+        <div class="p-3 flex flex-col gap-3">
+          <!-- Card 1 -->
+          <div class="border rounded-lg p-3" style="border-color:var(--w-border); background:white;">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-bold">회의록 작성</span>
+              <button class="text-xs" style="color:var(--w-muted)" disabled>🗑</button>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">High</span>
+              <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">긴급</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs" style="color:var(--w-muted)">
+              <span>✓ 1/2</span>
+            </div>
+          </div>
+          <!-- Card 2 -->
+          <div class="border rounded-lg p-3" style="border-color:var(--w-border); background:white;">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-bold">보고서 작성</span>
+              <button class="text-xs" style="color:var(--w-muted)" disabled>🗑</button>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">Medium</span>
+            </div>
+          </div>
+          <!-- Card 3 -->
+          <div class="border rounded-lg p-3" style="border-color:var(--w-border); background:white;">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-bold">점심 주문</span>
+              <button class="text-xs" style="color:var(--w-muted)" disabled>🗑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- In Progress Column -->
+      <div class="border rounded-lg overflow-hidden" style="border-color:var(--w-border); background:white;">
+        <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid var(--w-border);">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold">In Progress</span>
+            <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">2</span>
+          </div>
+          <button class="border rounded p-1.5 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>＋</button>
+        </div>
+        <div class="p-3 flex flex-col gap-3">
+          <!-- Card 4 -->
+          <div class="border rounded-lg p-3" style="border-color:var(--w-border); background:white;">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-bold">API 연동 개발</span>
+              <button class="text-xs" style="color:var(--w-muted)" disabled>🗑</button>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">High</span>
+              <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">백엔드</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs" style="color:var(--w-muted)">
+              <span>✓ 2/3</span>
+            </div>
+          </div>
+          <!-- Card 5 -->
+          <div class="border rounded-lg p-3" style="border-color:var(--w-border); background:white;">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-bold">디자인 리뷰</span>
+              <button class="text-xs" style="color:var(--w-muted)" disabled>🗑</button>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">Low</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Done Column -->
+      <div class="border rounded-lg overflow-hidden" style="border-color:var(--w-border); background:white;">
+        <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid var(--w-border);">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold">Done</span>
+            <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">1</span>
+          </div>
+          <button class="border rounded p-1.5 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>＋</button>
+        </div>
+        <div class="p-3 flex flex-col gap-3">
+          <!-- Card 6 -->
+          <div class="border rounded-lg p-3" style="border-color:var(--w-border); background:white;">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-bold" style="color:var(--w-muted)">환경 설정</span>
+              <button class="text-xs" style="color:var(--w-muted)" disabled>🗑</button>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">Medium</span>
+              <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">설정</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs" style="color:var(--w-muted)">
+              <span>✓ 3/3</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="screen-notes mt-6">
+      <details open>
+        <summary>Notes</summary>
+        <p>대표 데이터가 채워진 칸반 보드 기본 상태. 상호작용 없음.</p>
+        <ul>
+          <li>헤더: 앱 제목, 다크모드 토글, 내보내기/가져오기 버튼</li>
+          <li>검색바 + 우선순위/태그 필터 드롭다운</li>
+          <li>3칼럼(Todo, In Progress, Done) 가로 나열, 모바일에서 세로 스택</li>
+          <li>카드: 제목, 우선순위 배지, 태그 배지, 서브태스크 진행률, 삭제 버튼</li>
+          <li>각 칼럼 헤더에 카드 수 배지 + 추가(＋) 버튼</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- Screen 1: 카드 생성 -->
+<div id="screen-1" class="screen">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      카드 생성
+    </h2>
+
+    <!-- App Header (동일) -->
+    <div class="flex items-center justify-between mb-5">
+      <h1 class="text-base font-bold">Kanban Board</h1>
+      <div class="flex items-center gap-2">
+        <div class="border rounded-full" style="width:32px;height:16px;background:var(--w-fill);border-color:var(--w-border);position:relative;">
+          <div style="width:12px;height:12px;border-radius:50%;background:white;border:1px solid var(--w-border);position:absolute;top:1px;left:2px;"></div>
+        </div>
+        <span class="text-xs" style="color:var(--w-muted)">🌙</span>
+        <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>내보내기</button>
+        <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>가져오기</button>
+      </div>
+    </div>
+
+    <!-- Search & Filter bar -->
+    <div class="flex @md:flex-row flex-col gap-3 mb-5">
+      <div class="flex-1 flex items-center border rounded px-3 py-1.5 gap-2" style="border-color:var(--w-border); background:var(--w-fill);">
+        <span class="text-sm">🔍</span>
+        <input class="w-full text-sm border-0 outline-none" style="background:transparent; color:var(--w-muted)" placeholder="카드 검색..." disabled>
+      </div>
+      <div class="border rounded px-3 py-1.5 text-sm flex items-center justify-between shrink-0 @md:w-32" style="border-color:var(--w-border); background:var(--w-fill)">
+        <span style="color:var(--w-muted)">우선순위</span>
+        <span style="color:var(--w-muted)">▾</span>
+      </div>
+      <div class="border rounded px-3 py-1.5 text-sm flex items-center justify-between shrink-0 @md:w-28" style="border-color:var(--w-border); background:var(--w-fill)">
+        <span style="color:var(--w-muted)">태그</span>
+        <span style="color:var(--w-muted)">▾</span>
+      </div>
+    </div>
+
+    <!-- Kanban Columns — Todo에 입력 필드 활성 상태 -->
+    <div class="grid @md:grid-cols-3 grid-cols-1 gap-4">
+
+      <!-- Todo Column — 입력 중 -->
+      <div class="border rounded-lg overflow-hidden" style="border-color:var(--w-border); background:white;">
+        <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid var(--w-border);">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold">Todo</span>
+            <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">1</span>
+          </div>
+          <button class="border rounded p-1.5 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>＋</button>
+        </div>
+        <div class="p-3 flex flex-col gap-3">
+          <!-- 기존 카드 -->
+          <div class="border rounded-lg p-3" style="border-color:var(--w-border); background:white;">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-bold">회의록 작성</span>
+              <button class="text-xs" style="color:var(--w-muted)" disabled>🗑</button>
+            </div>
+          </div>
+          <!-- 새 카드 입력 필드 (KANBAN-002) -->
+          <div class="border-2 rounded-lg p-3" style="border-color:var(--w-text); background:white;">
+            <input class="w-full text-sm border rounded px-2 py-1.5 mb-2" style="border-color:var(--w-border); background:var(--w-fill)" value="회의록 작성" disabled>
+            <div class="flex justify-end gap-2">
+              <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>취소</button>
+              <button class="border rounded px-3 py-1 text-sm font-bold" style="border-color:var(--w-text); background:var(--w-fill)" disabled>추가</button>
+            </div>
+          </div>
+          <!-- 에러 상태 (KANBAN-003) -->
+          <div class="border-2 rounded-lg p-3" style="border-color:var(--w-text); background:white;">
+            <input class="w-full text-sm border rounded px-2 py-1.5 mb-1" style="border-color:var(--w-text); background:var(--w-fill); color:var(--w-muted)" placeholder="제목을 입력하세요..." disabled>
+            <p class="text-xs mb-2" style="color:var(--w-text)">⚠ 제목을 입력해주세요</p>
+            <div class="flex justify-end gap-2">
+              <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>취소</button>
+              <button class="border rounded px-3 py-1 text-sm font-bold" style="border-color:var(--w-text); background:var(--w-fill)" disabled>추가</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- In Progress Column -->
+      <div class="border rounded-lg overflow-hidden" style="border-color:var(--w-border); background:white;">
+        <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid var(--w-border);">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold">In Progress</span>
+            <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">1</span>
+          </div>
+          <button class="border rounded p-1.5 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>＋</button>
+        </div>
+        <div class="p-3 flex flex-col gap-3">
+          <div class="border rounded-lg p-3" style="border-color:var(--w-border); background:white;">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-bold">API 연동 개발</span>
+              <button class="text-xs" style="color:var(--w-muted)" disabled>🗑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Done Column -->
+      <div class="border rounded-lg overflow-hidden" style="border-color:var(--w-border); background:white;">
+        <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid var(--w-border);">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold">Done</span>
+            <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">0</span>
+          </div>
+          <button class="border rounded p-1.5 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>＋</button>
+        </div>
+        <div class="p-3">
+          <div class="border-2 border-dashed rounded flex flex-col items-center justify-center p-8 gap-2" style="border-color:var(--w-border); color:var(--w-muted)">
+            <span class="text-2xl">📋</span>
+            <p class="text-sm">카드가 없습니다</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="screen-notes mt-6">
+      <details open>
+        <summary>Notes</summary>
+        <p>카드 추가 버튼(＋) 클릭 후 입력 필드가 칼럼 하단에 나타나는 상태.</p>
+        <ul>
+          <li>KANBAN-002: 제목 입력 후 "추가" → 칼럼에 새 카드 생성</li>
+          <li>KANBAN-003: 빈 제목으로 "추가" → "제목을 입력해주세요" 에러 메시지 표시</li>
+          <li>"취소" 클릭 → 입력 필드 닫힘, 카드 생성 안 됨</li>
+          <li>Done 칼럼: 빈 상태(empty state) 표시</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- Screen 2: 카드 상세 모달 -->
+<div id="screen-2" class="screen">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      카드 상세 모달
+    </h2>
+
+    <!-- Modal overlay -->
+    <div class="rounded-lg" style="position:relative; min-height:500px; background:rgba(0,0,0,0.1); display:flex; align-items:center; justify-content:center;">
+      <div class="border rounded-lg w-full" style="border-color:var(--w-border); background:white; max-width:520px;">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-5 py-3" style="border-bottom:1px solid var(--w-border);">
+          <span class="text-sm font-bold">카드 상세</span>
+          <span style="cursor:pointer; color:var(--w-muted)">✕</span>
+        </div>
+        <!-- Body -->
+        <div class="p-5 flex flex-col gap-4">
+
+          <!-- 제목 (KANBAN-022, 023) -->
+          <div>
+            <label class="text-xs" style="color:var(--w-muted)">제목</label>
+            <input class="w-full border rounded px-3 py-1.5 text-sm mt-1" style="border-color:var(--w-border); background:var(--w-fill)" value="주간 회의록 작성" disabled>
+          </div>
+
+          <!-- 설명 (KANBAN-024) -->
+          <div>
+            <label class="text-xs" style="color:var(--w-muted)">설명</label>
+            <textarea class="w-full border rounded px-3 py-2 text-sm mt-1" rows="2" style="border-color:var(--w-border); background:var(--w-fill); resize:none;" disabled>회의 안건 정리</textarea>
+          </div>
+
+          <!-- 우선순위 (KANBAN-005) -->
+          <div>
+            <label class="text-xs" style="color:var(--w-muted)">우선순위</label>
+            <div class="flex gap-2 mt-1">
+              <button class="border rounded px-3 py-1 text-sm font-bold" style="border-color:var(--w-text); background:var(--w-fill)" disabled>High</button>
+              <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>Medium</button>
+              <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>Low</button>
+            </div>
+          </div>
+
+          <!-- 태그 (KANBAN-006) -->
+          <div>
+            <label class="text-xs" style="color:var(--w-muted)">태그</label>
+            <div class="flex items-center gap-2 mt-1 flex-wrap">
+              <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">긴급 ✕</span>
+              <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">백엔드 ✕</span>
+              <div class="flex items-center gap-1">
+                <input class="border rounded px-2 py-0.5 text-xs w-20" style="border-color:var(--w-border); background:var(--w-fill); color:var(--w-muted)" placeholder="태그 추가..." disabled>
+                <button class="border rounded px-2 py-0.5 text-xs" style="border-color:var(--w-border); background:var(--w-fill)" disabled>+</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 서브태스크 (KANBAN-009, 010) -->
+          <div>
+            <div class="flex items-center justify-between">
+              <label class="text-xs" style="color:var(--w-muted)">서브태스크</label>
+              <span class="text-xs" style="color:var(--w-muted)">1/2</span>
+            </div>
+            <!-- Progress bar -->
+            <div class="rounded-full overflow-hidden mt-1 mb-2" style="height:4px; background:var(--w-fill)">
+              <div class="rounded-full" style="height:100%; width:50%; background:var(--w-border)"></div>
+            </div>
+            <div class="flex flex-col gap-1">
+              <div class="flex items-center gap-2">
+                <input type="checkbox" checked disabled>
+                <span class="text-sm line-through" style="color:var(--w-muted)">자료 준비</span>
+                <button class="text-xs ml-auto" style="color:var(--w-muted)" disabled>🗑</button>
+              </div>
+              <div class="flex items-center gap-2">
+                <input type="checkbox" disabled>
+                <span class="text-sm">발표 자료 검토</span>
+                <button class="text-xs ml-auto" style="color:var(--w-muted)" disabled>🗑</button>
+              </div>
+              <div class="flex items-center gap-1 mt-1">
+                <input class="border rounded px-2 py-0.5 text-xs flex-1" style="border-color:var(--w-border); background:var(--w-fill); color:var(--w-muted)" placeholder="서브태스크 추가..." disabled>
+                <button class="border rounded px-2 py-0.5 text-xs" style="border-color:var(--w-border); background:var(--w-fill)" disabled>+</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- Footer -->
+        <div class="flex justify-end gap-2 px-5 py-3" style="border-top:1px solid var(--w-border);">
+          <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>닫기</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-notes mt-6">
+      <details open>
+        <summary>Notes</summary>
+        <p>카드 클릭 시 열리는 상세 편집 모달. 모든 필드를 한 곳에서 편집.</p>
+        <ul>
+          <li>KANBAN-022: 카드 클릭 → 모달 열림, 현재 데이터 표시</li>
+          <li>KANBAN-023: 모달 내 제목 수정 → 즉시 반영</li>
+          <li>KANBAN-024: 설명 textarea 편집 → 저장</li>
+          <li>KANBAN-005: 우선순위 High/Medium/Low 버튼 그룹, 선택 상태 bold 표시</li>
+          <li>KANBAN-006: 태그 배지 + ✕ 제거 + 입력 추가</li>
+          <li>KANBAN-009: 서브태스크 추가 입력</li>
+          <li>KANBAN-010: 체크 시 진행률 업데이트 (1/2), 프로그레스 바</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- Screen 3: 삭제 확인 -->
+<div id="screen-3" class="screen">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      삭제 확인
+    </h2>
+
+    <!-- App Header -->
+    <div class="flex items-center justify-between mb-5">
+      <h1 class="text-base font-bold">Kanban Board</h1>
+      <div class="flex items-center gap-2">
+        <div class="border rounded-full" style="width:32px;height:16px;background:var(--w-fill);border-color:var(--w-border);position:relative;">
+          <div style="width:12px;height:12px;border-radius:50%;background:white;border:1px solid var(--w-border);position:absolute;top:1px;left:2px;"></div>
+        </div>
+        <span class="text-xs" style="color:var(--w-muted)">🌙</span>
+        <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>내보내기</button>
+        <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>가져오기</button>
+      </div>
+    </div>
+
+    <!-- Delete dialog overlay on top of board -->
+    <div class="rounded-lg" style="position:relative; min-height:400px; background:rgba(0,0,0,0.1); display:flex; align-items:center; justify-content:center;">
+
+      <!-- Background: faded board columns -->
+      <div class="absolute inset-0 p-4 grid @md:grid-cols-3 grid-cols-1 gap-4" style="opacity:0.3; pointer-events:none;">
+        <div class="border rounded-lg" style="border-color:var(--w-border); background:white;">
+          <div class="px-4 py-3" style="border-bottom:1px solid var(--w-border);">
+            <span class="text-sm font-bold">Todo</span>
+          </div>
+          <div class="p-3">
+            <div class="border rounded-lg p-3" style="border-color:var(--w-border);">
+              <span class="text-sm">회의록 작성</span>
+            </div>
+          </div>
+        </div>
+        <div class="border rounded-lg" style="border-color:var(--w-border); background:white;">
+          <div class="px-4 py-3" style="border-bottom:1px solid var(--w-border);">
+            <span class="text-sm font-bold">In Progress</span>
+          </div>
+        </div>
+        <div class="border rounded-lg" style="border-color:var(--w-border); background:white;">
+          <div class="px-4 py-3" style="border-bottom:1px solid var(--w-border);">
+            <span class="text-sm font-bold">Done</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confirm dialog -->
+      <div class="border rounded-lg" style="border-color:var(--w-border); background:white; max-width:360px; width:100%; z-index:10;">
+        <div class="flex items-center justify-between px-5 py-3" style="border-bottom:1px solid var(--w-border);">
+          <span class="text-sm font-bold">카드 삭제</span>
+          <span style="cursor:pointer; color:var(--w-muted)">✕</span>
+        </div>
+        <div class="p-5">
+          <p class="text-sm">삭제하시겠습니까?</p>
+          <p class="text-xs mt-1" style="color:var(--w-muted)">이 작업은 되돌릴 수 없습니다.</p>
+        </div>
+        <div class="flex justify-end gap-2 px-5 py-3" style="border-top:1px solid var(--w-border);">
+          <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>취소</button>
+          <button class="border rounded px-3 py-1 text-sm font-bold" style="border-color:var(--w-text); background:var(--w-fill)" disabled>삭제</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="screen-notes mt-6">
+      <details open>
+        <summary>Notes</summary>
+        <p>카드 삭제 버튼(🗑) 클릭 시 확인 다이얼로그가 보드 위에 오버레이.</p>
+        <ul>
+          <li>KANBAN-007: "삭제" 클릭 → 카드 제거, 다이얼로그 닫힘</li>
+          <li>KANBAN-008: "취소" 클릭 → 카드 유지, 다이얼로그 닫힘</li>
+          <li>배경 보드는 dimmed 처리 (opacity 30%)</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- Screen 4: 검색 & 필터 -->
+<div id="screen-4" class="screen">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      검색 & 필터
+    </h2>
+
+    <!-- App Header -->
+    <div class="flex items-center justify-between mb-5">
+      <h1 class="text-base font-bold">Kanban Board</h1>
+      <div class="flex items-center gap-2">
+        <div class="border rounded-full" style="width:32px;height:16px;background:var(--w-fill);border-color:var(--w-border);position:relative;">
+          <div style="width:12px;height:12px;border-radius:50%;background:white;border:1px solid var(--w-border);position:absolute;top:1px;left:2px;"></div>
+        </div>
+        <span class="text-xs" style="color:var(--w-muted)">🌙</span>
+        <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>내보내기</button>
+        <button class="border rounded px-3 py-1 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>가져오기</button>
+      </div>
+    </div>
+
+    <!-- Search active + priority filter applied -->
+    <div class="flex @md:flex-row flex-col gap-3 mb-5">
+      <div class="flex-1 flex items-center border rounded px-3 py-1.5 gap-2" style="border-color:var(--w-text); background:var(--w-fill);">
+        <span class="text-sm">🔍</span>
+        <input class="w-full text-sm border-0 outline-none" style="background:transparent;" value="작성" disabled>
+        <span style="color:var(--w-muted); cursor:pointer;">✕</span>
+      </div>
+      <div class="border rounded px-3 py-1.5 text-sm flex items-center justify-between shrink-0 @md:w-32" style="border-color:var(--w-text); background:var(--w-fill)">
+        <span class="font-bold">High</span>
+        <span style="color:var(--w-muted)">▾</span>
+      </div>
+      <div class="border rounded px-3 py-1.5 text-sm flex items-center justify-between shrink-0 @md:w-28" style="border-color:var(--w-border); background:var(--w-fill)">
+        <span style="color:var(--w-muted)">태그</span>
+        <span style="color:var(--w-muted)">▾</span>
+      </div>
+    </div>
+
+    <!-- Filtered result: 검색 "작성" + 필터 High → 1개 매칭 -->
+    <div class="grid @md:grid-cols-3 grid-cols-1 gap-4">
+
+      <!-- Todo — 매칭 카드 1개 -->
+      <div class="border rounded-lg overflow-hidden" style="border-color:var(--w-border); background:white;">
+        <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid var(--w-border);">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold">Todo</span>
+            <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">1</span>
+          </div>
+          <button class="border rounded p-1.5 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>＋</button>
+        </div>
+        <div class="p-3 flex flex-col gap-3">
+          <div class="border rounded-lg p-3" style="border-color:var(--w-border); background:white;">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-bold">회의록 <span style="border-bottom:2px solid var(--w-text)">작성</span></span>
+              <button class="text-xs" style="color:var(--w-muted)" disabled>🗑</button>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">High</span>
+              <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">긴급</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- In Progress — 비어있음 -->
+      <div class="border rounded-lg overflow-hidden" style="border-color:var(--w-border); background:white;">
+        <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid var(--w-border);">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold">In Progress</span>
+            <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">0</span>
+          </div>
+          <button class="border rounded p-1.5 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>＋</button>
+        </div>
+        <div class="p-3">
+          <div class="border-2 border-dashed rounded flex flex-col items-center justify-center p-6 gap-1" style="border-color:var(--w-border); color:var(--w-muted)">
+            <p class="text-xs">매칭 카드 없음</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Done — 비어있음 -->
+      <div class="border rounded-lg overflow-hidden" style="border-color:var(--w-border); background:white;">
+        <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid var(--w-border);">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold">Done</span>
+            <span class="border rounded-full px-2 text-xs" style="border-color:var(--w-border); background:var(--w-fill)">0</span>
+          </div>
+          <button class="border rounded p-1.5 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>＋</button>
+        </div>
+        <div class="p-3">
+          <div class="border-2 border-dashed rounded flex flex-col items-center justify-center p-6 gap-1" style="border-color:var(--w-border); color:var(--w-muted)">
+            <p class="text-xs">매칭 카드 없음</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="screen-notes mt-6">
+      <details open>
+        <summary>Notes</summary>
+        <p>검색어 "작성" 입력 + 우선순위 "High" 필터 적용 상태. 조건에 맞는 카드만 표시.</p>
+        <ul>
+          <li>KANBAN-013: "작성" 검색 → 제목에 포함된 카드만 표시, 매칭 부분 하이라이트</li>
+          <li>KANBAN-015: High 필터 → High 우선순위 카드만 표시</li>
+          <li>KANBAN-014: 매칭 없는 칼럼은 "매칭 카드 없음" empty state</li>
+          <li>KANBAN-027: 검색창 ✕ 버튼 → 검색어 초기화, 전체 카드 표시</li>
+          <li>KANBAN-028: 필터 해제 → 전체 카드 다시 표시</li>
+          <li>활성 검색: 검색창 border 강조, 필터 적용: 드롭다운 border 강조 + bold 텍스트</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- Screen 5: 다크모드 & 내보내기/가져오기 -->
+<div id="screen-5" class="screen">
+  <div class="screen-content @container max-w-6xl mx-auto p-6" style="background:#1a1a2e; border-radius:8px;">
+
+    <h2 class="text-lg font-bold mb-5" style="color:#666; border-bottom:1px solid #333; padding-bottom:8px;">
+      다크모드 & 내보내기
+    </h2>
+
+    <!-- App Header — Dark -->
+    <div class="flex items-center justify-between mb-5">
+      <h1 class="text-base font-bold" style="color:#e0e0e0;">Kanban Board</h1>
+      <div class="flex items-center gap-2">
+        <!-- Dark mode toggle ON -->
+        <div class="border rounded-full" style="width:32px;height:16px;background:#555;border-color:#555;position:relative;">
+          <div style="width:12px;height:12px;border-radius:50%;background:white;border:1px solid #555;position:absolute;top:1px;right:2px;"></div>
+        </div>
+        <span class="text-xs" style="color:#888;">🌙</span>
+        <button class="border rounded px-3 py-1 text-sm" style="border-color:#444; background:#2a2a3e; color:#ccc;" disabled>내보내기</button>
+        <button class="border rounded px-3 py-1 text-sm" style="border-color:#444; background:#2a2a3e; color:#ccc;" disabled>가져오기</button>
+      </div>
+    </div>
+
+    <!-- Search & Filter — Dark -->
+    <div class="flex @md:flex-row flex-col gap-3 mb-5">
+      <div class="flex-1 flex items-center border rounded px-3 py-1.5 gap-2" style="border-color:#444; background:#2a2a3e;">
+        <span class="text-sm">🔍</span>
+        <input class="w-full text-sm border-0 outline-none" style="background:transparent; color:#888" placeholder="카드 검색..." disabled>
+      </div>
+      <div class="border rounded px-3 py-1.5 text-sm flex items-center justify-between shrink-0 @md:w-32" style="border-color:#444; background:#2a2a3e">
+        <span style="color:#888">우선순위</span>
+        <span style="color:#888">▾</span>
+      </div>
+      <div class="border rounded px-3 py-1.5 text-sm flex items-center justify-between shrink-0 @md:w-28" style="border-color:#444; background:#2a2a3e">
+        <span style="color:#888">태그</span>
+        <span style="color:#888">▾</span>
+      </div>
+    </div>
+
+    <!-- Columns — Dark -->
+    <div class="grid @md:grid-cols-3 grid-cols-1 gap-4">
+
+      <!-- Todo -->
+      <div class="border rounded-lg overflow-hidden" style="border-color:#333; background:#16213e;">
+        <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid #333;">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold" style="color:#e0e0e0;">Todo</span>
+            <span class="border rounded-full px-2 text-xs" style="border-color:#444; background:#2a2a3e; color:#aaa;">2</span>
+          </div>
+          <button class="border rounded p-1.5 text-sm" style="border-color:#444; background:#2a2a3e; color:#aaa;" disabled>＋</button>
+        </div>
+        <div class="p-3 flex flex-col gap-3">
+          <div class="border rounded-lg p-3" style="border-color:#333; background:#1a1a2e;">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-bold" style="color:#e0e0e0;">회의록 작성</span>
+              <button class="text-xs" style="color:#666" disabled>🗑</button>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="border rounded-full px-2 text-xs" style="border-color:#444; background:#2a2a3e; color:#aaa;">High</span>
+              <span class="border rounded-full px-2 text-xs" style="border-color:#444; background:#2a2a3e; color:#aaa;">긴급</span>
+            </div>
+          </div>
+          <div class="border rounded-lg p-3" style="border-color:#333; background:#1a1a2e;">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-bold" style="color:#e0e0e0;">보고서 작성</span>
+              <button class="text-xs" style="color:#666" disabled>🗑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- In Progress -->
+      <div class="border rounded-lg overflow-hidden" style="border-color:#333; background:#16213e;">
+        <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid #333;">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold" style="color:#e0e0e0;">In Progress</span>
+            <span class="border rounded-full px-2 text-xs" style="border-color:#444; background:#2a2a3e; color:#aaa;">1</span>
+          </div>
+          <button class="border rounded p-1.5 text-sm" style="border-color:#444; background:#2a2a3e; color:#aaa;" disabled>＋</button>
+        </div>
+        <div class="p-3 flex flex-col gap-3">
+          <div class="border rounded-lg p-3" style="border-color:#333; background:#1a1a2e;">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-bold" style="color:#e0e0e0;">API 연동 개발</span>
+              <button class="text-xs" style="color:#666" disabled>🗑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Done -->
+      <div class="border rounded-lg overflow-hidden" style="border-color:#333; background:#16213e;">
+        <div class="px-4 py-3 flex items-center justify-between" style="border-bottom:1px solid #333;">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-bold" style="color:#e0e0e0;">Done</span>
+            <span class="border rounded-full px-2 text-xs" style="border-color:#444; background:#2a2a3e; color:#aaa;">1</span>
+          </div>
+          <button class="border rounded p-1.5 text-sm" style="border-color:#444; background:#2a2a3e; color:#aaa;" disabled>＋</button>
+        </div>
+        <div class="p-3 flex flex-col gap-3">
+          <div class="border rounded-lg p-3" style="border-color:#333; background:#1a1a2e;">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-bold" style="color:#666;">환경 설정</span>
+              <button class="text-xs" style="color:#666" disabled>🗑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 내보내기/가져오기 상태 예시 -->
+    <div class="mt-5">
+      <!-- 실제 위치: 화면 하단 우측 고정 -->
+      <div class="border rounded-lg px-4 py-3 text-sm" style="border-color:#444; background:#2a2a3e; box-shadow:0 2px 8px rgba(0,0,0,0.2); max-width:360px;">
+        <div class="flex items-center justify-between">
+          <span style="color:#ccc;">✓ kanban-data.json 내보내기 완료</span>
+          <span style="color:#666;">✕</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 가져오기 에러 토스트 -->
+    <div class="mt-3">
+      <div class="border rounded-lg px-4 py-3 text-sm" style="border-color:#444; background:#2a2a3e; box-shadow:0 2px 8px rgba(0,0,0,0.2); max-width:360px;">
+        <div class="flex items-center justify-between">
+          <span style="color:#ccc;">⚠ 올바른 형식이 아닙니다</span>
+          <span style="color:#666;">✕</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-notes mt-6">
+      <details open>
+        <summary>Notes</summary>
+        <p>다크 테마 적용 상태 + 내보내기/가져오기 피드백 토스트.</p>
+        <ul>
+          <li>KANBAN-017: 다크모드 토글 ON → 전체 UI 다크 팔레트 전환</li>
+          <li>KANBAN-029: 시스템 다크 모드 → 초기 진입 시 다크 테마 적용</li>
+          <li>KANBAN-019: "내보내기" 클릭 → JSON 다운로드 + 성공 토스트</li>
+          <li>KANBAN-020: 유효 JSON 가져오기 → 보드 데이터 교체</li>
+          <li>KANBAN-021: 잘못된 형식 → "올바른 형식이 아닙니다" 에러 토스트</li>
+          <li>다크 색상: 배경 #1a1a2e, 카드 #16213e, 보더 #333, 텍스트 #e0e0e0</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var currentScreen = 0;
+var screenIds = [];
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('screen-' + id).classList.add('active');
+  document.querySelectorAll('nav button[id^="nav-"]').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('nav-' + id).classList.add('active');
+  currentScreen = screenIds.indexOf(id);
+}
+
+function setViewport(mode) {
+  document.body.classList.remove('viewport-mobile', 'viewport-desktop');
+  document.body.classList.add('viewport-' + mode);
+  document.querySelectorAll('.vp-toggle button').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('vp-' + mode).classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('nav button[id^="nav-"]').forEach(function(b) {
+    screenIds.push(parseInt(b.id.replace('nav-', '')));
+  });
+  var first = document.querySelector('nav button[id^="nav-"]');
+  if (first) first.click();
+});
+
+// ← → 키보드로 화면 전환
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' && currentScreen < screenIds.length - 1) {
+    show(screenIds[currentScreen + 1]);
+  } else if (e.key === 'ArrowLeft' && currentScreen > 0) {
+    show(screenIds[currentScreen - 1]);
+  }
+});
+</script>
+<script>
+// Wireframe feedback overlay
+(function() {
+  var root = document.createElement('div');
+  root.id = 'wf-feedback-root';
+  document.body.appendChild(root);
+  var shadow = root.attachShadow({ mode: 'open' });
+
+  shadow.innerHTML = '<style>' +
+    ':host { all: initial; }' +
+    '.wf-toggle { position: fixed; bottom: 20px; right: 20px; z-index: 99999; ' +
+      'width: 44px; height: 44px; border-radius: 12px; border: 1px solid hsl(214.3 31.8% 91.4%); ' +
+      'background: hsl(0 0% 100%); cursor: pointer; display: flex; align-items: center; ' +
+      'justify-content: center; font-family: sans-serif; color: hsl(215.4 16.3% 46.9%); ' +
+      'box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06); ' +
+      'transition: all 0.15s ease; }' +
+    '.wf-toggle:hover { background: hsl(210 40% 96.1%); color: hsl(222.2 47.4% 11.2%); }' +
+    '.wf-toggle.active { background: hsl(222.2 47.4% 11.2%); color: hsl(210 40% 98%); ' +
+      'border-color: hsl(222.2 47.4% 11.2%); }' +
+    '.wf-toggle.active svg { stroke: hsl(210 40% 98%); }' +
+    '.wf-highlight { position: absolute; background: rgba(59,130,246,0.15); ' +
+      'border: 2px solid rgba(59,130,246,0.5); pointer-events: none; z-index: 99990; ' +
+      'border-radius: 2px; transition: all 0.1s; }' +
+    '.wf-toast { position: fixed; bottom: 72px; right: 20px; z-index: 99999; ' +
+      'background: hsl(222.2 47.4% 11.2%); color: #fff; font-family: sans-serif; ' +
+      'font-size: 13px; padding: 8px 16px; border-radius: 8px; ' +
+      'box-shadow: 0 4px 12px rgba(0,0,0,0.15); opacity: 0; ' +
+      'transition: opacity 0.2s ease; pointer-events: none; max-width: 320px; ' +
+      'word-break: break-all; }' +
+    '.wf-toast.visible { opacity: 1; }' +
+  '</style>' +
+  '<div class="wf-toggle" id="wf-toggle-btn" title="Feedback mode">' +
+    '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M12 20h9"/><path d="M16.376 3.622a1 1 0 0 1 3.002 3.002L7.368 18.635a2 2 0 0 1-.855.506l-2.872.838a.5.5 0 0 1-.62-.62l.838-2.872a2 2 0 0 1 .506-.855z"/>' +
+    '</svg>' +
+  '</div>' +
+  '<div class="wf-highlight" id="wf-highlight" style="display:none"></div>' +
+  '<div class="wf-toast" id="wf-toast"></div>';
+
+  var toggleBtn = shadow.getElementById('wf-toggle-btn');
+  var highlightEl = shadow.getElementById('wf-highlight');
+  var toastEl = shadow.getElementById('wf-toast');
+  var feedbackMode = false;
+  var toastTimer;
+
+  function showToast(text) {
+    toastEl.textContent = text;
+    toastEl.classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(function() {
+      toastEl.classList.remove('visible');
+    }, 2000);
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() {
+        showToast('Copied: ' + text);
+      }, function() {
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast('Copied: ' + text);
+    } catch (_) {
+      showToast('Copy failed');
+    }
+    document.body.removeChild(ta);
+  }
+
+  toggleBtn.addEventListener('click', function() {
+    feedbackMode = !feedbackMode;
+    toggleBtn.classList.toggle('active', feedbackMode);
+    if (!feedbackMode) {
+      highlightEl.style.display = 'none';
+    }
+  });
+
+  function buildSelector(el) {
+    var parts = [];
+    var cur = el;
+    while (cur && cur !== document.body && cur !== document.documentElement) {
+      if (cur.id) {
+        parts.unshift('#' + cur.id);
+        break;
+      }
+      var tag = cur.tagName;
+      var parent = cur.parentElement;
+      if (parent) {
+        var siblings = Array.from(parent.children);
+        var idx = siblings.indexOf(cur) + 1;
+        parts.unshift(tag + ':nth-child(' + idx + ')');
+      } else {
+        parts.unshift(tag);
+      }
+      cur = parent;
+    }
+    return parts.join(' > ');
+  }
+
+  function getScreenId() {
+    var active = document.querySelector('.screen.active');
+    return active ? active.id.replace('screen-', '') : 'unknown';
+  }
+
+  document.addEventListener('mousemove', function(e) {
+    if (!feedbackMode) return;
+    var target = e.target;
+    if (!target || target.closest('#wf-feedback-root') || target.closest('nav')) {
+      highlightEl.style.display = 'none';
+      return;
+    }
+    var screen = target.closest('.screen.active');
+    if (!screen) { highlightEl.style.display = 'none'; return; }
+    var rect = target.getBoundingClientRect();
+    highlightEl.style.display = 'block';
+    highlightEl.style.top = (rect.top + window.scrollY) + 'px';
+    highlightEl.style.left = (rect.left + window.scrollX) + 'px';
+    highlightEl.style.width = rect.width + 'px';
+    highlightEl.style.height = rect.height + 'px';
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!feedbackMode) return;
+    var target = e.target;
+    if (!target || target.closest('#wf-feedback-root')) return;
+    if (target.closest('nav')) return;
+    var screen = target.closest('.screen.active');
+    if (!screen) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var selector = buildSelector(target);
+    var path = '[screen-' + getScreenId() + ' > ' + selector + ']';
+    copyToClipboard(path);
+  }, true);
+
+})();
+</script>
+</body>
+</html>
