@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import type { Card } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useKanbanStore } from "@/lib/store";
 import DeleteCardDialog from "./delete-card-dialog";
 
@@ -19,6 +19,19 @@ interface KanbanCardProps {
 export default function KanbanCard({ card, isEditing, onClickTitle, onClickCard, onEditComplete }: KanbanCardProps) {
   const updateCard = useKanbanStore((s) => s.updateCard);
   const [editValue, setEditValue] = useState(card.title);
+  const [isDragging, setIsDragging] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    return draggable({
+      element: el,
+      getInitialData: () => ({ cardId: card.id, columnId: card.columnId }),
+      onDragStart: () => setIsDragging(true),
+      onDrop: () => setIsDragging(false),
+    });
+  }, [card.id, card.columnId]);
 
   function handleSaveTitle() {
     const trimmed = editValue.trim();
@@ -30,8 +43,9 @@ export default function KanbanCard({ card, isEditing, onClickTitle, onClickCard,
 
   return (
     <div
+      ref={ref}
       data-testid={`card-${card.id}`}
-      className="cursor-pointer rounded-md border bg-card p-3 shadow-sm"
+      className={`cursor-pointer rounded-md border bg-card p-3 shadow-sm ${isDragging ? "opacity-50" : ""}`}
       onClick={() => onClickCard(card.id)}
     >
       <div className="flex flex-col gap-1">
