@@ -13,32 +13,16 @@ allowed-tools:
 
 # Wireframe: Spec → HTML 와이어프레임
 
-spec 문서로부터 HTML 와이어프레임을 생성한다. Tailwind CDN + CSS 변수로 최소 회색 톤 스타일 적용. 데스크톱/모바일 뷰포트 전환을 지원한다.
+UI 컴포넌트 추출과 사용자 흐름을 시각적으로 검증하기 위한 low-fidelity 와이어프레임을 생성한다.
 
-### 와이어프레임의 목적
+## 전제 조건
 
-이 와이어프레임은 plan mode에서 UI 컴포넌트를 추출하고, 사용자 흐름을 시각적으로 검증하기 위한 산출물이다.
-
-- 검증 대상: 정보 계층, 사용자 행동 흐름, 화면 간 전환 경로
-- 검증 대상이 아닌 것: 픽셀 정밀도, 색상 디자인, 애니메이션
-
-## Step 1: 전제 조건
-
-$ARGUMENTS에서 feature명 추출 후:
 1. `artifacts/<feature>/spec.md` 존재 확인. 없으면 "먼저 `/spec <feature>`를 실행하세요." 출력 후 종료.
 2. `artifacts/spec.yaml`에서 해당 feature의 시나리오를 확인한다.
 
-## Step 2: 시나리오 → 화면 그룹핑
+## 화면 그룹핑
 
-spec.md의 `### N.` 시나리오를 파싱하고, **시각적으로 구분되는 화면 상태**로 그룹핑한다.
-
-- 하나의 화면 = 하나의 시각적으로 구분되는 UI 상태
-- 모달/다이얼로그/시트가 열린 상태 → 별도 화면으로 분리 (기저 화면 + 오버레이)
-- 모바일에서 레이아웃이 크게 달라지는 경우 → 별도 모바일 화면 추가 검토
-
-각 화면에 대해 모바일에서 레이아웃이 달라지는 영역(반응형 전환 지점)을 식별한다.
-
-화면 목록, 시나리오 매핑, 반응형 전환 지점을 사용자에게 출력한 뒤, 바로 Step 3으로 진행한다.
+spec.md의 시나리오를 **시각적으로 구분되는 화면 상태**로 그룹핑하고 사용자에게 출력한 뒤, 바로 와이어프레임 생성으로 진행한다.
 
 **출력 형식:**
 ```
@@ -51,46 +35,30 @@ N개 화면으로 구성합니다:
    ↳ 반응형: 변환 없음
 ```
 
-## Step 3: 전체 와이어프레임 생성
+## 와이어프레임 생성
 
-1. `assets/template.html`을 읽어서 HTML 보일러플레이트를 확보한다
-2. `references/style-guide.md`를 읽어서 컴포넌트 패턴과 색상 규칙을 확인한다
-3. **모든 화면을 한 번에 생성**하여 `artifacts/<feature>/wireframe.html`에 작성한다. template.html의 삽입 패턴 주석을 따라 `<!-- NAV_BUTTONS -->`와 `<!-- SCREEN_CONTENT -->` 위치에 각 화면을 삽입한다.
+- 입력: `assets/template.html`, `references/style-guide.md`
+- 출력: `artifacts/<feature>/wireframe.html`
 
-   ### 작성 규칙
+### 고유 규칙
 
-   - Screen Notes에 자연어로 기술한다: 화면 목적, 주요 인터랙션, 상태 전환, 제약 사항
-     - 관련 시나리오 ID(예: KANBAN-001)를 명시적으로 참조한다
-     - 용도: plan mode 구현 계획의 입력
-   - spec.md에서 구체적인 예시 데이터를 사용
+- Screen Notes에 관련 시나리오 ID(예: KANBAN-001)를 명시적으로 참조한다
+- spec.md에서 구체적인 예시 데이터를 사용한다
 
-   ### 반응형 레이아웃 규칙
+### 피드백 루프
 
-   `references/style-guide.md`의 **반응형 규칙** 섹션을 적용한다. Step 2에서 식별한 반응형 전환 지점 각각에 대응하는 반응형 패턴을 적용한다.
-
-4. 피드백 서버를 백그라운드로 실행한다:
+1. 피드백 서버를 백그라운드로 실행한다:
    ```
    Bash(run_in_background): bun run .claude/skills/wireframe/assets/feedback-server.ts <feature>
    ```
+2. 브라우저에서 연다: `open http://localhost:3456`
+3. 실시간 피드백 루프 (유저가 터미널에 입력할 때까지 자동 반복):
+   - `curl -s http://localhost:3456/api/next-feedback`로 블로킹 대기
+   - 피드백 수신 → wireframe.html 수정
+   - spec 변경이 필요하면 사용자 승인 후 `spec.md`와 `spec.yaml`을 함께 반영 (spec-schema.yaml 형식)
+   - `curl -s -X POST http://localhost:3456/api/reload`로 브라우저 리로드
+   - 위 과정 반복 (유저가 터미널에 입력하면 루프 종료)
 
-5. 브라우저에서 연다:
-   ```
-   open http://localhost:3456
-   ```
-
-6. 실시간 피드백 루프 (유저가 터미널에 입력할 때까지 자동 반복):
-   a. `curl -s http://localhost:3456/api/next-feedback` (블로킹 대기)
-   b. 피드백 JSON 수신 → wireframe.html 수정
-   c. 피드백이 spec.yaml에 새 시나리오 추가가 필요하다고 판단되면:
-      - 추가할 시나리오를 사용자에게 보여주고 `AskUserQuestion`으로 승인 요청
-      - 승인 시 `artifacts/spec.yaml`에 append (기존 시나리오 수정/삭제 금지)
-      - spec-schema.yaml 형식 준수
-   d. `curl -s -X POST http://localhost:3456/api/reload` → 브라우저 자동 리로드
-   e. 6a로 돌아감
-   * 유저가 터미널에 새 메시지를 입력하면 blocking curl이 중단되며 루프 종료
-
-## Step 4: 완료
-
-산출물: `artifacts/<feature>/wireframe.html` + `artifacts/<feature>/feedback.json`
+## 완료
 
 다음 단계 안내: "구현을 시작하려면 plan mode로 전환하세요."
