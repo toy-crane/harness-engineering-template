@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, within, cleanup, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import KanbanPage from "../page";
@@ -71,7 +71,8 @@ describe("KANBAN-002: 카드 인라인 편집", () => {
     await user.selectOptions(prioritySelect, "상");
     await user.click(document.body);
 
-    expect(screen.getByText("상")).toBeInTheDocument();
+    const todoColumn = screen.getByTestId("column-todo");
+    expect(within(todoColumn).getByText("상")).toBeInTheDocument();
   });
 
   it("제목을 빈 값으로 변경 시도 → '제목을 입력해주세요' 에러", async () => {
@@ -130,7 +131,7 @@ describe("KANBAN-004: 칼럼 간 드래그&드롭", () => {
   });
 
   it("To Do → In Progress 이동", () => {
-    renderKanban();
+    const { unmount } = renderKanban();
 
     useKanbanStore.getState().moveCard(
       useKanbanStore.getState().columns.todo[0],
@@ -138,6 +139,7 @@ describe("KANBAN-004: 칼럼 간 드래그&드롭", () => {
       "in-progress"
     );
 
+    unmount();
     renderKanban();
 
     const inProgressColumn = screen.getByTestId("column-in-progress");
@@ -153,11 +155,12 @@ describe("KANBAN-005: 칼럼 내 카드 순서 변경", () => {
   });
 
   it("카드B를 카드A 위로 이동 → [카드B, 카드A] 순서", () => {
-    renderKanban();
+    const { unmount } = renderKanban();
 
     const cards = useKanbanStore.getState().columns.todo;
     useKanbanStore.getState().reorderCard("todo", cards[1], 0);
 
+    unmount();
     renderKanban();
 
     const todoColumn = screen.getByTestId("column-todo");
@@ -182,7 +185,8 @@ describe("KANBAN-006: 태그 생성 및 자동완성", () => {
     const tagInput = screen.getByPlaceholderText("태그 입력");
     await user.type(tagInput, "버그{enter}");
 
-    expect(screen.getByText("버그")).toBeInTheDocument();
+    const todoColumn = screen.getByTestId("column-todo");
+    expect(within(todoColumn).getByText("버그")).toBeInTheDocument();
   });
 
   it("'버' 입력 시 기존 태그 '버그' 자동완성 표시", async () => {
@@ -199,7 +203,7 @@ describe("KANBAN-006: 태그 생성 및 자동완성", () => {
     const tagInput = screen.getByPlaceholderText("태그 입력");
     await user.type(tagInput, "버");
 
-    expect(screen.getByText("버그")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "버그" })).toBeInTheDocument();
   });
 });
 
@@ -337,6 +341,7 @@ describe("KANBAN-011: 다크모드 토글", () => {
 
   it("다크모드 → 라이트모드 전환", async () => {
     document.documentElement.classList.add("dark");
+    localStorage.setItem("kanban-theme", "dark");
     const user = userEvent.setup();
     renderKanban();
 
@@ -453,11 +458,11 @@ describe("KANBAN-015: JSON 가져오기 (전체 교체)", () => {
     const confirmButton = screen.getByRole("button", { name: "확인" });
     await user.click(confirmButton);
 
-    const fileInput = screen.getByTestId("import-file-input");
+    const fileInput = screen.getByTestId("import-file-input") as HTMLInputElement;
     const file = new File(["invalid content"], "invalid.txt", {
       type: "text/plain",
     });
-    await user.upload(fileInput, file);
+    fireEvent.change(fileInput, { target: { files: [file] } });
 
     expect(screen.getByText("올바른 형식의 파일이 아닙니다")).toBeInTheDocument();
   });

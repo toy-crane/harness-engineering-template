@@ -48,26 +48,35 @@ export default function KanbanPage() {
     setImportDialogOpen(false);
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    try {
-      const text = await file.text();
-      const data = JSON.parse(text);
-      if (!data.cards || !data.columns) {
-        throw new Error("invalid format");
-      }
-      importData(data);
-      setImportError("");
-    } catch {
+    if (!file.name.endsWith(".json") && file.type !== "application/json") {
       setImportError("올바른 형식의 파일이 아닙니다");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      setImportReady(false);
+      return;
     }
 
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-    setImportReady(false);
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const text = ev.target?.result as string;
+        const data = JSON.parse(text);
+        if (!data.cards || !data.columns) {
+          throw new Error("invalid format");
+        }
+        importData(data);
+        setImportError("");
+      } catch {
+        setImportError("올바른 형식의 파일이 아닙니다");
+      }
+
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      setImportReady(false);
+    };
+    reader.readAsText(file);
   };
 
   return (
