@@ -30,10 +30,26 @@ function getFirstCardId(): string {
   return Object.keys(useKanbanStore.getState().cards)[0];
 }
 
+// Default matchMedia mock (light mode)
+function mockMatchMedia(darkMode = false) {
+  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+    matches: darkMode && query === "(prefers-color-scheme: dark)",
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }));
+}
+
 describe("Kanban Board Spec Tests", () => {
   beforeEach(() => {
     localStorage.clear();
     useKanbanStore.getState().reset();
+    document.documentElement.classList.remove("dark");
+    mockMatchMedia(false);
   });
 
   // ─── KANBAN-001: 칸반 보드 초기 표시 ───
@@ -567,17 +583,7 @@ describe("Kanban Board Spec Tests", () => {
   // ─── KANBAN-029: 다크모드 — 시스템 설정 초기값 적용 ───
   describe("KANBAN-029: 다크모드 — 시스템 설정 초기값 적용", () => {
     it("시스템이 다크모드이고 localStorage 없으면 다크 테마 적용", () => {
-      // Mock matchMedia for dark mode
-      window.matchMedia = vi.fn().mockImplementation((query: string) => ({
-        matches: query === "(prefers-color-scheme: dark)",
-        media: query,
-        onchange: null,
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      }));
+      mockMatchMedia(true);
 
       renderBoard();
 
