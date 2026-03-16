@@ -46,3 +46,6 @@ next-env.d.ts
 
 # worktree
 .claude/worktrees
+
+# agent
+.agents/
