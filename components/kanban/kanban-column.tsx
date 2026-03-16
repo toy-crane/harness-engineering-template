@@ -9,9 +9,11 @@ interface KanbanColumnProps {
   cards: Card[];
   onClickCardTitle: (cardId: string) => void;
   onClickCard: (cardId: string) => void;
+  editingCardId: string | null;
+  onEditComplete: () => void;
 }
 
-export default function KanbanColumn({ column, cards, onClickCardTitle, onClickCard }: KanbanColumnProps) {
+export default function KanbanColumn({ column, cards, onClickCardTitle, onClickCard, editingCardId, onEditComplete }: KanbanColumnProps) {
   return (
     <div
       data-testid={`column-${column.title}`}
@@ -26,8 +28,10 @@ export default function KanbanColumn({ column, cards, onClickCardTitle, onClickC
           <KanbanCard
             key={card.id}
             card={card}
+            isEditing={editingCardId === card.id}
             onClickTitle={onClickCardTitle}
             onClickCard={onClickCard}
+            onEditComplete={onEditComplete}
           />
         ))}
       </div>
