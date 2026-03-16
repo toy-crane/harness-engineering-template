@@ -25,6 +25,14 @@ $ARGUMENTS에서 feature명을 추출한다.
 
 프로젝트에 `components.json`이 있으면 이 단계를 실행한다.
 
+### 3-1: wireframe 컴포넌트 분석
+
+wireframe의 각 화면에서 사용된 컴포넌트 패턴을 식별한다:
+- 각 화면의 HTML 요소를 분석하여 사용된 컴포넌트 타입을 목록화한다 (예: Select, Switch, Progress Bar, Dropdown Menu 등)
+- 식별된 컴포넌트를 각 task의 구현 대상에 구체적 타입으로 명시한다 (예: "필터 UI" → "Select 드롭다운으로 필터 UI 구현")
+
+### 3-2: shadcn 레지스트리 탐색
+
 wireframe의 UI 요소에 대해 shadcn 레지스트리(공식+커뮤니티)에서 후보를 탐색한다.
 
 커뮤니티 레지스트리:

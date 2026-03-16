@@ -200,7 +200,7 @@
 아이콘 버튼:
 
 ```html
-<button class="border rounded p-1.5 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>🗑</button>
+<button class="border rounded p-1.5 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button>
 ```
 
 ### Input
@@ -229,7 +229,7 @@
 
 ```html
 <div class="flex items-center border rounded px-3 py-1.5 gap-2" style="border-color:var(--w-border); background:var(--w-fill);">
-  <span class="text-sm">🔍</span>
+  <i data-lucide="search" style="width:16px;height:16px;flex-shrink:0;"></i>
   <input class="w-full text-sm border-0 outline-none" style="background:transparent; color:var(--w-muted)" placeholder="Search..." disabled>
 </div>
 ```
@@ -331,7 +331,7 @@ On 상태:
 
 ```html
 <div class="border-2 border-dashed rounded-lg p-6 flex flex-col items-center gap-2" style="border-color:var(--w-border);">
-  <span class="text-2xl" style="color:var(--w-muted)">↑</span>
+  <i data-lucide="upload" style="width:32px;height:32px;color:var(--w-muted);"></i>
   <p class="text-sm" style="color:var(--w-muted)">Drop files here or click to upload</p>
   <p class="text-xs" style="color:var(--w-muted)">PNG, JPG up to 10MB</p>
 </div>
@@ -481,7 +481,7 @@ On 상태:
 
 ```html
 <div class="border rounded-lg px-4 py-3 flex items-start gap-2 text-sm" style="border-color:var(--w-border); background:var(--w-fill);">
-  <span>⚠</span>
+  <i data-lucide="alert-triangle" style="width:16px;height:16px;flex-shrink:0;"></i>
   <div>
     <p class="font-bold">Alert Title</p>
     <p class="text-xs mt-0.5" style="color:var(--w-muted)">Alert description message.</p>
@@ -509,7 +509,7 @@ On 상태:
 
 ```html
 <div class="flex items-center justify-center gap-2">
-  <span style="color:var(--w-muted)">⟳</span>
+  <i data-lucide="loader" style="width:16px;height:16px;color:var(--w-muted);"></i>
   <span class="text-sm" style="color:var(--w-muted)">Loading...</span>
 </div>
 ```
@@ -518,7 +518,7 @@ On 상태:
 
 ```html
 <div class="border-2 border-dashed rounded flex flex-col items-center justify-center p-8 gap-2" style="border-color:var(--w-border); color:var(--w-muted)">
-  <span class="text-2xl">📋</span>
+  <i data-lucide="clipboard-list" style="width:32px;height:32px;"></i>
   <p class="text-sm">No items yet</p>
   <button class="border rounded px-3 py-1 text-xs mt-1" style="border-color:var(--w-border); background:var(--w-fill)" disabled>Add first item</button>
 </div>
@@ -634,4 +634,33 @@ AI가 작성하는 화면 설명. 화면의 목적, 주요 인터랙션, 상태 
 
 ## 아이콘
 
-유니코드 문자와 이모지를 직접 사용한다. 외부 아이콘 라이브러리는 사용하지 않는다.
+Lucide 아이콘을 `data-lucide` 속성으로 사용한다. 이모지나 유니코드 문자를 아이콘으로 사용하지 않는다.
+
+```html
+<!-- 인라인 아이콘 -->
+<i data-lucide="search" style="width:16px;height:16px;"></i>
+
+<!-- 아이콘 버튼 -->
+<button class="border rounded p-1.5 text-sm" style="border-color:var(--w-border); background:var(--w-fill)" disabled>
+  <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+</button>
+```
+
+자주 쓰는 아이콘 매핑:
+| 용도 | data-lucide 값 |
+|------|----------------|
+| 검색 | `search` |
+| 삭제 | `trash-2` |
+| 닫기 | `x` |
+| 추가 | `plus` |
+| 편집 | `pencil` |
+| 설정 | `settings` |
+| 경고 | `alert-triangle` |
+| 성공 | `check` |
+| 로딩 | `loader` |
+| 업로드 | `upload` |
+| 체크(완료) | `check` |
+| 화살표(좌) | `chevron-left` |
+| 화살표(우) | `chevron-right` |
+| 드롭다운 | `chevron-down` |
+| 빈 상태 | `clipboard-list` |
