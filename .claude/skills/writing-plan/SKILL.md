@@ -26,6 +26,24 @@ $ARGUMENTS에서 feature명을 추출한다.
 - 한 번에 질문 하나. `AskUserQuestion`을 사용하고 2-4개 선택지를 제시한다
 - 사용자가 중지 신호를 보내거나 더 이상 새로운 발견이 없으면 다음 단계로 이동한다
 
+## Step 2.5: UI 컴포넌트 탐색 (선택)
+
+프로젝트에 `components.json`이 있으면 이 단계를 실행한다.
+
+wireframe의 UI 요소 각각에 대해:
+
+1. `bunx shadcn@latest info --json`으로 설치된 컴포넌트 확인
+2. `bunx shadcn@latest search -q "<키워드>"`로 공식 레지스트리 탐색
+3. 기능에 맞는 커뮤니티 레지스트리 탐색:
+   - 애니메이션/모션: `@magicui`, `@aceternity`, `@animate-ui`, `@motion-primitives`
+   - 마케팅/랜딩: `@tailark`
+   - 리치 텍스트 에디터: `@plate`
+   - AI 앱: `@ai-elements`
+4. 후보가 있으면 `bunx shadcn@latest docs <component>`로 사용법 확인
+
+후보를 사용자에게 제시하고 선택을 받는다. `AskUserQuestion`을 사용한다.
+커스텀 컴포넌트는 레지스트리에 대안이 없을 때만 만든다.
+
 ## Step 3: 계획 문서 생성
 
 `references/plan-template.md`를 읽고 그 형식에 맞춰 작성한다.
@@ -35,6 +53,7 @@ $ARGUMENTS에서 feature명을 추출한다.
 - 빈칸 채우기 결과를 Architecture Decisions에 기록한다
 - wireframe의 UI 요소를 프로젝트 컴포넌트 시스템에 매핑하고, 부족한 컴포넌트를 식별한다
 - 구현에 필요한 스킬을 Required Skills에 기록한다
+- Required Skills에 나열된 스킬의 규칙 파일을 읽고, 각 task의 구현 대상에 적극적으로 반영한다
 - 각 task는 대응하는 spec.yaml 시나리오 ID를 명시한다
 - 각 task는 구현 대상(What)과 수용 기준을 포함한다. 절차(How)는 쓰지 않는다
 - spec 테스트(*.spec.test.tsx) 생성을 첫 번째 task로 배치한다. 선행 작업이 필요하면 사유와 함께 앞에 배치한다
