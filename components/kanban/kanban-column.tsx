@@ -1,13 +1,17 @@
 "use client";
 
 import type { Column, Card } from "@/lib/types";
+import KanbanCard from "./kanban-card";
+import AddCardForm from "./add-card-form";
 
 interface KanbanColumnProps {
   column: Column;
   cards: Card[];
+  onClickCardTitle: (cardId: string) => void;
+  onClickCard: (cardId: string) => void;
 }
 
-export default function KanbanColumn({ column, cards }: KanbanColumnProps) {
+export default function KanbanColumn({ column, cards, onClickCardTitle, onClickCard }: KanbanColumnProps) {
   return (
     <div
       data-testid={`column-${column.title}`}
@@ -19,11 +23,15 @@ export default function KanbanColumn({ column, cards }: KanbanColumnProps) {
       </div>
       <div className="flex flex-col gap-2">
         {cards.map((card) => (
-          <div key={card.id} data-testid={`card-${card.id}`} className="rounded-md border bg-card p-3 shadow-sm">
-            <span className="text-sm">{card.title}</span>
-          </div>
+          <KanbanCard
+            key={card.id}
+            card={card}
+            onClickTitle={onClickCardTitle}
+            onClickCard={onClickCard}
+          />
         ))}
       </div>
+      <AddCardForm columnTitle={column.title} />
     </div>
   );
 }
