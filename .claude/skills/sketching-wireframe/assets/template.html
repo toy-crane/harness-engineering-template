@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wireframe: {{FEATURE_NAME}}</title>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
   :root {
     --w-bg: #f5f5f5;
@@ -145,6 +146,8 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   var first = document.querySelector('nav button[id^="nav-"]');
   if (first) first.click();
+  // Lucide 아이콘 렌더링
+  if (typeof lucide !== 'undefined') { lucide.createIcons(); }
 });
 
 // ← → 키보드로 화면 전환
