@@ -53,14 +53,14 @@ spec.md의 시나리오를 `references/spec-schema.yaml` 형식에 맞춰 `artif
 ### 추출 규칙
 
 - ID 형식: `{FEATURE}-{NNN}` (기존 번호와 충돌하지 않게 이어서 부여)
-- examples 작성: `references/examples-guide.md` 기준을 따른다
+- examples 작성: `references/scenario-guide.md` 기준을 따른다
 - 기존 spec.yaml이 있으면 scenarios에 append한다. 없으면 `version: 1`로 새로 생성한다
 
 ### 검증 체크리스트 (저장 전)
 
 - [ ] input이 구체적 값인가 (변수나 플레이스홀더가 아닌 실제 값)
 - [ ] expect가 화면에서 단언 가능한 값인가 (내부 상태/함수 호출 아님)
-- [ ] given/when/then이 사용자 관점인가 (구현 용어 아님)
+- [ ] given/when/then이 `references/scenario-guide.md` 기준을 충족하는가
 - [ ] 동일한 의미의 중복 시나리오가 없는가
 - [ ] examples가 1개 이상인가
 
