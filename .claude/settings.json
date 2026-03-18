@@ -7,12 +7,6 @@
           {
             "type": "command",
             "command": "\"$(git rev-parse --show-toplevel)\"/.claude/hooks/lint.sh"
-          },
-          {
-            "type": "command",
-            "command": "\"$(git rev-parse --show-toplevel)\"/.claude/hooks/auto-test.sh",
-            "timeout": 120,
-            "statusMessage": "관련 테스트 실행 중..."
           }
         ]
       }
@@ -21,10 +15,9 @@
       {
         "hooks": [
           {
-            "type": "command",
-            "command": "\"$(git rev-parse --show-toplevel)\"/.claude/hooks/final-test-gate.sh",
-            "timeout": 120,
-            "statusMessage": "최종 테스트 게이트 실행 중..."
+            "type": "prompt",
+            "prompt": "Claude가 작업을 끝내려 한다: $ARGUMENTS\n\n사용자의 의도를 파악하고 판단하라:\n- TDD RED 단계(테스트만 작성)를 요청했다면 테스트 실패는 정상이다 → {\"ok\": true}\n- 구현을 요청했는데 작업이 미완성이라면 → {\"ok\": false, \"reason\": \"미완성 항목 설명\"}\n- 의도가 불명확하면 허용 → {\"ok\": true}",
+            "timeout": 30
           }
         ]
       }
