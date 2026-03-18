@@ -28,7 +28,7 @@ bun dev
 | `bun run build` | 프로덕션 빌드 |
 | `bun start` | 프로덕션 서버 실행 |
 | `bun run lint` | ESLint 실행 |
-| `bun test` | 테스트 실행 |
+| `bun run test` | 테스트 실행 |
 | `bun run test:watch` | 테스트 워치 모드 |
 
 ## Hooks
