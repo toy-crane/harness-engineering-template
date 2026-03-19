@@ -6,13 +6,24 @@
 - [레이아웃 규칙](#레이아웃-규칙)
 - [반응형 규칙](#반응형-규칙)
 - [컴포넌트 패턴](#컴포넌트-패턴)
-  - Layout: [Container](#container) · [Card](#card) · [Separator](#separator)
-  - Navigation: [Tabs](#tabs) · [Breadcrumb](#breadcrumb) · [Pagination](#pagination) · [Stepper](#stepper)
-  - Form: [Button](#button) · [Input](#input) · [Textarea](#textarea) · [Search Input](#search-input) · [Select](#select--dropdown-trigger) · [Dropdown Menu](#dropdown-menu-expanded) · [Checkbox](#checkbox) · [Radio Group](#radio-group) · [Toggle / Switch](#toggle--switch) · [Slider](#slider) · [File Upload](#file-upload) · [Label](#label)
-  - Data Display: [Table](#table) · [List Item](#list-item) · [Avatar](#avatar) · [Badge / Tag](#badge--tag) · [Accordion](#accordion) · [Skeleton](#skeleton) · [Tooltip](#tooltip)
-  - Feedback: [Alert](#alert) · [Toast](#toast) · [Spinner](#spinner) · [Empty State](#empty-state) · [Progress Bar](#progress-bar)
-  - Overlay: [Modal / Dialog](#modal--dialog) · [Drawer (Side)](#drawer-side) · [Bottom Sheet (Mobile)](#bottom-sheet-mobile)
-  - Wireframe: [Screen Header](#screen-header) · [Screen Notes](#screen-notes)
+  - **Layout**
+    - [Container](#container) / [Card](#card) / [Separator](#separator)
+  - **Navigation**
+    - [Tabs](#tabs) / [Breadcrumb](#breadcrumb) / [Pagination](#pagination) / [Stepper](#stepper)
+  - **Form**
+    - [Button](#button) / [Input](#input) / [Textarea](#textarea) / [Search Input](#search-input)
+    - [Select](#select--dropdown-trigger) / [Dropdown Menu](#dropdown-menu-expanded)
+    - [Checkbox](#checkbox) / [Radio Group](#radio-group) / [Toggle / Switch](#toggle--switch)
+    - [Slider](#slider) / [File Upload](#file-upload) / [Label](#label)
+  - **Data Display**
+    - [Table](#table) / [List Item](#list-item) / [Avatar](#avatar) / [Badge / Tag](#badge--tag)
+    - [Accordion](#accordion) / [Skeleton](#skeleton) / [Tooltip](#tooltip)
+  - **Feedback**
+    - [Alert](#alert) / [Toast](#toast) / [Spinner](#spinner) / [Empty State](#empty-state) / [Progress Bar](#progress-bar)
+  - **Overlay**
+    - [Modal / Dialog](#modal--dialog) / [Drawer (Side)](#drawer-side) / [Bottom Sheet (Mobile)](#bottom-sheet-mobile)
+  - **Wireframe**
+    - [Screen Header](#screen-header) / [Screen Notes](#screen-notes)
 - [아이콘](#아이콘)
 
 ---

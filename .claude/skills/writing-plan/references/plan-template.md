@@ -1,4 +1,4 @@
-# <Feature> 구현 계획
+# Feature 구현 계획
 
 ## Architecture Decisions
 

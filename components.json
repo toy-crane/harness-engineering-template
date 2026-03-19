@@ -21,5 +21,13 @@
   },
   "menuColor": "default",
   "menuAccent": "subtle",
-  "registries": {}
+  "registries": {
+    "@magicui": "https://magicui.design/r/{name}",
+    "@aceternity": "https://ui.aceternity.com/registry/{name}.json",
+    "@animate-ui": "https://animate-ui.com/r/{name}.json",
+    "@motion-primitives": "https://motion-primitives.com/c/{name}.json",
+    "@tailark": "https://tailark.com/r/{name}.json",
+    "@plate": "https://platejs.org/r/{name}.json",
+    "@ai-elements": "https://ai-sdk.dev/elements/api/registry/{name}.json"
+  }
 }
