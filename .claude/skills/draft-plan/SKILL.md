@@ -14,20 +14,28 @@ $ARGUMENTS에서 feature명을 추출한다.
 - `artifacts/<feature>/spec.md` -- 선택
 - `artifacts/<feature>/wireframe.html` -- 선택
 
-## Step 2: 스킬 탐색
+## Step 2: 코드베이스 탐색
+
+기존 코드를 탐색하여 아키텍처와 관련 패턴을 파악한다.
+
+- 프로젝트 구조, 기존 컴포넌트, 상태 관리 방식 확인
+- 이 feature가 영향을 줄 파일과 그 의존 관계 파악
+- 유사한 기존 기능이 있으면 그 구현을 참조한다
+
+## Step 3: 스킬 탐색
 
 `skill-researcher` 에이전트를 호출하여 이 feature의 시나리오에 도움이 될 스킬을 찾는다.
 
 추천 목록을 사용자에게 보여주고, 확인/조정을 받는다.
 
-## Step 3: 빈칸 채우기
+## Step 4: 빈칸 채우기
 
 위 입력을 읽고, 구현에 필요하지만 아직 결정되지 않은 사항을 찾는다.
 
-- 변경 비용이 큰 결정만 질문한다 (상태 관리 전략, 외부 라이브러리 선택, 데이터 모델 구조 등)
+- 변경 비용이 큰 결정만 질문한다
 - 한 번에 질문 하나, 2-4개 선택지 제시
 
-## Step 4: 계획 문서 생성
+## Step 5: 계획 문서 생성
 
 `references/plan-template.md`를 읽고 그 형식에 맞춰 작성한다.
 
@@ -38,10 +46,12 @@ $ARGUMENTS에서 feature명을 추출한다.
 - spec 테스트(*.spec.test.tsx) 생성을 가장 먼저 배치한다. 선행 작업이 필요하면 사유와 함께 앞에 둔다
 - 이후 task에서 구현하며 테스트를 통과시킨다
 - wireframe의 컴포넌트 타입을 task에 반영한다 (예: "필터 UI" 대신 "Select 드롭다운으로 필터 UI")
+- 의존성이 적은 것부터 task를 배치한다
+- Affected Files 섹션에 코드베이스 탐색 결과를 반영한다
 
 `artifacts/<feature>/plan.md`로 저장한다.
 
-## Step 5: 독립 검토
+## Step 6: 독립 검토
 
 `plan-reviewer` 에이전트를 호출하여 위 입력과 plan.md 사이의 불일치를 검증한다.
 
