@@ -7,7 +7,6 @@
 
 ### 불변 계약
 - `artifacts/spec.yaml`이 전체 앱의 단일 불변 계약이다
-- spec.yaml의 시나리오에서 spec 테스트(`*.spec.test.tsx`)를 파생한다
 - 구현이 spec.yaml과 맞지 않으면, 구현을 수정한다
 
 ### TDD
