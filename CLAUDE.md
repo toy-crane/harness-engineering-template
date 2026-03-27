@@ -30,6 +30,9 @@
 - 기능 단위로 커밋, 여러 기능을 섞지 않는다
 - Conventional Commits: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`
 
+### 질문 규칙
+- 다지선다 질문은 반드시 AskUserQuestion 도구를 사용한다
+
 ### 작업 규칙
 - 모든 작업에 수용 기준(Acceptance Criteria)을 포함한다:
   1. 구현 검증을 위한 구체적 테스트/명령을 정의한다
