@@ -21,7 +21,7 @@ $ARGUMENTS에서 feature명을 추출한다.
 
 ## Step 3: 빈칸 채우기
 
-spec.yaml, spec.md(있으면), wireframe.html(있으면)을 읽고, 구현에 필요하지만 아직 결정되지 않은 사항을 찾는다.
+spec.yaml, spec.md, wireframe.html을 읽고, 구현에 필요하지만 아직 결정되지 않은 사항을 찾는다.
 
 - 변경 비용이 큰 결정만 질문한다 (상태 관리 전략, 외부 라이브러리 선택, 데이터 모델 구조 등)
 - 한 번에 질문 하나, 2-4개 선택지 제시
