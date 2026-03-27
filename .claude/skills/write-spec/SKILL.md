@@ -62,7 +62,7 @@ spec.md의 시나리오를 spec.yaml에 추출한다. `references/scenario-guide
 - [ ] 동일한 의미의 중복 시나리오가 없는가
 - [ ] examples가 1개 이상인가
 
-## Step 5: 독립 검토
+## Step 5: 누락 점검
 
 spec.yaml 저장 후, `spec-reviewer` 에이전트를 호출하여 spec.md와 spec.yaml 사이의 누락 시나리오를 검증한다.
 
