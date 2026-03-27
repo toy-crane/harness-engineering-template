@@ -37,8 +37,9 @@ Claude Code hooks 기반 자동 품질 게이트 (`.claude/settings.json`)
 
 | 단계 | 트리거 | 동작 |
 |---|---|---|
-| **PostToolUse** | `Write\|Edit` | ESLint auto-fix + `auto-test.sh` — 관련 테스트 자동 실행 |
-| **Stop** | 작업 완료 시 | `final-test-gate.sh` — 전체 테스트 실행, 실패 시 중단 |
+| **PreToolUse** | `Bash` | `secret-guard.sh` — git commit/add 시 gitleaks로 시크릿 탐지 |
+| **PostToolUse** | `Write\|Edit` | `lint-fix.sh` — ESLint auto-fix |
+| **Stop** | 작업 완료 시 | `stop-test.sh` — 전체 테스트 실행, 실패 시 재시도 (최대 3회) |
 
 ## 테스트 파일 컨벤션
 
@@ -49,29 +50,28 @@ Claude Code hooks 기반 자동 품질 게이트 (`.claude/settings.json`)
 
 ## Claude Code 워크플로우
 
-이 프로젝트는 `/writing-spec` → `/sketching-wireframe` → `Plan Mode` → `Implementation` 순서로 개발합니다.
+이 프로젝트는 `/write-spec` → `/sketch-wireframe` → `/draft-plan` → `/execute-plan` 순서로 개발합니다.
 
 `artifacts/spec.yaml`이 전체 앱의 **단일 불변 계약**입니다. spec.yaml의 시나리오에서 spec 테스트를 파생하고, 구현이 spec.yaml과 맞지 않으면 구현을 수정합니다.
 
-### 1. Spec (`/writing-spec`)
+### 1. Spec (`/write-spec`)
 
-기능의 요구사항을 구조화합니다. [상황]/[동작] 형식의 시나리오, 성공 기준, 전제 조건을 정의하고 `artifacts/<feature>/spec.md`에 저장합니다. 승인 후 `artifacts/spec.yaml`에 구조화된 시나리오를 추출합니다.
+유저와 대화하며 기능의 스펙을 작성합니다. 사용자 흐름을 시뮬레이션하고 빈칸을 질문으로 채운 뒤, spec.md(논의 기록)와 spec.yaml(검증 가능한 요구사항)을 생성합니다.
 
-### 2. Wireframe (`/sketching-wireframe`)
+### 2. Wireframe (`/sketch-wireframe`)
 
-spec을 기반으로 HTML 와이어프레임을 생성합니다. Tailwind + 시스템 monospace로 레이아웃과 컴포넌트 구조를 브라우저에서 빠르게 검증하고 `artifacts/<feature>/wireframe.html`에 저장합니다.
+spec.yaml 기반 HTML 와이어프레임을 생성합니다. 레이아웃 검증이 목적이며, 피드백 루프를 돌리며 `artifacts/<feature>/wireframe.html`에 저장합니다.
 
-### 3. Plan Mode (`/writing-plan`)
+### 3. Plan (`/draft-plan`)
 
-spec.yaml과 wireframe을 참조하여 구현 계획을 수립합니다. spec.yaml 기반 spec 테스트(`*.spec.test.tsx`) 생성을 첫 번째 태스크로 배치하고, 각 태스크에 수용 기준을 포함합니다.
+spec.yaml과 wireframe을 참조하여 구현 계획을 수립합니다. skill-researcher로 관련 스킬을 찾고, plan-reviewer로 독립 검토합니다.
 
-### 4. Implementation
+### 4. Execute (`/execute-plan`)
 
-TDD로 구현합니다.
+plan.md의 Task를 TDD로 순차 실행합니다. 완료 후 QA Evaluator(spec 시나리오 검증)와 Design Evaluator(시각적 품질 채점)로 검증하고, Code Simplifier로 정리합니다.
 
-1. spec.yaml 기반 spec 테스트 생성 (`*.spec.test.tsx`) — 수용 기준 정의 (Red)
-2. 구현 테스트 작성 (`*.test.tsx`) — 단위 로직 검증 (Red)
-3. 최소 코드 구현 (Green)
-4. 리팩터링
+### 5. Improve (`/improve-harness`)
+
+실행 중 반복된 패턴을 감지하고 Skill/Hook/Rule 변경을 제안합니다.
 
 > spec 테스트(`*.spec.test.tsx`)는 생성 이후 수정 금지. 테스트가 실패하면 구현을 수정합니다.
