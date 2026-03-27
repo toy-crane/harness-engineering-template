@@ -48,10 +48,10 @@ N개 화면으로 구성합니다:
 
 출력: `artifacts/<feature>/wireframe.html`
 
-서버 실행 후 브라우저에서 연다: `Bash(run_in_background): bunx vite artifacts/<feature> --port=3456`
+서버 실행: `Bash(run_in_background): bunx vite artifacts/<feature> --port=3456`
 
 피드백 루프:
-- 사용자가 자연어로 피드백 → wireframe.html 수정
+- 브라우저에서 wireframe.html을 열고 사용자 피드백을 받는다 → wireframe.html 수정
 - **spec 변경이 필요하면 wireframe을 중단하고 `/write-spec`으로 돌아간다. wireframe에서 artifacts/spec.yaml을 직접 수정하지 않는다.**
 
 레이아웃이 확정되면 Step 4로 진행한다.
