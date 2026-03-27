@@ -11,7 +11,7 @@ argument-hint: "feature 이름"
 $ARGUMENTS에서 feature명을 추출한다.
 
 - `artifacts/<feature>/plan.md` -- 없으면 "먼저 `/draft-plan`을 실행하세요." 출력 후 종료
-- `spec.yaml` 읽기
+- `artifacts/spec.yaml` 읽기
 - `artifacts/<feature>/wireframe.html` -- 있으면 참조
 - plan.md의 Required Skills에 나열된 각 SKILL.md를 읽는다
 

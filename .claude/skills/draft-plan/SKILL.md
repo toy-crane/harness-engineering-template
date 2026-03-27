@@ -10,7 +10,7 @@ argument-hint: "feature 이름"
 
 $ARGUMENTS에서 feature명을 추출한다.
 
-- `spec.yaml` -- 없으면 "먼저 `/write-spec`을 실행하세요." 출력 후 종료
+- `artifacts/spec.yaml` -- 없으면 "먼저 `/write-spec`을 실행하세요." 출력 후 종료
 - `artifacts/<feature>/wireframe.html` -- 있으면 참조, 없으면 없이 진행
 
 ## Step 2: 스킬 탐색
