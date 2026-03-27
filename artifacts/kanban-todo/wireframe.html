@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe: Kanban Todo</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  :root {
+    --w-bg: #f5f5f5;
+    --w-border: #ccc;
+    --w-text: #555;
+    --w-muted: #aaa;
+    --w-fill: #eee;
+  }
+
+  * {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    color: var(--w-text);
+  }
+
+  body { background: var(--w-bg); }
+
+  /* Screen nav */
+  nav { position: sticky; top: 0; z-index: 40; background: var(--w-bg); border-bottom: 1px solid var(--w-border); }
+  nav button { cursor: pointer; font-size: 13px; }
+  nav button:hover { background: var(--w-fill); border-radius: 4px; }
+  nav button.active { font-weight: bold; border-bottom: 2px solid var(--w-text); }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Viewport toggle */
+  .vp-toggle button {
+    font-size: 12px; padding: 2px 8px;
+    border: 1px solid var(--w-border); cursor: pointer; background: white;
+  }
+  .vp-toggle button:first-child { border-radius: 4px 0 0 4px; }
+  .vp-toggle button:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+  .vp-toggle button.active { background: var(--w-text); color: white; }
+
+  /* Mobile viewport frame */
+  body.viewport-mobile .screen-content {
+    max-width: 375px !important;
+    margin: 24px auto !important;
+    border: 2px solid var(--w-border);
+    border-radius: 24px;
+    min-height: 667px;
+    background: white;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 32px 16px !important;
+  }
+
+  /* Screen Notes */
+  .screen-notes {
+    background: #fffde7;
+    border-left: 3px solid #ffd54f;
+    padding: 12px 16px;
+    margin-top: 24px;
+    font-size: 13px;
+    border-radius: 0 4px 4px 0;
+  }
+  .screen-notes summary {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    color: #b0a050;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .screen-notes p { margin: 6px 0 2px; color: #777; }
+  .screen-notes ul { margin: 4px 0 0 16px; padding: 0; color: #777; }
+  .screen-notes li { margin: 2px 0; }
+</style>
+</head>
+<body class="p-0 m-0 viewport-mobile">
+
+<nav class="flex items-center gap-4 px-6 py-2">
+  <span class="text-xs" style="color:var(--w-muted)">wireframe</span>
+  <!-- NAV_BUTTONS -->
+  <button id="nav-0" onclick="show(0)" class="px-2 py-1">기본 보드</button>
+  <button id="nav-1" onclick="show(1)" class="px-2 py-1">카드 추가</button>
+  <button id="nav-2" onclick="show(2)" class="px-2 py-1">카드 상세</button>
+  <button id="nav-3" onclick="show(3)" class="px-2 py-1">인라인 편집</button>
+  <button id="nav-4" onclick="show(4)" class="px-2 py-1">카드 삭제</button>
+  <button id="nav-5" onclick="show(5)" class="px-2 py-1">서브태스크</button>
+  <button id="nav-6" onclick="show(6)" class="px-2 py-1">검색·필터</button>
+  <button id="nav-7" onclick="show(7)" class="px-2 py-1">다크모드</button>
+  <div class="vp-toggle flex ml-auto">
+    <button id="vp-desktop" onclick="setViewport('desktop')">Desktop</button>
+    <button id="vp-mobile" onclick="setViewport('mobile')" class="active">Mobile</button>
+  </div>
+</nav>
+
+<!-- SCREEN_CONTENT -->
+
+<!-- ── Screen 0: 기본 보드 ── -->
+<div id="screen-0" class="screen" data-scenario="KANBAN-001, KANBAN-002, KANBAN-015, KANBAN-016, KANBAN-024, KANBAN-025, KANBAN-026, KANBAN-027">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <!-- App Header -->
+    <div class="flex items-center justify-between mb-4">
+      <h1 class="text-base font-bold">Kanban Todo</h1>
+      <button class="p-1 rounded" style="border:1px solid var(--w-border)">
+        <i data-lucide="moon" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- Search & Filter Bar -->
+    <div class="flex flex-col gap-2 mb-4">
+      <div class="flex items-center gap-2 px-3 py-2 rounded" style="border:1px solid var(--w-border); background:white">
+        <i data-lucide="search" class="w-4 h-4" style="color:var(--w-muted)"></i>
+        <span class="text-sm" style="color:var(--w-muted)">카드 검색...</span>
+      </div>
+      <div class="flex gap-2">
+        <select class="text-xs px-2 py-1 rounded" style="border:1px solid var(--w-border); background:white; color:var(--w-text)">
+          <option>우선순위: 전체</option>
+          <option>High</option>
+          <option>Medium</option>
+          <option>Low</option>
+        </select>
+        <select class="text-xs px-2 py-1 rounded" style="border:1px solid var(--w-border); background:white; color:var(--w-text)">
+          <option>태그: 전체</option>
+          <option>개인</option>
+          <option>업무</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Kanban Columns (mobile: vertical stack) -->
+    <div class="flex flex-col gap-4 @md:flex-row @md:gap-4">
+
+      <!-- To Do Column -->
+      <div class="flex-1 rounded-lg p-3" style="background:var(--w-fill); border:1px solid var(--w-border)">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold">To Do <span class="text-xs font-normal" style="color:var(--w-muted)">(2)</span></h2>
+        </div>
+        <!-- Card -->
+        <div class="rounded p-3 mb-2 flex items-start gap-2" style="background:white; border:1px solid var(--w-border)">
+          <i data-lucide="grip-vertical" class="w-4 h-4 mt-0.5 shrink-0 cursor-grab" style="color:var(--w-muted)"></i>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-medium mb-1">장보기</div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] px-1.5 py-0.5 rounded" style="background:#fee; color:#c55; border:1px solid #fcc">High</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded" style="background:var(--w-fill); border:1px solid var(--w-border)">개인</span>
+              <span class="text-[10px] ml-auto flex items-center gap-1" style="color:var(--w-muted)">
+                <i data-lucide="check-square" class="w-3 h-3"></i> 1/2
+              </span>
+            </div>
+          </div>
+        </div>
+        <!-- Card -->
+        <div class="rounded p-3 mb-2 flex items-start gap-2" style="background:white; border:1px solid var(--w-border)">
+          <i data-lucide="grip-vertical" class="w-4 h-4 mt-0.5 shrink-0 cursor-grab" style="color:var(--w-muted)"></i>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-medium mb-1">공부하기</div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] px-1.5 py-0.5 rounded" style="background:#efe; color:#5a5; border:1px solid #cec">Low</span>
+            </div>
+          </div>
+        </div>
+        <!-- Add Card Button -->
+        <button class="w-full text-left text-sm px-3 py-2 rounded flex items-center gap-2" style="color:var(--w-muted); border:1px dashed var(--w-border)">
+          <i data-lucide="plus" class="w-4 h-4"></i> 카드 추가
+        </button>
+      </div>
+
+      <!-- In Progress Column -->
+      <div class="flex-1 rounded-lg p-3" style="background:var(--w-fill); border:1px solid var(--w-border)">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold">In Progress <span class="text-xs font-normal" style="color:var(--w-muted)">(1)</span></h2>
+        </div>
+        <!-- Card -->
+        <div class="rounded p-3 mb-2 flex items-start gap-2" style="background:white; border:1px solid var(--w-border)">
+          <i data-lucide="grip-vertical" class="w-4 h-4 mt-0.5 shrink-0 cursor-grab" style="color:var(--w-muted)"></i>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-medium mb-1">운동하기</div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] px-1.5 py-0.5 rounded" style="background:#eef; color:#55c; border:1px solid #ccf">Medium</span>
+            </div>
+          </div>
+        </div>
+        <!-- Add Card Button -->
+        <button class="w-full text-left text-sm px-3 py-2 rounded flex items-center gap-2" style="color:var(--w-muted); border:1px dashed var(--w-border)">
+          <i data-lucide="plus" class="w-4 h-4"></i> 카드 추가
+        </button>
+      </div>
+
+      <!-- Done Column -->
+      <div class="flex-1 rounded-lg p-3" style="background:var(--w-fill); border:1px solid var(--w-border)">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm font-bold">Done <span class="text-xs font-normal" style="color:var(--w-muted)">(0)</span></h2>
+        </div>
+        <div class="text-center py-6 text-xs" style="color:var(--w-muted)">
+          완료된 카드 없음
+        </div>
+        <!-- Add Card Button -->
+        <button class="w-full text-left text-sm px-3 py-2 rounded flex items-center gap-2" style="color:var(--w-muted); border:1px dashed var(--w-border)">
+          <i data-lucide="plus" class="w-4 h-4"></i> 카드 추가
+        </button>
+      </div>
+
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: 앱 진입 시 localStorage에서 보드 데이터 로드</li>
+          <li>인터랙션: 카드 추가(KANBAN-001,002), 칼럼 간 드래그&드롭(KANBAN-015,027), 칼럼 내 순서 변경(KANBAN-016)</li>
+          <li>영속성: 새로고침 후 카드(KANBAN-024), 칼럼 위치(KANBAN-025), 다크모드(KANBAN-026) 유지</li>
+          <li>전환: 카드 클릭 → 상세 모달(Screen 1)</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Screen 1: 카드 추가 ── -->
+<div id="screen-1" class="screen" data-scenario="KANBAN-001, KANBAN-002">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      카드 추가
+    </h2>
+
+    <!-- To Do column with add card form open -->
+    <div class="rounded-lg p-3 max-w-sm" style="background:var(--w-fill); border:1px solid var(--w-border)">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-bold">To Do <span class="text-xs font-normal" style="color:var(--w-muted)">(0)</span></h2>
+      </div>
+
+      <!-- Add Card Form (expanded) -->
+      <div class="rounded p-3 mb-2" style="background:white; border:1px solid var(--w-border)">
+        <input type="text" value="장보기" class="w-full text-sm px-2 py-1.5 rounded mb-2" style="border:1px solid var(--w-border)" placeholder="카드 제목 입력">
+        <div class="flex gap-2">
+          <button class="text-xs px-3 py-1 rounded" style="background:var(--w-text); color:white">확인</button>
+          <button class="text-xs px-3 py-1 rounded" style="border:1px solid var(--w-border)">취소</button>
+        </div>
+      </div>
+
+      <!-- Error state -->
+      <div class="rounded p-3 mb-2" style="background:white; border:1px solid #e55">
+        <input type="text" value="" class="w-full text-sm px-2 py-1.5 rounded mb-1" style="border:1px solid #e55" placeholder="카드 제목 입력">
+        <p class="text-xs mb-2" style="color:#e55">제목을 입력해주세요</p>
+        <div class="flex gap-2">
+          <button class="text-xs px-3 py-1 rounded" style="background:var(--w-text); color:white">확인</button>
+          <button class="text-xs px-3 py-1 rounded" style="border:1px solid var(--w-border)">취소</button>
+        </div>
+      </div>
+
+      <button class="w-full text-left text-sm px-3 py-2 rounded flex items-center gap-2" style="color:var(--w-muted); border:1px dashed var(--w-border)">
+        <i data-lucide="plus" class="w-4 h-4"></i> 카드 추가
+      </button>
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: '카드 추가' 버튼 클릭 시 입력 폼 확장</li>
+          <li>인터랙션: 제목 입력 후 확인 → 카드 생성, 빈 제목 확인 → 오류 메시지</li>
+          <li>전환: 확인/취소 → 폼 접힘, 카드가 칼럼에 추가됨</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Screen 2: 카드 상세 모달 ── -->
+<div id="screen-2" class="screen" data-scenario="KANBAN-003, KANBAN-004, KANBAN-005, KANBAN-006">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      카드 상세 모달
+    </h2>
+
+    <!-- Modal overlay simulation -->
+    <div class="rounded-lg p-4" style="background:white; border:2px solid var(--w-border); box-shadow:0 4px 24px rgba(0,0,0,0.12)">
+
+      <!-- Modal header -->
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-base font-bold">장보기</h3>
+        <button class="p-1 rounded" style="border:1px solid var(--w-border)">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- 설명 -->
+      <div class="mb-4">
+        <label class="text-xs font-bold block mb-1" style="color:var(--w-muted)">설명</label>
+        <div class="text-sm px-3 py-2 rounded" style="border:1px solid var(--w-border); min-height:60px">마트 가서 장보기</div>
+      </div>
+
+      <!-- 우선순위 -->
+      <div class="mb-4">
+        <label class="text-xs font-bold block mb-1" style="color:var(--w-muted)">우선순위</label>
+        <div class="flex gap-2">
+          <button class="text-xs px-3 py-1 rounded" style="background:#fee; color:#c55; border:1px solid #fcc; font-weight:bold">High</button>
+          <button class="text-xs px-3 py-1 rounded" style="border:1px solid var(--w-border)">Medium</button>
+          <button class="text-xs px-3 py-1 rounded" style="border:1px solid var(--w-border)">Low</button>
+        </div>
+      </div>
+
+      <!-- 태그 -->
+      <div class="mb-4">
+        <label class="text-xs font-bold block mb-1" style="color:var(--w-muted)">태그</label>
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-xs px-2 py-0.5 rounded flex items-center gap-1" style="background:var(--w-fill); border:1px solid var(--w-border)">
+            개인 <i data-lucide="x" class="w-3 h-3"></i>
+          </span>
+        </div>
+        <div class="flex gap-2">
+          <input type="text" class="text-xs px-2 py-1 rounded flex-1" style="border:1px solid var(--w-border)" placeholder="태그 입력">
+          <button class="text-xs px-2 py-1 rounded" style="border:1px solid var(--w-border)">추가</button>
+        </div>
+      </div>
+
+      <!-- 서브태스크 -->
+      <div class="mb-4">
+        <label class="text-xs font-bold block mb-2" style="color:var(--w-muted)">서브태스크 <span style="color:var(--w-muted)">1/2</span></label>
+        <div class="flex items-center gap-2 mb-1.5 px-2 py-1 rounded" style="background:var(--w-fill)">
+          <input type="checkbox" checked>
+          <span class="text-xs line-through" style="color:var(--w-muted)">우유 사기</span>
+        </div>
+        <div class="flex items-center gap-2 mb-2 px-2 py-1 rounded" style="border:1px solid var(--w-border)">
+          <input type="checkbox">
+          <span class="text-xs">빵 사기</span>
+        </div>
+        <div class="flex gap-2">
+          <input type="text" class="text-xs px-2 py-1.5 rounded flex-1" style="border:1px solid var(--w-border)" placeholder="서브태스크 추가">
+          <button class="text-xs px-3 py-1.5 rounded" style="background:var(--w-text); color:white">추가</button>
+        </div>
+      </div>
+
+      <!-- 하단 버튼 -->
+      <div class="flex justify-between pt-3" style="border-top:1px solid var(--w-border)">
+        <button class="text-xs px-3 py-1 rounded" style="color:#e55; border:1px solid #fcc">
+          <i data-lucide="trash-2" class="w-3 h-3 inline"></i> 삭제
+        </button>
+        <button class="text-xs px-3 py-1 rounded" style="background:var(--w-text); color:white">저장</button>
+      </div>
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: 보드에서 카드 클릭</li>
+          <li>인터랙션: 설명 편집(KANBAN-004), 우선순위 변경(KANBAN-005), 태그 추가(KANBAN-006)</li>
+          <li>전환: X 또는 저장 → 모달 닫힘, 삭제 → 삭제 확인(Screen 4)</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Screen 3: 인라인 편집 ── -->
+<div id="screen-3" class="screen" data-scenario="KANBAN-007, KANBAN-008">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      인라인 제목 편집
+    </h2>
+
+    <div class="rounded-lg p-3 max-w-sm" style="background:var(--w-fill); border:1px solid var(--w-border)">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-bold">To Do</h2>
+      </div>
+
+      <!-- Normal card -->
+      <div class="rounded p-3 mb-2 flex items-start gap-2" style="background:white; border:1px solid var(--w-border)">
+        <i data-lucide="grip-vertical" class="w-4 h-4 mt-0.5 shrink-0 cursor-grab" style="color:var(--w-muted)"></i>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-medium">공부하기</div>
+        </div>
+      </div>
+
+      <!-- Editing state -->
+      <div class="rounded p-3 mb-2 flex items-start gap-2" style="background:white; border:2px solid var(--w-text)">
+        <i data-lucide="grip-vertical" class="w-4 h-4 mt-0.5 shrink-0 cursor-grab" style="color:var(--w-muted)"></i>
+        <div class="flex-1 min-w-0">
+          <input type="text" value="마트 장보기" class="text-sm font-medium w-full px-1 py-0.5 rounded" style="border:1px solid var(--w-border)">
+          <p class="text-[10px] mt-1" style="color:var(--w-muted)">Enter로 저장 · Esc로 취소</p>
+        </div>
+      </div>
+
+      <!-- Error hint: empty title -->
+      <div class="rounded p-3 mb-2 flex items-start gap-2" style="background:white; border:2px solid #e55">
+        <i data-lucide="grip-vertical" class="w-4 h-4 mt-0.5 shrink-0 cursor-grab" style="color:var(--w-muted)"></i>
+        <div class="flex-1 min-w-0">
+          <input type="text" value="" class="text-sm font-medium w-full px-1 py-0.5 rounded" style="border:1px solid #e55" placeholder="제목을 입력하세요">
+          <p class="text-[10px] mt-1" style="color:#e55">빈 제목은 저장되지 않습니다</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: 카드 제목 텍스트 클릭 시 인라인 입력으로 전환</li>
+          <li>인터랙션: 텍스트 수정 후 Enter(KANBAN-007), 빈 문자열 Enter → 원래 제목 유지(KANBAN-008)</li>
+          <li>전환: Enter/Esc → 인라인 편집 종료, 일반 카드 상태 복귀</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Screen 4: 카드 삭제 ── -->
+<div id="screen-4" class="screen" data-scenario="KANBAN-009, KANBAN-010, KANBAN-011">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      카드 삭제
+    </h2>
+
+    <!-- Confirm dialog overlay -->
+    <div class="rounded-lg p-6 text-center max-w-sm mx-auto" style="background:white; border:2px solid var(--w-border); box-shadow:0 4px 24px rgba(0,0,0,0.12)">
+      <i data-lucide="alert-triangle" class="w-8 h-8 mx-auto mb-3" style="color:#e55"></i>
+      <p class="text-sm font-bold mb-1">카드 삭제</p>
+      <p class="text-xs mb-4" style="color:var(--w-muted)">정말 삭제하시겠습니까?</p>
+      <div class="flex gap-2 justify-center">
+        <button class="text-xs px-4 py-1.5 rounded" style="border:1px solid var(--w-border)">취소</button>
+        <button class="text-xs px-4 py-1.5 rounded" style="background:#e55; color:white">확인</button>
+      </div>
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: 카드 상세 모달에서 삭제 버튼 클릭(KANBAN-009)</li>
+          <li>인터랙션: 확인 → 카드 제거(KANBAN-010), 취소 → 다이얼로그 닫힘(KANBAN-011)</li>
+          <li>전환: 확인 → 보드로 복귀(카드 없음), 취소 → 상세 모달 유지</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Screen 5: 서브태스크 ── -->
+<div id="screen-5" class="screen" data-scenario="KANBAN-012, KANBAN-013, KANBAN-014">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      서브태스크 관리
+    </h2>
+
+    <!-- Modal subtask section -->
+    <div class="rounded-lg p-4 max-w-sm" style="background:white; border:2px solid var(--w-border); box-shadow:0 4px 24px rgba(0,0,0,0.12)">
+
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-base font-bold">장보기</h3>
+        <button class="p-1 rounded" style="border:1px solid var(--w-border)">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <label class="text-xs font-bold block mb-2" style="color:var(--w-muted)">서브태스크</label>
+
+      <!-- Progress bar -->
+      <div class="flex items-center gap-2 mb-3">
+        <div class="flex-1 h-1.5 rounded-full" style="background:var(--w-fill)">
+          <div class="h-1.5 rounded-full" style="background:var(--w-text); width:50%"></div>
+        </div>
+        <span class="text-xs font-bold">1/2</span>
+      </div>
+
+      <!-- Subtask list -->
+      <div class="flex items-center gap-2 mb-2 px-2 py-1.5 rounded" style="background:var(--w-fill)">
+        <input type="checkbox" checked>
+        <span class="text-xs line-through" style="color:var(--w-muted)">우유 사기</span>
+      </div>
+      <div class="flex items-center gap-2 mb-2 px-2 py-1.5 rounded" style="background:white; border:1px solid var(--w-border)">
+        <input type="checkbox">
+        <span class="text-xs">빵 사기</span>
+      </div>
+
+      <!-- Add subtask -->
+      <div class="flex gap-2 mt-3">
+        <input type="text" class="text-xs px-2 py-1.5 rounded flex-1" style="border:1px solid var(--w-border)" placeholder="서브태스크 추가">
+        <button class="text-xs px-3 py-1.5 rounded" style="background:var(--w-text); color:white">추가</button>
+      </div>
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: 카드 상세 모달 내 서브태스크 섹션</li>
+          <li>인터랙션: 서브태스크 추가(KANBAN-012), 체크박스 토글(KANBAN-013), 진행률 표시(KANBAN-014)</li>
+          <li>전환: 진행률이 카드 미리보기에도 반영됨 (1/2 뱃지)</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Screen 6: 검색·필터 ── -->
+<div id="screen-6" class="screen" data-scenario="KANBAN-017, KANBAN-018, KANBAN-019, KANBAN-020, KANBAN-021, KANBAN-028, KANBAN-029">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      검색·필터
+    </h2>
+
+    <!-- Search active state -->
+    <div class="flex flex-col gap-2 mb-4">
+      <div class="flex items-center gap-2 px-3 py-2 rounded" style="border:2px solid var(--w-text); background:white">
+        <i data-lucide="search" class="w-4 h-4" style="color:var(--w-text)"></i>
+        <span class="text-sm">장</span>
+        <button class="ml-auto p-0.5" style="color:var(--w-muted)"><i data-lucide="x" class="w-3 h-3"></i></button>
+      </div>
+      <div class="flex gap-2">
+        <select class="text-xs px-2 py-1 rounded" style="border:2px solid var(--w-text); background:white; color:var(--w-text); font-weight:bold">
+          <option selected>High</option>
+        </select>
+        <select class="text-xs px-2 py-1 rounded" style="border:1px solid var(--w-border); background:white; color:var(--w-text)">
+          <option>태그: 전체</option>
+        </select>
+      </div>
+      <p class="text-xs" style="color:var(--w-muted)">검색: "장" + 우선순위: High → 1개 결과</p>
+    </div>
+
+    <!-- Filtered board -->
+    <div class="flex flex-col gap-4 @md:flex-row @md:gap-4">
+
+      <div class="flex-1 rounded-lg p-3" style="background:var(--w-fill); border:1px solid var(--w-border)">
+        <h2 class="text-sm font-bold mb-3">To Do</h2>
+        <!-- Visible card -->
+        <div class="rounded p-3 mb-2 flex items-start gap-2" style="background:white; border:1px solid var(--w-border)">
+          <i data-lucide="grip-vertical" class="w-4 h-4 mt-0.5 shrink-0 cursor-grab" style="color:var(--w-muted)"></i>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-medium mb-1"><span style="background:#ffd; padding:0 2px">장</span>보기</div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] px-1.5 py-0.5 rounded" style="background:#fee; color:#c55; border:1px solid #fcc">High</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded" style="background:var(--w-fill); border:1px solid var(--w-border)">개인</span>
+            </div>
+          </div>
+        </div>
+        <!-- Hidden cards (dimmed) -->
+        <div class="rounded p-3 mb-2 opacity-20" style="background:white; border:1px solid var(--w-border)">
+          <div class="text-sm font-medium">공부하기</div>
+        </div>
+      </div>
+
+      <div class="flex-1 rounded-lg p-3" style="background:var(--w-fill); border:1px solid var(--w-border)">
+        <h2 class="text-sm font-bold mb-3">In Progress</h2>
+        <div class="rounded p-3 mb-2 opacity-20" style="background:white; border:1px solid var(--w-border)">
+          <div class="text-sm font-medium">운동하기</div>
+        </div>
+      </div>
+
+      <div class="flex-1 rounded-lg p-3" style="background:var(--w-fill); border:1px solid var(--w-border)">
+        <h2 class="text-sm font-bold mb-3">Done</h2>
+        <div class="text-center py-6 text-xs" style="color:var(--w-muted)">결과 없음</div>
+      </div>
+
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: 검색바 입력(KANBAN-017,018,028) 또는 필터 선택(KANBAN-019,020,029)</li>
+          <li>인터랙션: 검색+필터 AND 조합(KANBAN-021), 검색어 하이라이트, 필터 해제 시 전체 복원(KANBAN-029)</li>
+          <li>전환: 필터링된 카드만 표시, 나머지는 숨김</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Screen 7: 다크모드 ── -->
+<div id="screen-7" class="screen" data-scenario="KANBAN-022, KANBAN-023">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      다크모드 토글
+    </h2>
+
+    <!-- Light mode preview -->
+    <div class="mb-6">
+      <p class="text-xs font-bold mb-2" style="color:var(--w-muted)">Light Mode</p>
+      <div class="rounded-lg p-4" style="background:#f5f5f5; border:1px solid #ccc">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-bold" style="color:#555">Kanban Todo</span>
+          <button class="p-1 rounded" style="border:1px solid #ccc">
+            <i data-lucide="moon" class="w-4 h-4" style="color:#555"></i>
+          </button>
+        </div>
+        <div class="flex gap-2">
+          <div class="flex-1 rounded p-2" style="background:#eee; border:1px solid #ccc">
+            <div class="text-xs font-bold mb-2" style="color:#555">To Do</div>
+            <div class="rounded p-2" style="background:white; border:1px solid #ccc">
+              <span class="text-xs" style="color:#555">장보기</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark mode preview -->
+    <div>
+      <p class="text-xs font-bold mb-2" style="color:var(--w-muted)">Dark Mode</p>
+      <div class="rounded-lg p-4" style="background:#1a1a2e; border:1px solid #333">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-bold" style="color:#e0e0e0">Kanban Todo</span>
+          <button class="p-1 rounded" style="border:1px solid #444">
+            <i data-lucide="sun" class="w-4 h-4" style="color:#e0e0e0"></i>
+          </button>
+        </div>
+        <div class="flex gap-2">
+          <div class="flex-1 rounded p-2" style="background:#16213e; border:1px solid #333">
+            <div class="text-xs font-bold mb-2" style="color:#e0e0e0">To Do</div>
+            <div class="rounded p-2" style="background:#0f3460; border:1px solid #444">
+              <span class="text-xs" style="color:#e0e0e0">장보기</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: 헤더 다크모드 토글 버튼 클릭</li>
+          <li>인터랙션: 라이트→다크(KANBAN-022), 다크→라이트(KANBAN-023), 아이콘 moon↔sun 전환</li>
+          <li>전환: 설정이 localStorage에 저장되어 새로고침 후 유지(KANBAN-026)</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var currentScreen = 0;
+var screenIds = [];
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('screen-' + id).classList.add('active');
+  document.querySelectorAll('nav button[id^="nav-"]').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('nav-' + id).classList.add('active');
+  currentScreen = screenIds.indexOf(id);
+}
+
+function setViewport(mode) {
+  document.body.classList.remove('viewport-mobile', 'viewport-desktop');
+  document.body.classList.add('viewport-' + mode);
+  document.querySelectorAll('.vp-toggle button').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('vp-' + mode).classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('nav button[id^="nav-"]').forEach(function(b) {
+    screenIds.push(parseInt(b.id.replace('nav-', '')));
+  });
+  var first = document.querySelector('nav button[id^="nav-"]');
+  if (first) first.click();
+  lucide.createIcons();
+});
+</script>
+</body>
+</html>
