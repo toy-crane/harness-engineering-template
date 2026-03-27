@@ -3,10 +3,10 @@
 # Requires: brew install gitleaks
 # exit 0 = continue, exit 2 = block
 
-set -euo pipefail
+set -eo pipefail
 
 # Only intercept git commit commands
-COMMAND=$(echo "$TOOL_INPUT" | jq -r '.command // empty')
+COMMAND=$(echo "${TOOL_INPUT:-"{}"}" | jq -r '.command // empty')
 case "$COMMAND" in
   *"git commit"*|*"git add"*) ;;
   *) exit 0 ;;
