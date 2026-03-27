@@ -10,7 +10,7 @@ argument-hint: "기능 설명"
 
 기존 기능을 확장하는 경우, 질문 전에 먼저 탐색한다:
 
-- `spec.yaml`에서 관련 시나리오 읽기
+- `artifacts/spec.yaml`에서 관련 시나리오 읽기
 - `artifacts/<feature>/spec.md` 확인
 - 관련 컴포넌트의 현재 구현 확인
 
@@ -46,12 +46,12 @@ argument-hint: "기능 설명"
 
 ## Step 4: spec.yaml 추출
 
-spec.md의 시나리오를 spec.yaml에 추출한다. `references/scenario-guide.md`의 기준과 `references/spec-example.yaml`의 구조를 따른다.
+spec.md의 시나리오를 `artifacts/spec.yaml`에 추출한다. `references/scenario-guide.md`의 기준과 `references/spec-example.yaml`의 구조를 따른다.
 
 ### 추출 규칙
 
 - ID 형식: `{FEATURE}-{NNN}` (기존 번호와 충돌하지 않게 이어서 부여)
-- 기존 spec.yaml이 있으면 features에 append한다. 없으면 새로 생성한다
+- 기존 `artifacts/spec.yaml`이 있으면 features에 append한다. 없으면 새로 생성한다
 - `examples`의 input/expect는 화면에서 확인 가능한 구체적 값으로 작성한다
 
 ### 검증 체크리스트 (저장 전)
