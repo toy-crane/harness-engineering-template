@@ -1,13 +1,12 @@
 ## 패키지 매니저 bun
 
-### 테스트 실행: 
+### 테스트 실행
 - `bun run test`
 
 ## 개발 워크플로우
 
 ### 불변 계약
 - `artifacts/spec.yaml`이 전체 앱의 단일 불변 계약이다
-- spec.yaml의 시나리오에서 spec 테스트(`*.spec.test.tsx`)를 파생한다
 - 구현이 spec.yaml과 맞지 않으면, 구현을 수정한다
 
 ### TDD
@@ -24,7 +23,7 @@
 | `*.test.tsx` | 구현 테스트 (단위/통합) |
 
 ### spec 테스트 작성 규칙
-- spec 테스트(`*.spec.test.tsx`)는 생성 task 이후 수정 금지. 테스트가 실패하면 구현을 수정한다
+- spec 테스트(`*.spec.test.tsx`)는 spec.yaml의 계약을 검증하는 수용 기준이다. 생성 task 이후 수정 금지 — 테스트가 실패하면 구현을 수정한다
 
 ### 커밋 규칙
 - 기능 단위로 커밋, 여러 기능을 섞지 않는다
@@ -41,7 +40,7 @@
 
 ## Architecture
 
-의존성이 적은 것부터 구현한다. 역방향 의존은 금지한다.
+순환 의존 방지를 위해 역방향 의존은 금지한다. 의존성이 적은 것부터 구현한다.
 
 | 순서 | 디렉토리 | 허용 의존성 |
 |------|---------|-----------|
@@ -52,3 +51,12 @@
 | 5 | `hooks/` | types, config, lib, services |
 | 6 | `components/` | types, config, lib, hooks |
 | 7 | `app/` | 모두 |
+
+## Boundary
+
+### Ask-first
+- spec.yaml 변경
+- 새로운 외부 의존성 추가
+- CLAUDE.md 수정
+
+분류가 모호하면 Ask-first로 간주한다.
