@@ -33,12 +33,9 @@ $ARGUMENTS에서 feature명을 추출한다.
 
 ### 계획 요건
 
-- Step 2에서 확정한 스킬을 Required Skills에 나열한다
-- Required Skills에 나열된 각 스킬의 SKILL.md를 읽고, 실제 규칙 소스(rules/ 디렉토리 파일, 외부 URL 등)를 파악한 뒤, 각 task의 참조 규칙에 구체적 소스를 나열한다
-- 각 task는 대응하는 spec.yaml 시나리오 ID를 명시한다
+- 각 스킬의 SKILL.md에서 규칙 소스를 파악하여 task의 참조 규칙에 채운다
 - 각 task는 구현 대상(What)과 수용 기준을 포함한다. 절차(How)는 쓰지 않는다
 - 첫 번째 task는 반드시 spec.yaml 시나리오를 테스트 뼈대로 변환한다 (Red). 이후 task에서 구현하며 Green으로 전환한다. 선행 작업이 필요하면 사유와 함께 앞에 배치한다
-- Task 순서는 Architecture 의존성 순서를 따른다. 의존성이 적은 디렉토리부터 순서대로 구현하고, 각 task에서 해당 영역의 테스트를 Green으로 전환한다
 - wireframe의 컴포넌트 타입을 task에 반영한다 (예: "필터 UI" 대신 "Select 드롭다운으로 필터 UI")
 
 `artifacts/<feature>/plan.md`로 저장한다.
