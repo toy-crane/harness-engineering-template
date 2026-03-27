@@ -44,7 +44,7 @@ N개 화면으로 구성합니다:
 ## Step 3: 기본 화면
 
 1. `assets/template.html`을 읽어서 HTML 보일러플레이트를 확보한다
-2. 기본 화면을 상호작용 없는 기본 상태로 생성한다. `<!-- NAV_BUTTONS -->`와 `<!-- SCREEN_CONTENT -->` 위치에 삽입 패턴 주석을 따라 삽입한다
+2. 기본 화면을 생성한다. template.html 내 주석의 삽입 패턴을 따른다
 3. Step 2에서 식별한 반응형 전환 지점에 `@md:` 접두사로 데스크톱 레이아웃을 적용한다
 
 출력: `artifacts/<feature>/wireframe.html`
