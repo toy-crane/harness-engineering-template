@@ -48,10 +48,7 @@ N개 화면으로 구성합니다:
 
 출력: `artifacts/<feature>/wireframe.html`
 
-Vite dev server를 실행하고 브라우저에서 연다:
-```
-Bash(run_in_background): bunx vite artifacts/<feature> --port=3456
-```
+서버 실행 후 브라우저에서 연다: `Bash(run_in_background): bunx vite artifacts/<feature> --port=3456`
 
 피드백 루프:
 - 사용자가 자연어로 피드백 → wireframe.html 수정
