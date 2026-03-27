@@ -25,8 +25,6 @@
 
 ### spec 테스트 작성 규칙
 - spec 테스트(`*.spec.test.tsx`)는 생성 task 이후 수정 금지. 테스트가 실패하면 구현을 수정한다
-- 요소 선택은 `getByRole`, `getByLabelText` 등 구현 구조에 의존하지 않는 안정적 패턴을 사용한다
-- wireframe의 컴포넌트 타입(Select, Switch, Progress 등)에 맞는 인터랙션 패턴으로 작성한다
 
 ### 커밋 규칙
 - 기능 단위로 커밋, 여러 기능을 섞지 않는다
