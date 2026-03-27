@@ -57,6 +57,3 @@
 ### Ask-first
 - spec.yaml 변경
 - 새로운 외부 의존성 추가
-- CLAUDE.md 수정
-
-분류가 모호하면 Ask-first로 간주한다.
