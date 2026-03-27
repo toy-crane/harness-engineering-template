@@ -16,11 +16,14 @@ argument-hint: "feature 이름"
 
 - `assets/template.html`의 CSS 변수 5개만 사용: `--w-bg`, `--w-border`, `--w-text`, `--w-muted`, `--w-fill`
 - Tailwind v4 유틸리티만 사용. 반응형은 `@container` + `@md:` 접두사 (모바일 우선)
-- 모든 `<input>`, `<select>`, `<button>`에 `disabled`
-- Lucide 아이콘(`data-lucide` 속성)
+- Lucide 아이콘: `<i data-lucide="icon-name"></i>`
 - 시스템 monospace 폰트
 
 이 규칙 외의 색상, 폰트, 스타일을 사용하지 않는다.
+
+## 금지 사항
+
+- artifacts/spec.yaml을 직접 수정하지 않는다. spec 변경이 필요하면 wireframe을 중단하고 `/write-spec`으로 돌아간다.
 
 ## Step 1: 기존 화면 확인
 
@@ -29,7 +32,7 @@ argument-hint: "feature 이름"
 ## Step 2: 화면 구성
 
 artifacts/spec.yaml의 시나리오를 시각적으로 구분되는 화면 상태로 그룹핑하고 사용자에게 출력한다.
-첫 번째 화면은 항상 기본 화면으로 고정한다. 시나리오 ID는 사용자에게 노출하지 않는다(Step 4~5에서 내부적으로 추적).
+첫 번째 화면은 항상 기본 화면으로 고정한다.
 
 ```
 N개 화면으로 구성합니다:
@@ -45,20 +48,14 @@ N개 화면으로 구성합니다:
 ## Step 3: 기본 화면
 
 1. `assets/template.html`을 읽어서 HTML 보일러플레이트를 확보한다
-2. 기본 화면을 상호작용 없는 기본 상태로 생성한다. `<!-- NAV_BUTTONS -->`와 `<!-- SCREEN_CONTENT -->` 위치에 삽입 패턴 주석을 따라 삽입한다
-3. Step 2에서 식별한 반응형 전환 지점에 `@md:` 접두사로 데스크톱 레이아웃을 적용한다
+2. 기본 화면을 생성한다. template.html 내 주석의 삽입 패턴을 따른다
 
 출력: `artifacts/<feature>/wireframe.html`
 
-Vite dev server를 실행하고 피드백을 받는다:
-```
-Bash(run_in_background): bunx vite artifacts/<feature> --port=3456
-open http://localhost:3456/wireframe.html
-```
+서버 실행: `Bash(run_in_background): bunx vite artifacts/<feature> --port=3456`
 
 피드백 루프:
-- 사용자가 자연어로 피드백 → wireframe.html 수정
-- **spec 변경이 필요하면 wireframe을 중단하고 `/write-spec`으로 돌아간다. wireframe에서 artifacts/spec.yaml을 직접 수정하지 않는다.**
+- 브라우저에서 wireframe.html을 열고 사용자 피드백을 받는다 → wireframe.html 수정
 
 레이아웃이 확정되면 Step 4로 진행한다.
 

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wireframe: {{FEATURE_NAME}}</title>
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
   :root {
     --w-bg: #f5f5f5;
@@ -146,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   var first = document.querySelector('nav button[id^="nav-"]');
   if (first) first.click();
+  lucide.createIcons();
 });
 </script>
 </body>
