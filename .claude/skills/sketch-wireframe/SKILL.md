@@ -28,7 +28,7 @@ argument-hint: "feature 이름"
 ## Step 2: 화면 구성
 
 artifacts/spec.yaml의 시나리오를 시각적으로 구분되는 화면 상태로 그룹핑하고 사용자에게 출력한다.
-첫 번째 화면은 항상 기본 화면으로 고정한다. 시나리오 ID는 사용자에게 노출하지 않는다(Step 4~5에서 내부적으로 추적).
+첫 번째 화면은 항상 기본 화면으로 고정한다.
 
 ```
 N개 화면으로 구성합니다:
@@ -45,7 +45,6 @@ N개 화면으로 구성합니다:
 
 1. `assets/template.html`을 읽어서 HTML 보일러플레이트를 확보한다
 2. 기본 화면을 생성한다. template.html 내 주석의 삽입 패턴을 따른다
-3. Step 2에서 식별한 반응형 전환 지점에 `@md:` 접두사로 데스크톱 레이아웃을 적용한다
 
 출력: `artifacts/<feature>/wireframe.html`
 
