@@ -16,8 +16,7 @@ argument-hint: "feature 이름"
 
 - `assets/template.html`의 CSS 변수 5개만 사용: `--w-bg`, `--w-border`, `--w-text`, `--w-muted`, `--w-fill`
 - Tailwind v4 유틸리티만 사용. 반응형은 `@container` + `@md:` 접두사 (모바일 우선)
-- 모든 `<input>`, `<select>`, `<button>`에 `disabled`
-- Lucide 아이콘: `<i data-lucide="icon-name"></i>` — template.html이 CDN + `createIcons()`를 포함하므로 `data-lucide` 속성만 쓰면 자동 렌더링
+- Lucide 아이콘: `<i data-lucide="icon-name"></i>`
 - 시스템 monospace 폰트
 
 이 규칙 외의 색상, 폰트, 스타일을 사용하지 않는다.
