@@ -1,9 +1,8 @@
-## 패키지 매니저 bun
-
-### 테스트 실행
-- `bun run test`
-
 ## 개발 워크플로우
+
+### 패키지 매니저
+- bun 사용
+- 테스트 실행: `bun run test`
 
 ### 불변 계약
 - `artifacts/spec.yaml`이 전체 앱의 단일 불변 계약이다
