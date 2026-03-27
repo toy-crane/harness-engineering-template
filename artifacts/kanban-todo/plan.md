@@ -173,9 +173,9 @@
     - 태그: Input + Badge 목록 (X 아이콘으로 태그 제거)
     - 삭제: AlertDialog 확인 ("정말 삭제하시겠습니까?")
     - 저장 Button
-  - `components/kanban/subtask-list.tsx`: Checkbox 체크리스트 + 진행률 표시 (Progress bar + "n/m") + Input으로 서브태스크 추가
+  - `components/kanban/subtask-list.tsx`: Checkbox 체크리스트 + Progress 컴포넌트로 진행률 표시 + "n/m" 텍스트 + Input으로 서브태스크 추가
   - `components/kanban/inline-title-edit.tsx`: 카드 제목 클릭 → Input 전환 (Enter 저장, Esc 취소, 빈 제목 거부)
-  - shadcn 추가 필요: `bunx --bun shadcn@latest add toggle-group`
+  - shadcn 추가 필요: `bunx --bun shadcn@latest add toggle-group progress`
 - **수용 기준**:
   - [ ] 카드 클릭 → Dialog 열림, DialogTitle에 카드 제목, "설명", "우선순위", "태그", "서브태스크" 섹션 표시
   - [ ] 설명 Textarea에 "마트 가서 장보기" 입력 후 저장 → 재오픈 시 반영
