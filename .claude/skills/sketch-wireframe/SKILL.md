@@ -10,7 +10,7 @@ argument-hint: "feature 이름"
 
 ## 전제 조건
 
-`spec.yaml`에서 해당 feature의 시나리오를 확인한다. 없으면 "먼저 `/write-spec`을 실행하세요." 출력 후 종료.
+`artifacts/spec.yaml`에서 해당 feature의 시나리오를 확인한다. 없으면 "먼저 `/write-spec`을 실행하세요." 출력 후 종료.
 
 ## 스타일 규칙
 
@@ -28,7 +28,7 @@ argument-hint: "feature 이름"
 
 ## Step 2: 화면 그룹핑
 
-spec.yaml의 시나리오를 시각적으로 구분되는 화면 상태로 그룹핑하고 사용자에게 출력한다.
+artifacts/spec.yaml의 시나리오를 시각적으로 구분되는 화면 상태로 그룹핑하고 사용자에게 출력한다.
 첫 번째 화면은 항상 기본 화면(시나리오 매핑 없음)으로 고정한다.
 
 ```
@@ -53,7 +53,7 @@ open http://localhost:3456/wireframe.html
 
 피드백 루프:
 - 사용자가 자연어로 피드백 → wireframe.html 수정
-- **spec 변경이 필요하면 wireframe을 중단하고 `/write-spec`으로 돌아간다. wireframe에서 spec.yaml을 직접 수정하지 않는다.**
+- **spec 변경이 필요하면 wireframe을 중단하고 `/write-spec`으로 돌아간다. wireframe에서 artifacts/spec.yaml을 직접 수정하지 않는다.**
 
 레이아웃이 확정되면 Step 4로 진행한다.
 
@@ -61,13 +61,13 @@ open http://localhost:3456/wireframe.html
 
 확정된 레이아웃 위에 나머지 시나리오별 화면을 추가한다.
 - 각 화면에 시나리오 ID를 명시적으로 참조한다
-- spec.yaml의 examples에서 구체적 데이터를 사용한다
+- artifacts/spec.yaml의 examples에서 구체적 데이터를 사용한다
 
 동일한 피드백 루프로 검증한다.
 
 ## Step 5: 커버리지 검증
 
-spec.yaml의 모든 시나리오 ID가 wireframe 화면에서 참조되었는지 확인한다. 누락된 시나리오가 있으면 사용자에게 보고하고, 화면에 추가할지 확인한다.
+artifacts/spec.yaml의 모든 시나리오 ID가 wireframe 화면에서 참조되었는지 확인한다. 누락된 시나리오가 있으면 사용자에게 보고하고, 화면에 추가할지 확인한다.
 
 ## 완료
 
