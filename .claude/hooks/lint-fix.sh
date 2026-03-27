@@ -4,7 +4,8 @@
 
 set -eo pipefail
 
-FILE_PATH=$(echo "${TOOL_INPUT:-"{}"}" | jq -r '.file_path // empty')
+INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
 [ -z "$FILE_PATH" ] && exit 0
 
 # Only lint supported file types

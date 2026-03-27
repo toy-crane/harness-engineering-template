@@ -5,8 +5,9 @@
 
 set -eo pipefail
 
+INPUT=$(cat)
 # Only intercept git commit commands
-COMMAND=$(echo "${TOOL_INPUT:-"{}"}" | jq -r '.command // empty')
+COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
 case "$COMMAND" in
   *"git commit"*|*"git add"*) ;;
   *) exit 0 ;;
