@@ -21,6 +21,10 @@ argument-hint: "feature 이름"
 
 이 규칙 외의 색상, 폰트, 스타일을 사용하지 않는다.
 
+## 금지 사항
+
+- artifacts/spec.yaml을 직접 수정하지 않는다. spec 변경이 필요하면 wireframe을 중단하고 `/write-spec`으로 돌아간다.
+
 ## Step 1: 기존 화면 확인
 
 프로젝트에 실행 가능한 앱이 있으면, 관련 화면의 현재 구현을 확인한다. 기존 화면에 요소를 추가하는 경우, 기존 레이아웃을 기반으로 wireframe을 만든다.
@@ -52,7 +56,6 @@ N개 화면으로 구성합니다:
 
 피드백 루프:
 - 브라우저에서 wireframe.html을 열고 사용자 피드백을 받는다 → wireframe.html 수정
-- **spec 변경이 필요하면 wireframe을 중단하고 `/write-spec`으로 돌아간다. wireframe에서 artifacts/spec.yaml을 직접 수정하지 않는다.**
 
 레이아웃이 확정되면 Step 4로 진행한다.
 
