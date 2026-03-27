@@ -1,0 +1,38 @@
+product:
+  name: "Todo App"
+  description: "간단한 할 일 관리 앱"
+
+features:
+  - id: todo-add
+    title: "할 일 추가"
+    scenarios:
+      - id: TODO-ADD-001
+        given: "빈 할 일 목록이 표시된 화면"
+        when: "'할 일 추가' 입력란에 '우유 사기'를 입력하고 '추가' 버튼을 클릭한다"
+        then: "목록에 '우유 사기' 항목이 표시된다"
+        examples:
+          - input: { title: "우유 사기" }
+            expect: { itemText: "우유 사기", itemCount: 1 }
+      - id: TODO-ADD-002
+        given: "'제목' 입력란이 비어 있는 할 일 추가 폼"
+        when: "'추가' 버튼을 클릭한다"
+        then: "'제목을 입력해주세요' 오류 메시지가 표시된다"
+        examples:
+          - input: { title: "" }
+            expect: { errorMessage: "제목을 입력해주세요" }
+    excludes:
+      - "할 일 카테고리 분류"
+      - "마감일 설정"
+
+  - id: todo-delete
+    title: "할 일 삭제"
+    scenarios:
+      - id: TODO-DEL-001
+        given: "할 일 3개가 표시된 목록"
+        when: "첫 번째 항목의 '삭제' 버튼을 클릭한다"
+        then: "목록에 할 일 2개가 표시된다"
+        examples:
+          - input: { targetIndex: 0 }
+            expect: { itemCount: 2 }
+    preconditions:
+      - "할 일 추가 기능이 구현되어 있다"
