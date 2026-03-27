@@ -38,3 +38,17 @@
   1. 구현 검증을 위한 구체적 테스트/명령을 정의한다
   2. 구체적 입력과 기대 출력을 명시한다
   3. 구현 후 모든 수용 기준을 실행하고 통과를 확인한다
+
+## Architecture
+
+의존성이 적은 것부터 구현한다. 역방향 의존은 금지한다.
+
+| 순서 | 디렉토리 | 허용 의존성 |
+|------|---------|-----------|
+| 1 | `types/` | 없음 |
+| 2 | `config/` | types |
+| 3 | `lib/` | types, config |
+| 4 | `services/` | types, config, lib |
+| 5 | `hooks/` | types, config, lib, services |
+| 6 | `components/` | types, config, lib, hooks |
+| 7 | `app/` | 모두 |
