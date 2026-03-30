@@ -42,6 +42,7 @@
         "hooks": [
           {
             "type": "command",
+            "if": "Bash(git *)",
             "command": "\"$(git rev-parse --show-toplevel)\"/.claude/hooks/secret-guard.sh",
             "timeout": 10
           }
