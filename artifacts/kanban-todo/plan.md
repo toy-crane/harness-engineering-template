@@ -44,7 +44,6 @@
 |------|------|
 | shadcn | UI 컴포넌트 규칙 (composition, styling, forms, icons, base-vs-radix) |
 | vercel-react-best-practices | 리렌더링 최적화, 클라이언트 상태 패턴 |
-| frontend-design | 칸반 보드 비주얼 디자인 품질 |
 
 ## Affected Files
 
@@ -143,7 +142,7 @@
 
 - **시나리오**: KANBAN-001, KANBAN-002
 - **의존성**: Task 3 (스토어)
-- **참조 규칙**: `shadcn` (composition.md — Badge로 우선순위/태그 표시, Dialog Title 필수), `shadcn` (styling.md — semantic color, gap, cn(), 수동 dark: 오버라이드 금지), `shadcn` (forms.md — Field+Input으로 카드 제목 입력, data-invalid로 유효성 표시), `shadcn` (icons.md — lucide-react, data-icon), `frontend-design` (와이어프레임 기반 비주얼 디자인), `vercel-react-best-practices` (리렌더링 최적화)
+- **참조 규칙**: `shadcn` (composition.md — Badge로 우선순위/태그 표시, Dialog Title 필수), `shadcn` (styling.md — semantic color, gap, cn(), 수동 dark: 오버라이드 금지), `shadcn` (forms.md — Field+Input으로 카드 제목 입력, data-invalid로 유효성 표시), `shadcn` (icons.md — lucide-react, data-icon), `vercel-react-best-practices` (리렌더링 최적화)
 - **구현 대상**:
   - `components/kanban/kanban-board.tsx`: 3칼럼 보드 레이아웃 (@container 반응형 — 모바일: 세로 스택, 데스크톱: 가로 배치)
   - `components/kanban/kanban-column.tsx`: 칼럼 컴포넌트 (제목, 카드 수 표시, 카드 목록)
@@ -165,7 +164,7 @@
 
 - **시나리오**: KANBAN-003~014
 - **의존성**: Task 4 (카드 컴포넌트)
-- **참조 규칙**: `shadcn` (composition.md — Dialog Title 필수, AlertDialog로 삭제 확인, Badge로 태그 표시), `shadcn` (forms.md — ToggleGroup type="single"으로 우선순위 선택, Field+Textarea로 설명, Checkbox로 서브태스크), `shadcn` (base-vs-radix.md — radix ToggleGroup: type="single" defaultValue="string"), `shadcn` (styling.md — semantic color, cn()), `shadcn` (icons.md — lucide-react, data-icon), `frontend-design` (와이어프레임 Screen 2~5 기반)
+- **참조 규칙**: `shadcn` (composition.md — Dialog Title 필수, AlertDialog로 삭제 확인, Badge로 태그 표시), `shadcn` (forms.md — ToggleGroup type="single"으로 우선순위 선택, Field+Textarea로 설명, Checkbox로 서브태스크), `shadcn` (base-vs-radix.md — radix ToggleGroup: type="single" defaultValue="string"), `shadcn` (styling.md — semantic color, cn()), `shadcn` (icons.md — lucide-react, data-icon)
 - **구현 대상**:
   - `components/kanban/card-detail-modal.tsx`: Dialog 기반 상세 모달
     - 설명: Textarea

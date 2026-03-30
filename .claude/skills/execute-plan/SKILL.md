@@ -1,6 +1,6 @@
 ---
 name: execute-plan
-description: plan.md Task를 순차 실행하고, QA/Design Evaluator로 검증한 뒤, Code Simplifier로 정리한다. "/execute-plan", "플랜 실행", "구현 시작" 등으로 실행.
+description: plan.md Task를 순차 실행하고, QA Evaluator로 검증한 뒤, Code Simplifier로 정리한다. "/execute-plan", "플랜 실행", "구현 시작" 등으로 실행.
 argument-hint: "feature 이름"
 ---
 
@@ -26,9 +26,9 @@ plan.md의 Task를 순서대로 실행한다.
 
 ## Step 3: 평가 루프
 
-전체 Task 완료 후 dev server를 시작하고 Evaluator를 호출한다.
+전체 Task 완료 후 dev server를 시작하고 QA Evaluator를 호출한다.
 
-- QA Evaluator + Design Evaluator (UI 없으면 Design 생략)
+- QA Evaluator: spec.yaml 시나리오별 pass/fail 검증
 - 피드백 → 수정 → 재평가
 - 최대 5라운드. 소진 시 사용자에게 보고하고 중단한다.
 
@@ -40,5 +40,4 @@ plan.md의 Task를 순서대로 실행한다.
 
 사용자에게 결과를 보고한다:
 - QA: 시나리오별 pass/fail
-- Design: 최종 점수 (4축)
 - Code Simplifier: 주요 변경사항
