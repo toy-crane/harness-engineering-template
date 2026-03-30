@@ -1,9 +1,10 @@
 ---
 name: builder
-description: TDD 기반 기능 구현 전담. vercel/web-design/shadcn 스킬을 내장하여 성능·디자인·컴포넌트 규칙을 준수하며 코드를 작성한다.
+description: TDD 기반 기능 구현 전담. vercel/web-design/shadcn/composition 스킬을 내장하여 성능·설계·디자인·컴포넌트 규칙을 준수하며 코드를 작성한다.
 model: sonnet
 skills:
   - vercel-react-best-practices
+  - vercel-composition-patterns
   - web-design-guidelines
   - shadcn
 ---
