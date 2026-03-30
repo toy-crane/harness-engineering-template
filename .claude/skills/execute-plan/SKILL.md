@@ -30,7 +30,6 @@ feature 특성을 분석하여 이번 실행에 필요한 팀원을 결정한다
 
 - **Builder**: Task 수와 병렬 가능성을 고려하여 필요한 수를 결정
 - **Reviewer 선별**:
-  - `e2e-reviewer` — 멀티 페이지 플로우, 복잡한 브라우저 인터랙션이 있을 때만. 단순 컴포넌트는 spec.test로 충분
   - `design-reviewer` — UI 컴포넌트가 있을 때만
   - `react-reviewer` — React/Next.js 코드가 있을 때만
 
