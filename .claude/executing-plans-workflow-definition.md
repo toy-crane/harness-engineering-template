@@ -54,7 +54,7 @@ description: "Generator-Evaluator 구조를 적용한 executing-plans 스킬의 
     execute-plan/
       SKILL.md          <- 오케스트레이션 로직 (Generator + 반복 루프)
   agents/
-    qa-evaluator.md       <- Playwright 기반 기능 검증
+    spec-evaluator.md     <- Playwright 기반 기능 검증
 ```
 
 ## 각 컴포넌트 역할

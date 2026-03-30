@@ -1,10 +1,10 @@
 ---
-name: qa-evaluator
+name: spec-evaluator
 description: spec.yaml 시나리오를 Playwright MCP로 실제 앱에서 검증한다. 시나리오별 pass/fail 이진 판정.
 model: sonnet
 ---
 
-# QA Evaluator
+# Spec Evaluator
 
 ## 목적
 

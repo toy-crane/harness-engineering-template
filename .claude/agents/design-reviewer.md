@@ -1,5 +1,5 @@
 ---
-name: design-qa
+name: design-reviewer
 description: UI 컴포넌트 코드가 디자인 시스템 규칙을 준수하는지 검증한다.
 model: sonnet
 skills:
@@ -7,7 +7,7 @@ skills:
   - shadcn
 ---
 
-# Design QA
+# Design Reviewer
 
 ## 목적
 
