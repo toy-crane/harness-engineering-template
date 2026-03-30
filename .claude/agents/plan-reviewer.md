@@ -2,6 +2,8 @@
 name: plan-reviewer
 description: plan.md 독립 검토. spec.yaml 시나리오 커버리지를 검증하고, wireframe이 있으면 컴포넌트 정합성도 검증한다.
 model: sonnet
+skills:
+  - sketch-wireframe
 ---
 
 # Plan Reviewer
