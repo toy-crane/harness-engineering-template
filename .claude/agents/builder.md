@@ -7,6 +7,7 @@ skills:
   - vercel-composition-patterns
   - web-design-guidelines
   - shadcn
+  - next-best-practices
 ---
 
 # Builder
