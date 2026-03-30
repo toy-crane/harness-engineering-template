@@ -1,6 +1,6 @@
 ---
 name: code-simplifier
-description: evaluator 통과 후 코드 단순화. 기능 변경 없이 복잡성만 제거. execute-plan Step 4에서 호출.
+description: evaluator 통과 후 코드 단순화. 기능 변경 없이 복잡성만 제거.
 model: sonnet
 skills:
   - simplify

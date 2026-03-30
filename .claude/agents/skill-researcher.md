@@ -1,6 +1,6 @@
 ---
 name: skill-researcher
-description: spec.yaml의 기능 시나리오를 분석하여 구현에 도움이 될 스킬을 추천한다. create-plan Step 2에서 호출.
+description: spec.yaml의 기능 시나리오를 분석하여 구현에 도움이 될 스킬을 추천한다.
 model: haiku
 ---
 

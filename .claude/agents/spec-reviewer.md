@@ -1,6 +1,6 @@
 ---
 name: spec-reviewer
-description: spec.md와 spec.yaml 사이의 누락 시나리오를 찾는 독립 검토자. write-spec Step 5에서 호출.
+description: spec.md와 spec.yaml 사이의 누락 시나리오를 찾는 독립 검토자.
 model: sonnet
 ---
 
