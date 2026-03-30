@@ -26,9 +26,10 @@ plan.md의 Task를 순서대로 실행한다.
 
 ## Step 3: 평가 루프
 
-전체 Task 완료 후 dev server를 시작하고 QA Evaluator를 호출한다.
+전체 Task 완료 후 dev server를 시작하고 평가를 실행한다.
 
 - QA Evaluator: spec.yaml 시나리오별 pass/fail 검증
+- Design QA: 컴포넌트 파일의 디자인 시스템 규칙 준수 검증
 - 피드백 → 수정 → 재평가
 - 최대 5라운드. 소진 시 사용자에게 보고하고 중단한다.
 
