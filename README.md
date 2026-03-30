@@ -68,7 +68,7 @@ spec.yaml과 wireframe을 참조하여 구현 계획을 수립합니다. skill-r
 
 ### 4. Execute (`/execute-plan`)
 
-plan.md의 Task를 TDD로 순차 실행합니다. 완료 후 QA Evaluator(spec 시나리오 검증)와 Design Evaluator(시각적 품질 채점)로 검증하고, Code Simplifier로 정리합니다.
+plan.md의 Task를 TDD로 순차 실행합니다. 완료 후 QA Evaluator(spec 시나리오 검증)로 검증하고, Code Simplifier로 정리합니다.
 
 ### 5. Improve (`/improve-harness`)
 
