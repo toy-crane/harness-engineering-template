@@ -33,13 +33,13 @@ description: "Generator-Evaluator 구조를 적용한 executing-plans 스킬의 
                                                 [Generator 구현]
                                                         |
                                                         v
-                                                [QA Evaluator] <---- spec.yaml
+                                                [E2E Reviewer] <---- spec.yaml
                                                         |
                                                 [Design Reviewer] <---- design rules
                                                         |
                                                 [React Reviewer] <---- react best practices
                                                         |
-                                                pass/fail (최대 3회)
+                                                pass/fail
                                                         |
                                                     전체 pass
                                                         |
@@ -58,7 +58,7 @@ description: "Generator-Evaluator 구조를 적용한 executing-plans 스킬의 
     execute-plan/
       SKILL.md          <- 오케스트레이션 로직 (Generator + 반복 루프)
   agents/
-    spec-evaluator.md     <- Playwright 기반 기능 검증
+    e2e-reviewer.md       <- Playwright 기반 기능 검증
     design-reviewer.md    <- 디자인 시스템 규칙 검증
     react-reviewer.md     <- React/Next.js 성능 패턴 검증
 ```
@@ -69,16 +69,16 @@ description: "Generator-Evaluator 구조를 적용한 executing-plans 스킬의 
 
 - plan.md를 읽고 태스크 목록을 순서대로 실행
 - Generator 역할을 직접 수행 (단일 에이전트)
-- 구현 완료 후 QA -> Design -> React 순서로 Evaluator 호출
+- 구현 완료 후 E2E -> Design -> React 순서로 Reviewer 호출
 - 반복 루프 관리 (재시도, pivot 판단, 종료)
 
-### 2. QA Evaluator (에이전트)
+### 2. E2E Reviewer (에이전트)
 
 - 입력: spec.yaml, 실행 중인 앱 URL
 - 도구: Playwright MCP
 - 판정: spec 시나리오별 pass/fail (이진)
 - 출력: 실패 시나리오 목록 + 재현 방법
-- 최대 3회 반복, 전체 pass 시 종료
+- 전체 pass 시 종료
 
 ### 3. React Reviewer (에이전트)
 
@@ -90,15 +90,16 @@ description: "Generator-Evaluator 구조를 적용한 executing-plans 스킬의 
 
 ## 반복 루프 종료 조건 요약
 
-| Evaluator | 판정 방식 | 최대 반복 | 종료 조건 |
-|-----------|----------|----------|----------|
-| QA | spec 시나리오별 pass/fail | 3회 | 전체 pass, 또는 3회 소진 시 사용자 보고 |
-| React | fail-tier 규칙 위반 pass/fail | 3회 | fail-tier 전체 pass, 또는 3회 소진 시 사용자 보고 |
+| Reviewer | 판정 방식 | 종료 조건 |
+|----------|----------|----------|
+| E2E | spec 시나리오별 pass/fail | 전체 pass |
+| Design | 디자인 시스템 규칙 pass/fail | 전체 pass |
+| React | fail-tier 규칙 위반 pass/fail | fail-tier 전체 pass |
 
 ## 핵심 설계 원칙
 
 1. **Generator는 단일 에이전트 유지**: 모델 역량 향상으로 분해 불필요
-2. **QA Evaluator는 독립 검증자**: spec.yaml만을 기준으로 객관적 판정
+2. **E2E Reviewer는 독립 검증자**: spec.yaml만을 기준으로 객관적 판정
 3. **오케스트레이션은 스킬 프롬프트 안에**: 별도 YAML 불필요
 4. **레이아웃 구성 품질은 wireframe에서 검증**: 위계, 밀도, 흐름, 상태를 wireframe 피드백 루프에서 확인
 5. **spec test는 읽기 전용**: 테스트가 실패하면 구현을 고침
