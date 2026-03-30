@@ -89,7 +89,7 @@
 
 - **시나리오**: KANBAN-001~029 전체
 - **의존성**: Task 1 (타입) — spec 테스트에서 테스트 데이터 생성 시 타입 필요
-- **참조 규칙**: `CLAUDE.md` spec 테스트 작성 규칙 (생성 후 수정 금지), `*.spec.test.tsx` 컨벤션
+- **참조 규칙**: `CLAUDE.md` spec 테스트 작성 규칙, `*.spec.test.tsx` 컨벤션
 - **구현 대상**:
   - `__tests__/kanban.spec.test.tsx`: spec.yaml의 29개 시나리오를 렌더링 기반으로 검증
 - **수용 기준**:

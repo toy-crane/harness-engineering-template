@@ -24,8 +24,6 @@ plan.md의 Task를 순서대로 실행한다.
 2. 테스트를 통과하는 최소 코드를 구현한다 (Green)
 3. spec 테스트와 구현 테스트 양쪽 통과를 유지하며 리팩터링
 
-spec 테스트(`*.spec.test.tsx`)는 Task 1에서 생성된 후 수정 금지. 실패하면 구현을 수정한다.
-
 ## Step 3: 평가 루프
 
 전체 Task 완료 후 dev server를 시작하고 Evaluator를 호출한다.

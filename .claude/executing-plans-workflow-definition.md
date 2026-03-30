@@ -102,7 +102,7 @@ description: "Generator-Evaluator 구조를 적용한 executing-plans 스킬의 
 2. **Evaluator는 관점으로 분리**: QA vs Design, 도구와 프롬프트 성격이 다름
 3. **오케스트레이션은 스킬 프롬프트 안에**: 별도 YAML 불필요
 4. **frontend-design 스킬 이중 적용**: Planner(spec 단계)와 Design Evaluator 양쪽에서 참조
-5. **spec test는 읽기 전용**: 테스트가 실패하면 구현을 고침
+
 
 ## 기존 하네스와의 관계
 
