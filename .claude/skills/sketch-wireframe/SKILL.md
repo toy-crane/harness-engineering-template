@@ -38,8 +38,8 @@ argument-hint: "feature 이름"
 서버 실행: `Bash(run_in_background): bunx vite artifacts/<feature> --port=3456`
 
 피드백 루프:
-- 브라우저 도구로 `http://localhost:3456/wireframe.html`을 열고 사용자 피드백을 받는다 → wireframe.html 수정
-- template의 Mobile/Desktop 토글로 양쪽 레이아웃을 확인한다
+- 사용자에게 `http://localhost:3456/wireframe.html` 확인을 안내한다 (Mobile/Desktop 토글로 양쪽 확인)
+- 사용자 피드백을 받아 wireframe.html을 수정한다
 
 레이아웃이 확정되면 Step 3으로 진행한다.
 
