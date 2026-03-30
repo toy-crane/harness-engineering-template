@@ -30,6 +30,7 @@ plan.md의 Task를 순서대로 실행한다.
 
 - QA Evaluator: spec.yaml 시나리오별 pass/fail 검증
 - Design QA: 컴포넌트 파일의 디자인 시스템 규칙 준수 검증
+- React QA: React/Next.js 성능 패턴 검증 (CRITICAL/HIGH 위반만 fail)
 - 피드백 → 수정 → 재평가
 - 최대 5라운드. 소진 시 사용자에게 보고하고 중단한다.
 
@@ -41,4 +42,5 @@ plan.md의 Task를 순서대로 실행한다.
 
 사용자에게 결과를 보고한다:
 - QA: 시나리오별 pass/fail
+- React QA: CRITICAL/HIGH 위반 + advisory 요약
 - Code Simplifier: 주요 변경사항

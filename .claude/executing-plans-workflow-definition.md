@@ -35,6 +35,10 @@ description: "Generator-Evaluator 구조를 적용한 executing-plans 스킬의 
                                                         v
                                                 [QA Evaluator] <---- spec.yaml
                                                         |
+                                                [Design Reviewer] <---- design rules
+                                                        |
+                                                [React Reviewer] <---- react best practices
+                                                        |
                                                 pass/fail (최대 3회)
                                                         |
                                                     전체 pass
@@ -55,6 +59,8 @@ description: "Generator-Evaluator 구조를 적용한 executing-plans 스킬의 
       SKILL.md          <- 오케스트레이션 로직 (Generator + 반복 루프)
   agents/
     spec-evaluator.md     <- Playwright 기반 기능 검증
+    design-reviewer.md    <- 디자인 시스템 규칙 검증
+    react-reviewer.md     <- React/Next.js 성능 패턴 검증
 ```
 
 ## 각 컴포넌트 역할
@@ -63,7 +69,7 @@ description: "Generator-Evaluator 구조를 적용한 executing-plans 스킬의 
 
 - plan.md를 읽고 태스크 목록을 순서대로 실행
 - Generator 역할을 직접 수행 (단일 에이전트)
-- 구현 완료 후 QA -> Design 순서로 Evaluator 호출
+- 구현 완료 후 QA -> Design -> React 순서로 Evaluator 호출
 - 반복 루프 관리 (재시도, pivot 판단, 종료)
 
 ### 2. QA Evaluator (에이전트)
@@ -74,11 +80,20 @@ description: "Generator-Evaluator 구조를 적용한 executing-plans 스킬의 
 - 출력: 실패 시나리오 목록 + 재현 방법
 - 최대 3회 반복, 전체 pass 시 종료
 
+### 3. React Reviewer (에이전트)
+
+- 입력: 구현된 컴포넌트/페이지 파일 목록
+- 도구: vercel-react-best-practices 스킬 규칙
+- 판정: 파일별 pass/fail (CRITICAL/HIGH 위반만 fail, MEDIUM 이하는 advisory)
+- 출력: 위반 목록 (파일:행, 규칙 출처, 수정 방향) + advisory 목록
+- Next.js 미사용 시 `server-*` 규칙 건너뜀
+
 ## 반복 루프 종료 조건 요약
 
 | Evaluator | 판정 방식 | 최대 반복 | 종료 조건 |
 |-----------|----------|----------|----------|
 | QA | spec 시나리오별 pass/fail | 3회 | 전체 pass, 또는 3회 소진 시 사용자 보고 |
+| React | fail-tier 규칙 위반 pass/fail | 3회 | fail-tier 전체 pass, 또는 3회 소진 시 사용자 보고 |
 
 ## 핵심 설계 원칙
 
