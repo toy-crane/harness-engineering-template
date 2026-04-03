@@ -1,0 +1,82 @@
+product:
+  name: "Feed Me"
+  description: "URL을 입력하면 콘텐츠를 추출하여 AI 챗봇으로 보낼 수 있는 미니멀 도구"
+
+features:
+  - id: feed-extract
+    title: "콘텐츠 추출"
+    scenarios:
+      - id: FEED-EXT-001
+        given: "URL 입력란이 비어 있는 초기 화면"
+        when: "URL 입력란에 'https://example.com/article'을 입력하고 제출 버튼을 클릭한다"
+        then: "제목, 저자, 발행일, 사이트명이 상단에 표시되고 본문 미리보기가 아래에 표시된다"
+        examples:
+          - input: { url: "https://example.com/article" }
+            expect: { titleVisible: true, authorVisible: true, contentPreviewVisible: true }
+      - id: FEED-EXT-002
+        given: "URL 입력란이 비어 있는 초기 화면"
+        when: "URL 입력란에 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'를 입력하고 제출 버튼을 클릭한다"
+        then: "영상 제목이 상단에 표시되고 transcript 미리보기가 아래에 표시된다"
+        examples:
+          - input: { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" }
+            expect: { titleVisible: true, contentPreviewVisible: true }
+      - id: FEED-EXT-003
+        given: "URL 입력란이 비어 있는 초기 화면"
+        when: "URL 입력란에 URL을 입력하고 제출 버튼을 클릭한다"
+        then: "제출 직후 로딩 인디케이터가 화면에 표시된다"
+        examples:
+          - input: { url: "https://example.com/article" }
+            expect: { loadingIndicatorVisible: true }
+          - input: { url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" }
+            expect: { loadingIndicatorVisible: true }
+    excludes:
+      - "콘텐츠 편집 기능"
+      - "추출 히스토리 저장"
+
+  - id: feed-send
+    title: "AI 챗봇으로 보내기"
+    scenarios:
+      - id: FEED-SEND-001
+        given: "콘텐츠가 추출되어 미리보기가 표시된 상태"
+        when: "Open In Chat 드롭다운을 클릭한다"
+        then: "'ChatGPT'와 'Claude' 두 개 옵션이 표시된다"
+        examples:
+          - input: { action: "click-open-in-chat" }
+            expect: { chatGPTOption: true, claudeOption: true, optionCount: 2 }
+      - id: FEED-SEND-002
+        given: "Open In Chat 드롭다운이 열린 상태"
+        when: "'ChatGPT' 옵션을 클릭한다"
+        then: "추출된 원문 텍스트가 ChatGPT 채팅으로 전달된다"
+        examples:
+          - input: { selectedChat: "ChatGPT" }
+            expect: { redirectTarget: "chatgpt.com" }
+      - id: FEED-SEND-003
+        given: "Open In Chat 드롭다운이 열린 상태"
+        when: "'Claude' 옵션을 클릭한다"
+        then: "추출된 원문 텍스트가 Claude 채팅으로 전달된다"
+        examples:
+          - input: { selectedChat: "Claude" }
+            expect: { redirectTarget: "claude.ai" }
+    excludes:
+      - "기본 프롬프트 추가"
+      - "ChatGPT, Claude 외 다른 AI 챗봇"
+    preconditions:
+      - "콘텐츠 추출 기능이 구현되어 있다"
+
+  - id: feed-error
+    title: "오류 처리"
+    scenarios:
+      - id: FEED-ERR-001
+        given: "URL 입력란이 비어 있는 초기 화면"
+        when: "URL 입력란에 'not-a-url'을 입력하고 제출 버튼을 클릭한다"
+        then: "'올바른 URL을 입력해주세요' 오류 메시지가 표시된다"
+        examples:
+          - input: { url: "not-a-url" }
+            expect: { errorMessage: "올바른 URL을 입력해주세요" }
+      - id: FEED-ERR-002
+        given: "URL 입력란이 비어 있는 초기 화면"
+        when: "접근 불가능한 URL을 입력하고 제출 버튼을 클릭한다"
+        then: "'콘텐츠를 추출할 수 없습니다' 오류 메시지가 표시된다"
+        examples:
+          - input: { url: "https://unreachable.invalid/page" }
+            expect: { errorMessage: "콘텐츠를 추출할 수 없습니다" }
