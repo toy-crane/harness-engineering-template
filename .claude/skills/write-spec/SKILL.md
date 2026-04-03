@@ -33,6 +33,14 @@ argument-hint: "기능 설명"
 - 기존 시나리오와의 교차점이 있으면 구체적으로 언급하며 질문한다
 - 3회 이상 새로운 발견이 없으면 다음 단계로 이동한다. 단, 변경 비용이 큰 미탐색 분기가 있으면 먼저 질문한다
 
+## Step 2.5: 첨부 이미지 저장
+
+대화 중 사용자가 이미지를 첨부했으면 `artifacts/<feature-name>/references/`에 저장한다.
+
+- 파일명: 이미지 내용을 설명하는 영문 kebab-case (예: `main-dashboard-layout.png`)
+- 이미 같은 이미지가 있으면 건너뛴다
+- 저장 후 어떤 파일을 저장했는지 한 줄로 알려준다
+
 ## Step 3: spec.md 생성
 
 `references/spec-template.md`를 읽고 그 형식에 맞춰 작성한다.
