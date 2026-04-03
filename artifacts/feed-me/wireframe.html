@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe: Feed Me</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  :root {
+    --w-bg: #f5f5f5;
+    --w-border: #ccc;
+    --w-text: #555;
+    --w-muted: #aaa;
+    --w-fill: #eee;
+  }
+
+  * {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    color: var(--w-text);
+  }
+
+  body { background: var(--w-bg); }
+
+  /* Screen nav */
+  nav { position: sticky; top: 0; z-index: 40; background: var(--w-bg); border-bottom: 1px solid var(--w-border); }
+  nav button { cursor: pointer; font-size: 13px; }
+  nav button:hover { background: var(--w-fill); border-radius: 4px; }
+  nav button.active { font-weight: bold; border-bottom: 2px solid var(--w-text); }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Viewport toggle */
+  .vp-toggle button {
+    font-size: 12px; padding: 2px 8px;
+    border: 1px solid var(--w-border); cursor: pointer; background: white;
+  }
+  .vp-toggle button:first-child { border-radius: 4px 0 0 4px; }
+  .vp-toggle button:last-child { border-radius: 0 4px 4px 0; border-left: none; }
+  .vp-toggle button.active { background: var(--w-text); color: white; }
+
+  /* Mobile viewport frame */
+  body.viewport-mobile .screen-content {
+    max-width: 375px !important;
+    margin: 24px auto !important;
+    border: 2px solid var(--w-border);
+    border-radius: 24px;
+    min-height: 667px;
+    background: white;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    padding: 32px 16px !important;
+  }
+
+  /* Screen Notes */
+  .screen-notes {
+    background: #fffde7;
+    border-left: 3px solid #ffd54f;
+    padding: 12px 16px;
+    margin-top: 24px;
+    font-size: 13px;
+    border-radius: 0 4px 4px 0;
+  }
+  .screen-notes summary {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    color: #b0a050;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .screen-notes p { margin: 6px 0 2px; color: #777; }
+  .screen-notes ul { margin: 4px 0 0 16px; padding: 0; color: #777; }
+  .screen-notes li { margin: 2px 0; }
+
+  /* Wireframe components */
+  .w-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--w-border);
+    border-radius: 8px;
+    font-size: 14px;
+    background: white;
+  }
+  .w-btn {
+    padding: 10px 20px;
+    border: 1px solid var(--w-border);
+    border-radius: 8px;
+    font-size: 14px;
+    background: var(--w-fill);
+    cursor: pointer;
+  }
+  .w-btn-primary {
+    background: var(--w-text);
+    color: white;
+    border-color: var(--w-text);
+  }
+  .w-card {
+    border: 1px solid var(--w-border);
+    border-radius: 8px;
+    background: white;
+    padding: 16px;
+  }
+  .w-meta {
+    font-size: 12px;
+    color: var(--w-muted);
+  }
+  .w-skeleton {
+    background: var(--w-fill);
+    border-radius: 4px;
+    height: 14px;
+    margin-bottom: 8px;
+  }
+  .w-error {
+    border: 1px solid #e57373;
+    background: #ffebee;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #c62828;
+  }
+  .w-dropdown {
+    border: 1px solid var(--w-border);
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 4px;
+  }
+  .w-dropdown-item {
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .w-dropdown-item:hover {
+    background: var(--w-fill);
+  }
+</style>
+</head>
+<body class="p-0 m-0 viewport-mobile">
+
+<nav class="flex items-center gap-4 px-6 py-2 flex-wrap">
+  <span class="text-xs" style="color:var(--w-muted)">wireframe</span>
+  <!-- NAV_BUTTONS -->
+  <button id="nav-0" onclick="show(0)" class="px-2 py-1">초기</button>
+  <button id="nav-1" onclick="show(1)" class="px-2 py-1">로딩</button>
+  <button id="nav-2" onclick="show(2)" class="px-2 py-1">아티클 결과</button>
+  <button id="nav-3" onclick="show(3)" class="px-2 py-1">YouTube 결과</button>
+  <button id="nav-4" onclick="show(4)" class="px-2 py-1">오류</button>
+  <div class="vp-toggle flex ml-auto">
+    <button id="vp-desktop" onclick="setViewport('desktop')">Desktop</button>
+    <button id="vp-mobile" onclick="setViewport('mobile')" class="active">Mobile</button>
+  </div>
+</nav>
+
+<!-- SCREEN_CONTENT -->
+
+<!-- Screen 0: 초기 화면 -->
+<div id="screen-0" class="screen" data-scenario="FEED-EXT-001, FEED-EXT-002">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      초기 화면
+    </h2>
+
+    <div class="flex flex-col justify-center" style="min-height: 400px;">
+      <!-- Title -->
+      <h1 class="text-2xl font-bold mb-2">Feed Me</h1>
+      <p class="text-sm mb-8" style="color:var(--w-muted)">Get the main content of any page for AI chat.</p>
+
+      <!-- URL Input Form -->
+      <div class="flex gap-2">
+        <input class="w-input flex-1" type="text" placeholder="Enter a URL" />
+        <button class="w-btn w-btn-primary whitespace-nowrap">가져오기</button>
+      </div>
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: 앱 최초 진입 시 표시</li>
+          <li>인터랙션: URL 입력 후 제출 버튼 클릭 또는 Enter</li>
+          <li>전환: 유효한 URL 제출 → 로딩 화면, 잘못된 URL → 오류 화면</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- Screen 1: 로딩 -->
+<div id="screen-1" class="screen" data-scenario="FEED-EXT-003">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      로딩
+    </h2>
+
+    <!-- URL Input (disabled state) -->
+    <div class="w-full max-w-md mx-auto mb-8">
+      <div class="flex gap-2">
+        <input class="w-input flex-1" type="text" value="https://example.com/article" disabled style="opacity:0.6" />
+        <button class="w-btn" disabled style="opacity:0.6">
+          <i data-lucide="arrow-right" style="width:16px; height:16px"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading skeleton -->
+    <div class="w-card max-w-md mx-auto">
+      <div class="flex items-center gap-2 mb-4">
+        <i data-lucide="loader-2" style="width:16px; height:16px; color:var(--w-muted)" class="animate-spin"></i>
+        <span class="text-sm" style="color:var(--w-muted)">콘텐츠 추출 중...</span>
+      </div>
+      <div class="w-skeleton" style="width:70%"></div>
+      <div class="w-skeleton" style="width:40%"></div>
+      <div class="w-skeleton mt-4" style="width:100%"></div>
+      <div class="w-skeleton" style="width:90%"></div>
+      <div class="w-skeleton" style="width:95%"></div>
+      <div class="w-skeleton" style="width:60%"></div>
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: 유효한 URL 제출 직후</li>
+          <li>인터랙션: 없음 (대기 상태)</li>
+          <li>전환: 추출 완료 → 아티클/YouTube 결과, 추출 실패 → 오류 화면</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- Screen 2: 아티클 결과 -->
+<div id="screen-2" class="screen" data-scenario="FEED-EXT-001, FEED-SEND-001, FEED-SEND-002, FEED-SEND-003">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      아티클 결과
+    </h2>
+
+    <!-- URL Input (with current URL) -->
+    <div class="w-full max-w-md mx-auto mb-6">
+      <div class="flex gap-2">
+        <input class="w-input flex-1" type="text" value="https://example.com/article" />
+        <button class="w-btn w-btn-primary">
+          <i data-lucide="arrow-right" style="width:16px; height:16px; color:white"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Result Card -->
+    <div class="w-card max-w-md mx-auto">
+      <!-- Metadata -->
+      <div class="mb-4">
+        <h3 class="text-base font-bold mb-2">Understanding Modern Web Architecture</h3>
+        <div class="flex flex-wrap gap-3 w-meta">
+          <span class="flex items-center gap-1">
+            <i data-lucide="user" style="width:12px; height:12px"></i>
+            John Doe
+          </span>
+          <span class="flex items-center gap-1">
+            <i data-lucide="calendar" style="width:12px; height:12px"></i>
+            2025-03-15
+          </span>
+          <span class="flex items-center gap-1">
+            <i data-lucide="globe" style="width:12px; height:12px"></i>
+            example.com
+          </span>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <hr style="border-color:var(--w-border); margin: 12px 0;" />
+
+      <!-- Content Preview -->
+      <div class="text-sm leading-relaxed" style="max-height: 200px; overflow-y: auto;">
+        <p class="mb-2">Modern web architecture has evolved significantly over the past decade. Server-side rendering, once the standard approach, has given way to...</p>
+        <p class="mb-2">The introduction of React Server Components marks another shift in how we think about the boundary between server and client...</p>
+        <p style="color:var(--w-muted)">[본문 계속...]</p>
+      </div>
+
+      <!-- Divider -->
+      <hr style="border-color:var(--w-border); margin: 12px 0;" />
+
+      <!-- Open In Chat -->
+      <div class="relative">
+        <button class="w-btn w-full flex items-center justify-center gap-2">
+          <i data-lucide="message-square" style="width:14px; height:14px"></i>
+          Open in Chat
+          <i data-lucide="chevron-down" style="width:14px; height:14px"></i>
+        </button>
+
+        <!-- Dropdown (shown for wireframe) -->
+        <div class="w-dropdown mt-2">
+          <div class="w-dropdown-item">
+            <i data-lucide="message-circle" style="width:14px; height:14px"></i>
+            ChatGPT
+          </div>
+          <div class="w-dropdown-item">
+            <i data-lucide="bot" style="width:14px; height:14px"></i>
+            Claude
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: 아티클 URL 추출 완료 시</li>
+          <li>인터랙션: Open In Chat 클릭 → 드롭다운에서 ChatGPT/Claude 선택</li>
+          <li>전환: 챗봇 선택 → 해당 챗봇 사이트로 이동 (원문 텍스트 전달), 새 URL 입력 → 로딩 화면</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- Screen 3: YouTube 결과 -->
+<div id="screen-3" class="screen" data-scenario="FEED-EXT-002">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      YouTube 결과
+    </h2>
+
+    <!-- URL Input -->
+    <div class="w-full max-w-md mx-auto mb-6">
+      <div class="flex gap-2">
+        <input class="w-input flex-1" type="text" value="https://www.youtube.com/watch?v=dQw4w9WgXcQ" />
+        <button class="w-btn w-btn-primary">
+          <i data-lucide="arrow-right" style="width:16px; height:16px; color:white"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Result Card -->
+    <div class="w-card max-w-md mx-auto">
+      <!-- Metadata -->
+      <div class="mb-4">
+        <h3 class="text-base font-bold mb-2">Rick Astley - Never Gonna Give You Up</h3>
+        <div class="flex flex-wrap gap-3 w-meta">
+          <span class="flex items-center gap-1">
+            <i data-lucide="youtube" style="width:12px; height:12px"></i>
+            YouTube
+          </span>
+          <span class="flex items-center gap-1">
+            <i data-lucide="user" style="width:12px; height:12px"></i>
+            Rick Astley
+          </span>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <hr style="border-color:var(--w-border); margin: 12px 0;" />
+
+      <!-- Transcript Preview -->
+      <div class="text-sm leading-relaxed" style="max-height: 200px; overflow-y: auto;">
+        <p class="mb-2" style="color:var(--w-muted); font-size:11px; text-transform:uppercase; letter-spacing:0.05em;">Transcript</p>
+        <p class="mb-1"><span class="w-meta">0:00</span> We're no strangers to love</p>
+        <p class="mb-1"><span class="w-meta">0:03</span> You know the rules and so do I</p>
+        <p class="mb-1"><span class="w-meta">0:07</span> A full commitment's what I'm thinking of</p>
+        <p class="mb-1"><span class="w-meta">0:11</span> You wouldn't get this from any other guy</p>
+        <p style="color:var(--w-muted)">[transcript 계속...]</p>
+      </div>
+
+      <!-- Divider -->
+      <hr style="border-color:var(--w-border); margin: 12px 0;" />
+
+      <!-- Open In Chat -->
+      <div>
+        <button class="w-btn w-full flex items-center justify-center gap-2">
+          <i data-lucide="message-square" style="width:14px; height:14px"></i>
+          Open in Chat
+          <i data-lucide="chevron-down" style="width:14px; height:14px"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: YouTube URL 추출 완료 시</li>
+          <li>인터랙션: Open In Chat 클릭 → 드롭다운에서 ChatGPT/Claude 선택</li>
+          <li>전환: 챗봇 선택 → 해당 챗봇 사이트로 이동 (transcript 텍스트 전달), 새 URL 입력 → 로딩 화면</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!-- Screen 4: 오류 -->
+<div id="screen-4" class="screen" data-scenario="FEED-ERR-001, FEED-ERR-002">
+  <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+    <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+      오류
+    </h2>
+
+    <!-- URL Input -->
+    <div class="w-full max-w-md mx-auto mb-6">
+      <div class="flex gap-2">
+        <input class="w-input flex-1" type="text" value="not-a-url" />
+        <button class="w-btn w-btn-primary">
+          <i data-lucide="arrow-right" style="width:16px; height:16px; color:white"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div class="w-error max-w-md mx-auto flex items-center gap-2">
+      <i data-lucide="alert-circle" style="width:16px; height:16px; color:#c62828; flex-shrink:0"></i>
+      <span>올바른 URL을 입력해주세요</span>
+    </div>
+
+    <div class="screen-notes">
+      <details open>
+        <summary>Notes</summary>
+        <ul>
+          <li>트리거: 잘못된 URL 형식 입력 시 또는 콘텐츠 추출 실패 시</li>
+          <li>인터랙션: URL 수정 후 재제출</li>
+          <li>전환: 유효한 URL 제출 → 로딩 화면</li>
+          <li>오류 메시지: URL 형식 오류 → "올바른 URL을 입력해주세요", 추출 실패 → "콘텐츠를 추출할 수 없습니다"</li>
+        </ul>
+      </details>
+    </div>
+
+  </div>
+</div>
+
+<!--
+  ──────────────────────────────────────
+  화면 삽입 패턴 (이 주석은 삭제하지 않는다)
+  ──────────────────────────────────────
+
+  NAV_BUTTONS 위치에 삽입:
+  <button id="nav-0" onclick="show(0)" class="px-2 py-1">화면 이름</button>
+
+  SCREEN_CONTENT 위치에 삽입:
+  <div id="screen-0" class="screen" data-scenario="FEATURE-001, FEATURE-002">
+    <div class="screen-content @container max-w-6xl mx-auto p-6">
+
+      <h2 class="text-lg font-bold mb-5" style="color:var(--w-muted); border-bottom:1px solid var(--w-border); padding-bottom:8px;">
+        화면 이름
+      </h2>
+
+      여기에 와이어프레임 컨텐츠 작성
+      반응형: 모바일 우선 → @md: 접두사로 데스크톱 레이아웃
+
+      <div class="screen-notes">
+        <details open>
+          <summary>Notes</summary>
+          <p>화면 목적과 사용자 행동 설명</p>
+          <ul>
+            <li>트리거: 이 화면으로 진입하는 조건</li>
+            <li>인터랙션: 주요 사용자 동작</li>
+            <li>전환: 다른 화면으로 이동하는 조건</li>
+          </ul>
+        </details>
+      </div>
+
+    </div>
+  </div>
+-->
+
+<script>
+var currentScreen = 0;
+var screenIds = [];
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('screen-' + id).classList.add('active');
+  document.querySelectorAll('nav button[id^="nav-"]').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('nav-' + id).classList.add('active');
+  currentScreen = screenIds.indexOf(id);
+}
+
+function setViewport(mode) {
+  document.body.classList.remove('viewport-mobile', 'viewport-desktop');
+  document.body.classList.add('viewport-' + mode);
+  document.querySelectorAll('.vp-toggle button').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('vp-' + mode).classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('nav button[id^="nav-"]').forEach(function(b) {
+    screenIds.push(parseInt(b.id.replace('nav-', '')));
+  });
+  var first = document.querySelector('nav button[id^="nav-"]');
+  if (first) first.click();
+  lucide.createIcons();
+});
+</script>
+</body>
+</html>
