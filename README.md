@@ -54,26 +54,26 @@ Claude Code hooks 기반 자동 품질 게이트 (`.claude/settings.json`)
 
 `artifacts/spec.yaml`이 전체 앱의 **단일 불변 계약**입니다. spec.yaml의 시나리오에서 spec 테스트를 파생하고, 구현이 spec.yaml과 맞지 않으면 구현을 수정합니다.
 
-### 0. Requirements (`/write-requirements`)
+### 1. Requirements (`/write-requirements`)
 
 유저의 아이디어를 인터뷰로 정리하여 요구사항 문서를 작성합니다. 전체 사용자 흐름을 같이 걸어보며 핵심 아이디어, 설계 원칙, 핵심 도구를 정리합니다. 산출물은 `artifacts/<feature>/requirements.md`입니다.
 
-### 1. Spec (`/write-spec`)
+### 2. Spec (`/write-spec`)
 
 유저와 대화하며 기능의 스펙을 작성합니다. 사용자 흐름을 시뮬레이션하고 빈칸을 질문으로 채운 뒤, spec.md(논의 기록)와 spec.yaml(검증 가능한 요구사항)을 생성합니다.
 
-### 2. Wireframe (`/sketch-wireframe`)
+### 3. Wireframe (`/sketch-wireframe`)
 
 spec.yaml 기반 HTML 와이어프레임을 생성합니다. 레이아웃 검증이 목적이며, 피드백 루프를 돌리며 `artifacts/<feature>/wireframe.html`에 저장합니다.
 
-### 3. Plan (`/draft-plan`)
+### 4. Plan (`/draft-plan`)
 
 spec.yaml과 wireframe을 참조하여 구현 계획을 수립합니다. skill-researcher로 관련 스킬을 찾고, plan-reviewer로 독립 검토합니다.
 
-### 4. Execute (`/execute-plan`)
+### 5. Execute (`/execute-plan`)
 
 plan.md의 Task를 TDD로 순차 실행합니다. 완료 후 QA Evaluator(spec 시나리오 검증)로 검증하고, Code Simplifier로 정리합니다.
 
-### 5. Improve (`/improve-harness`)
+### 6. Improve (`/improve-harness`)
 
 실행 중 반복된 패턴을 감지하고 Skill/Hook/Rule 변경을 제안합니다.
