@@ -13,7 +13,7 @@ argument-hint: "feature 이름"
 - **spec 정합성이 목적, 프로세스는 수단** — spec.yaml의 input→output이 일치하는 것이 유일한 목표다. 그 목표를 달성하기 위해서라면 프로세스는 자유롭게 조정할 수 있다
 - **모든 의사결정은 Team Lead를 통한다** — Builder와 Reviewer는 Team Lead에게 보고하고, Team Lead가 다음 행동을 결정한다
 - **유연한 판단의 범위** — Task 순서 변경/합치기, spec 범위 밖 피드백 무시, 접근 방식 전환, 사용자 에스컬레이션 등 상황에 따라 Team Lead가 결정한다
-- **판단을 기록한다** — 자의적으로 내린 판단은 `artifacts/<feature>/decisions.md`에 기록한다 (시점, 내용, 근거)
+- **판단을 기록한다** — 자의적으로 내린 판단은 `artifacts/<feature>/decisions.md`에 `references/decisions-template.md` 형식으로 기록한다
 
 ## Step 1: 전제 조건 확인
 
@@ -23,6 +23,7 @@ $ARGUMENTS에서 feature명을 추출한다.
 - `artifacts/spec.yaml` 읽기
 - `artifacts/<feature>/wireframe.html` — 있으면 참조
 - plan.md의 Required Skills에 나열된 각 SKILL.md를 읽는다
+- `references/decisions-template.md` 읽기 — decisions.md 기록 형식 확인
 
 ## Step 2: 팀 편성
 
@@ -68,6 +69,8 @@ plan.md의 Task 목록을 분석한다.
 
 수정 전략 판단을 decisions.md에 기록한다.
 
+평가 루프 완료 후, Step 2(팀 편성)와 Step 3(실행 계획)에서 `미정`으로 남긴 결과를 갱신한다.
+
 ## Step 6: Code Simplifier
 
 모든 Reviewer pass 후 `code-simplifier` 에이전트를 호출한다.
@@ -79,4 +82,4 @@ plan.md의 Task 목록을 분석한다.
 - **실행 요약**: 총 Task 수, 병렬/순차 실행 현황, 팀 구성
 - **Reviewer 결과**: 실행한 Reviewer별 pass/fail
 - **Code Simplifier**: 주요 변경사항
-- **판단 기록**: decisions.md 경로 안내
+- **판단 기록**: decisions.md 경로 안내 — 남은 `미정` 결과를 모두 갱신한 뒤 보고
