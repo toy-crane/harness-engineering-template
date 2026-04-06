@@ -10,6 +10,7 @@ argument-hint: "기능 설명"
 
 기존 기능을 확장하는 경우, 질문 전에 먼저 탐색한다:
 
+- `artifacts/<feature>/requirements.md`가 있으면 읽는다. 핵심 아이디어와 설계 원칙을 질문의 시작점으로 활용하고, 이미 결정된 사항은 다시 질문하지 않는다
 - `artifacts/spec.yaml`에서 관련 시나리오 읽기
 - `artifacts/<feature>/spec.md` 확인
 - 관련 컴포넌트의 현재 구현 확인
