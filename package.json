@@ -38,6 +38,7 @@
     "jsdom": "^28.1.0",
     "tailwindcss": "^4",
     "typescript": "^5",
+    "playwright": "^1.52.0",
     "vitest": "^4.0.18"
   },
   "ignoreScripts": [

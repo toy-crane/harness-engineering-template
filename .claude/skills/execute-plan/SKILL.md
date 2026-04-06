@@ -30,6 +30,7 @@ feature 특성을 분석하여 이번 실행에 필요한 팀원을 결정한다
 
 - **Builder**: Task 수와 병렬 가능성을 고려하여 필요한 수를 결정
 - **Reviewer 선별**:
+  - `wireframe-reviewer` — wireframe.html이 존재하고 UI 변경 Task가 있을 때
   - `design-reviewer` — UI 컴포넌트가 있을 때만
   - `react-reviewer` — React/Next.js 코드가 있을 때만
 
@@ -46,14 +47,14 @@ plan.md의 Task 목록을 분석한다.
 
 ## Step 4: Builder에게 Task 위임
 
-실행 계획에 따라 `builder` agent를 spawn한다. 각 Builder에게 Task 내용, spec.yaml 경로, wireframe 경로를 전달한다.
+실행 계획에 따라 `builder` agent를 spawn한다. 각 Builder에게 Task 내용, spec.yaml 경로, wireframe 경로, 구현 앱 URL을 전달한다.
 
 - 순차 Task: 하나씩 위임하고 결과 확인 후 다음으로 진행
 - 병렬 Task: 독립적인 Task는 동시에 여러 Builder를 spawn하고 완료 후 결과 종합
 
 ## Step 5: 평가 루프
 
-전체 Task 완료 후 Step 2에서 선별한 Reviewer를 **병렬로** spawn한다.
+전체 Task 완료 후 Step 2에서 선별한 Reviewer를 **병렬로** spawn한다. wireframe-reviewer에게는 feature명, 구현 앱 URL, wireframe screen ↔ 구현 URL 경로 매핑을 함께 전달한다.
 
 ### 피드백 처리
 
