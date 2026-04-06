@@ -50,9 +50,13 @@ Claude Code hooks 기반 자동 품질 게이트 (`.claude/settings.json`)
 
 ## Claude Code 워크플로우
 
-이 프로젝트는 `/write-spec` → `/sketch-wireframe` → `/draft-plan` → `/execute-plan` 순서로 개발합니다.
+이 프로젝트는 `/write-requirements` → `/write-spec` → `/sketch-wireframe` → `/draft-plan` → `/execute-plan` 순서로 개발합니다. `/write-requirements`는 최초 MVP 정의 시에만 사용하고, 이후 기능 추가는 `/write-spec`부터 시작합니다.
 
 `artifacts/spec.yaml`이 전체 앱의 **단일 불변 계약**입니다. spec.yaml의 시나리오에서 spec 테스트를 파생하고, 구현이 spec.yaml과 맞지 않으면 구현을 수정합니다.
+
+### 0. Requirements (`/write-requirements`) — MVP 최초 1회
+
+유저의 아이디어를 인터뷰로 정리하여 요구사항 문서를 작성합니다. 전체 사용자 흐름을 같이 걸어보며 핵심 아이디어, 설계 원칙, 핵심 도구를 정리합니다. 산출물은 `artifacts/<feature>/requirements.md`입니다.
 
 ### 1. Spec (`/write-spec`)
 
