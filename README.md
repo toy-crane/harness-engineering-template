@@ -52,7 +52,8 @@ Claude Code hooks 기반 자동 품질 게이트 (`.claude/settings.json`)
 
 ```mermaid
 flowchart LR
-    A["/write-requirements"] --> B["/write-spec"]
+    A["/write-requirements
+    (MVP only)"] --> B["/write-spec"]
     B --> C["/sketch-wireframe"]
     C --> D["/draft-plan"]
     D --> E["/execute-plan"]
