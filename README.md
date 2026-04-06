@@ -58,6 +58,8 @@ flowchart LR
     D --> E["/execute-plan"]
 ```
 
+`/write-requirements`는 최초 MVP 정의 시에만 사용하고, 이후 기능 추가는 `/write-spec`부터 시작합니다.
+
 `artifacts/spec.yaml`이 전체 앱의 **단일 불변 계약**입니다. spec.yaml의 시나리오에서 spec 테스트를 파생하고, 구현이 spec.yaml과 맞지 않으면 구현을 수정합니다.
 
 ### 1. Requirements (`/write-requirements`)
