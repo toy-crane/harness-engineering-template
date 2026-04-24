@@ -1,8 +1,10 @@
 # decisions.md 작성 가이드
 
-Team Lead의 판단을 `artifacts/<feature>/decisions.md`에 기록한다.
+구현 중 내린 판단을 `artifacts/<feature>/decisions.md`에 기록한다.
 
-이 파일의 주된 목적은 **미래 하네스 업데이트**가 스킬을 개선할 수 있을 만큼 맥락을 남기는 것이다. 형식보다 명료함을 우선한다 — 중요한 신호를 포착한다.
+이 파일의 목적은 **같은 실수를 다음에 반복하지 않는 것**이다. `/self-improve`가 이 로그를 읽고 하네스(Skill/Hook/Rule/CLAUDE.md) 승격 후보를 제안한다. 형식보다 명료함을 우선한다 — 중요한 신호만 포착한다.
+
+**기록 기준**: 모든 판단을 기록하지 않는다. 잘 풀린 일은 생략하고, **예상과 달랐던 것·우회했던 것·다시 마주치고 싶지 않은 것**만 남긴다.
 
 ## 항목 형식
 
@@ -12,7 +14,7 @@ Team Lead의 판단을 `artifacts/<feature>/decisions.md`에 기록한다.
 **When**: <어느 Step / 어떤 상황이 판단을 촉발했는가>
 **Decision**: <무엇을 결정했는가>
 **Why**: <근거 — spec 경로, 이전 케이스, 제약을 인용>
-**Harness Signal**: <이 판단이 재발할 가능성이 높다면, SKILL.md에 추가할 규칙은 무엇인가 — 또는 현재 규칙의 어느 부분이 불명확했는가. 일반화할 것이 없으면 "N/A">
+**Harness Signal**: <다음 Task/다음 feature에서 같은 실수를 피하려면 어떤 규칙이 있었으면 좋았을지. 단 한 번의 판단이어도 "같은 일이 또 생길 것 같다"는 감이 들면 기록한다. 일반화할 것이 없으면 "N/A">
 **Result**: Pending → Success / Partial / Failure + 구체적 관찰
 
 <선택 자유 노트: 고려한 대안, 트레이드오프, 후속 작업>
@@ -32,7 +34,7 @@ Team Lead의 판단을 `artifacts/<feature>/decisions.md`에 기록한다.
 
 ## 기록 시점
 
-판단이 내려질 때마다 로그한다. 전형적 트리거:
+전형적 트리거:
 
 | Event | Step |
 |---|---|
@@ -40,7 +42,8 @@ Team Lead의 판단을 `artifacts/<feature>/decisions.md`에 기록한다.
 | Spec 모호성 — 하나의 해석을 선택 | Step 3 |
 | Task 범위 변경 (추가 / 제거 / 병합) | Step 3 |
 | 빌드 또는 테스트 실패 — 복구 경로 | Step 3 |
-| 사용자 피드백 판단 (accept / reject / partial) | Step 4 |
+| code-reviewer 피드백 판단 (accept / reject / partial) | Step 4 |
+| 사용자 피드백 판단 (accept / reject / partial) | Step 5 |
 | 사용자 escalation | any Step |
 
 자명한 결정(예: "대안 없이 plan.md를 그대로 따름")은 기록하지 않는다.
@@ -66,5 +69,6 @@ Team Lead의 판단을 `artifacts/<feature>/decisions.md`에 기록한다.
 ### 업데이트 시점
 
 - **Step 3 진행 중**: 해당 결정의 영향을 받은 Task가 끝나면 Pending → Partial / Failure를 빠르게 갱신
-- **Step 4 (human review) 이후**: Step 2 (Task 순서) 결과와 사용자 피드백 판단을 마무리
-- **Step 5 (done)에서**: 남은 모든 Pending을 해소하고 최종 보고에 Harness Signal 노트를 요약
+- **Step 4 (code review) 이후**: code-reviewer 피드백 판단을 마무리
+- **Step 5 (human review) 이후**: Step 2 (Task 순서) 결과와 사용자 피드백 판단을 마무리
+- **Step 6 (done)에서**: 남은 모든 Pending을 해소하고 최종 보고에 Harness Signal 노트를 요약
