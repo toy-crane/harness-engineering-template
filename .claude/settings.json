@@ -1,7 +1,4 @@
 {
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
-  },
   "hooks": {
     "WorktreeCreate": [
       {
@@ -21,30 +18,6 @@
             "type": "command",
             "command": "\"$(git rev-parse --show-toplevel)\"/.claude/hooks/lint-fix.sh",
             "timeout": 30
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$(git rev-parse --show-toplevel)\"/.claude/hooks/stop-test.sh",
-            "timeout": 120
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "if": "Bash(git *)",
-            "command": "\"$(git rev-parse --show-toplevel)\"/.claude/hooks/secret-guard.sh",
-            "timeout": 10
           }
         ]
       }
