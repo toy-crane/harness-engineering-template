@@ -6,14 +6,19 @@ argument-hint: "feature description"
 
 # Write Spec
 
-이 스킬의 산출물은 하나의 문서다: `artifacts/<feature-name>/spec.md`. spec은 feature가 **외부에서 관찰 가능한 관점**에서 무엇을 해야 하는지(WHAT)를 기술한다. 구현 선택(파일 배치, 테이블 스키마, 테스트 유형, 라이브러리)은 `plan.md`에 둔다. 여기가 아니다.
+Input: 사용자 설명과 관련된 이미지 (선택)
+  - 사용자가 feature에 대해서 뒷받침 하는 이미지를 추가한 경우, `artifacts/<feature-name>/references/`에 저장한다. 
+Output: `artifacts/<feature-name>/spec.md`. 
+
+spec은 feature가 **외부에서 관찰 가능한 관점**에서 무엇을 해야 하는지(WHAT)만 기술한다. 
+구현 선택(파일 배치, 테이블 스키마, 테스트 유형, 라이브러리)은 `plan.md`에 둔다.
 
 ## Step 1: Pre-exploration
 
 질문하기 전에 기존 맥락을 탐색한다. 다음 파일이 있으면 순서대로 읽는다:
 
 1. `artifacts/<feature>/idea.md` — 핵심 아이디어와 설계 원칙 (이미 결정된 항목을 다시 묻지 않는다)
-2. `artifacts/<feature>/spec.md` — 이전 패스의 논의 기록 (있다면)
+2. `artifacts/<feature>/spec.md` — 이전 논의 기록 (있다면)
 
 완전히 새로운 feature라면 idea.md만 확인한다.
 
@@ -28,11 +33,12 @@ argument-hint: "feature description"
 → 지금 바로잡거나, 이대로 진행한다.
 ```
 
-모호한 요구사항을 조용히 채우지 않는다. spec의 목적은 코드를 쓰기 전에 오해를 드러내는 것이다.
+모호한 요구사항을 조용히 채우지 않는다. 
+spec의 목적은 코드를 쓰기 전에 오해를 드러내는 것이다.
 
 ## Step 3: Reframe as Success Criteria
 
-사용자 설명의 모호한 요구사항을 구체적이고 테스트 가능한 조건으로 번역한다:
+사용자 설명의 모호한 요구사항을 구체적이고 테스트 가능한 조건으로 변환한다:
 
 ```
 요구사항: "대시보드를 더 빠르게 만든다"
@@ -64,20 +70,19 @@ argument-hint: "feature description"
 
 ## Step 5: Generate spec.md
 
-사용자가 이미지를 첨부했다면, 먼저 `artifacts/<feature-name>/references/`에 저장한다.
-
-`references/spec-template.md`를 읽고 그 형식을 따른다. `references/spec-example.md`는 톤과 구체성의 모델로, `references/scenario-guide.md`는 Given/When/Then과 Success Criteria 규칙으로 참고한다.
+- `references/spec-template.md`를 읽고 그 형식을 따른다. 
+- `references/scenario-guide.md`는 Given/When/Then과 Success Criteria 규칙으로 참고한다.
 
 ### 작성 규칙
 
 - **WHAT만 쓴다.** 파일 경로, 테이블/컬럼명, 테스트 유형, 라이브러리명은 spec.md에 나타나지 않는다.
-- **Success Criteria는 관찰 가능해야 한다.** 모든 항목은 사용자, API 소비자, 테스트 하네스가 외부에서 검증할 수 있는 입력 → 출력을 기술한다. 내부 상태나 함수 호출은 절대 참조하지 않는다.
+- **Success Criteria는 관찰 가능해야 한다.** 모든 항목은 사용자, 코드로 검증할 수 있는 입력 → 출력을 기술한다. 내부 상태나 함수 호출은 절대 참조하지 않는다.
 - **Excluded 항목에는 이유를 단다.**
 - **Undecided Items**는 사용자가 명시적으로 결정할 수 없었던 항목만 기록한다.
 - **시나리오 전반에 걸친 규칙은 Invariants에 쓴다** (보안, 성능, 데이터 일관성). 해당 없으면 섹션을 생략한다.
 
 파일명: `artifacts/<feature-name>/spec.md`
 
-## Done
+## Step 6: 인수인계
 
 spec에 UI 변경이 포함되면 `/sketch-wireframe`으로 안내한다. 그 외에는 `/draft-plan`으로 안내한다.
