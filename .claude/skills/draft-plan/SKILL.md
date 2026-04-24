@@ -1,72 +1,143 @@
 ---
 name: draft-plan
-description: spec.yaml 기반으로 구현 계획을 작성한다. skill-researcher로 관련 스킬을 찾고, TDD 기반 task 목록을 생성한다. "/draft-plan", "계획 작성", "구현 계획" 등으로 실행.
-argument-hint: "feature 이름"
+description: Create an implementation plan (artifacts/<feature>/plan.md) based on spec.md. **Use only for product features that are ambiguous, multi-file, or take over 30 minutes — NOT for meta-tooling (skills, rules, hooks, repo config), single-line fixes, or unambiguous changes.** Discover related skills and generate a TDD-based task list with vertical slicing and dependency ordering. Triggered by "/draft-plan", "create plan", "implementation plan", etc.
+argument-hint: "feature name"
 ---
 
-# 구현 계획 작성
+# Create Implementation Plan
 
-## Step 1: 전제 조건 확인
+## Step 1: Check Prerequisites
 
-$ARGUMENTS에서 feature명을 추출한다.
+Extract the feature name from $ARGUMENTS.
 
-- `artifacts/spec.yaml` -- 없으면 "먼저 `/write-spec`을 실행하세요." 출력 후 종료
-- `artifacts/<feature>/spec.md` -- 선택
-- `artifacts/<feature>/wireframe.html` -- 선택
+Required (per-feature):
+- `artifacts/<feature>/spec.md` -- If missing, output "Please run `/write-spec <feature>` first." and stop
 
-## Step 2: 코드베이스 탐색
+Optional (per-feature):
+- `artifacts/<feature>/wireframe.html`
 
-기존 코드를 탐색하여 아키텍처와 관련 패턴을 파악한다.
+## Step 2: Enter Plan Mode
 
-- 프로젝트 구조, 기존 컴포넌트, 상태 관리 방식 확인
-- 이 feature가 영향을 줄 파일과 그 의존 관계 파악
-- 유사한 기존 기능이 있으면 그 구현을 참조한다
+Operate in read-only mode. Do not create, modify, or delete any project files.
 
-## Step 3: 스킬 탐색
+The only file output from this skill is `artifacts/<feature>/plan.md`.
 
-`skill-researcher` 에이전트를 호출하여 이 feature의 시나리오에 도움이 될 스킬을 찾는다.
+## Step 3: Codebase Exploration
 
-추천 목록을 사용자에게 보여주고, 확인/조정을 받는다.
+Explore the existing code to understand the architecture and related patterns.
 
-## Step 4: 빈칸 채우기
+- Check project structure, existing components, and state management approach
+- Identify files this feature will affect and their dependency relationships
+- Map dependencies between components — what depends on what
+- If similar existing functionality exists, reference its implementation
+- Note risks and unknowns
 
-위 입력을 읽고, 구현에 필요하지만 아직 결정되지 않은 사항을 찾는다.
+## Step 4: Discover Skills
 
-- 변경 비용이 큰 결정만 질문한다
-- 한 번에 질문 하나, 2-4개 선택지 제시
+Scan `.claude/skills/` and select every skill that has even a slight connection to this feature.
+When in doubt, include it — the implementer can ignore what isn't needed.
 
-## Step 5: 계획 문서 생성
+**Always follow** (regardless of feature):
+- See `CLAUDE.md` → Testing — any task that adds or modifies behavior must follow RED → GREEN discipline and map each acceptance bullet to a test case. CLAUDE.md defines the project's success-criteria principle, stack, and placement rules.
 
-`references/plan-template.md`를 읽고 그 형식에 맞춰 작성한다.
+## Step 5: Fill in the Blanks
 
-### 계획 요건
+Read the above inputs and find items that are needed for implementation but not yet decided.
 
-#### Task 작성 원칙
-- task에는 What과 수용 기준만 포함한다. 코드베이스가 변할 수 있으므로 How는 제외한다
-- task 참조에는 executor가 직접 찾을 수 없는 외부 소스만 포함한다 (스킬은 이름 + 키워드만)
+- Only ask about decisions with high cost of change
+- One question at a time, present 2-4 options
 
-#### 배치 순서
-- spec 테스트(*.spec.test.tsx) 생성을 가장 먼저 배치한다. 선행 작업이 필요하면 사유와 함께 앞에 둔다
-- 의존성이 적은 것부터 task를 배치한다
+## Step 6: Generate Plan Document
 
-#### 테스트
-- 각 구현 task의 수용 기준에 구현 테스트 통과를 포함한다
+Read each confirmed skill's SKILL.md. The plan must not contradict rules that will be loaded during execution.
 
-#### Wireframe 반영
-- wireframe.html이 있으면, 컴포넌트 타입을 task의 구현 대상에 반영한다
-- wireframe에서 식별된 컴포넌트 중 프로젝트에 없는 것은, 직접 구현 전에 패키지 레지스트리에서 설치 가능 여부를 확인한다
+Read `references/plan-template.md` and write following its format.
 
-#### 기타
-- Affected Files 섹션에 코드베이스 탐색 결과를 반영한다
+### Task Writing Principles
 
-`artifacts/<feature>/plan.md`로 저장한다.
+#### Vertical Slicing
 
-## Step 6: 독립 검토
+Each task must be a vertical slice delivering working, testable functionality through one complete path — not a horizontal layer.
 
-`plan-reviewer` 에이전트를 호출하여 위 입력과 plan.md 사이의 불일치를 검증한다.
+Bad (horizontal slicing):
+```
+Task 1: Build entire database schema
+Task 2: Build all API endpoints
+Task 3: Build all UI components
+Task 4: Connect everything
+```
 
-갭이 있으면 사용자에게 보여주고, 반영할 갭을 선택받아 plan.md에 반영한다.
+Good (vertical slicing):
+```
+Task 1: User can create an account (schema + API + UI for registration)
+Task 2: User can log in (auth schema + API + UI for login)
+Task 3: User can create a task (task schema + API + UI for creation)
+```
 
-## 완료
+#### Task Sizing
 
-사용자에게 `/execute-plan <feature>` 진행 여부를 안내한다.
+Target S (1-2 files) or M (3-5 files). Never L or larger.
+
+Break a task down further when:
+- Acceptance criteria need more than 3 bullets
+- It touches 2 or more independent subsystems
+- The title contains "and" (sign it is two tasks)
+
+#### Acceptance
+
+Each task's **Acceptance** section is a flat checklist of natural-language outcomes derived from the Success Criteria of the scenarios listed in **Covers**. One bullet per Success Criteria covered by this task. Use concrete values from the spec — paraphrasing is allowed but the outcome must remain externally observable.
+
+**Each acceptance bullet must map 1:1 to a test case that proves it.** Pick the lowest boundary where the criterion is actually provable — if a mock would obscure what the criterion is about, don't mock there (see `CLAUDE.md` → Testing).
+
+The task's **Covers** line names which scenarios are addressed and whether coverage is full or partial. If partial, note which subset (e.g. "happy path only", "validation only").
+
+#### Verification
+
+Each Acceptance bullet must name **how it will be verified** — a command, an MCP step, or a specific human review. The bullet is not done until a future reader can re-run that check independently. Pick the lowest provable boundary.
+
+| Provable in | Use |
+|---|---|
+| Code (DOM, function, DB, HTTP) | Vitest / pgTAP / `bun run build` |
+| Real browser, repeatable in CI | Playwright (`bun run test:e2e`) |
+| Real browser, one-shot with evidence | Browser MCP (`mcp__claude-in-chrome__*`) |
+| Cannot be automated (design judgment, screen-reader AT, cross-browser feel, perf threshold absent from tooling) | Human review — state the reviewer/role, the artifact, and the criterion. Save evidence (screenshot/video/note) to `artifacts/<feature>/evidence/`. |
+
+`manual: visit X` as a placeholder for a check that *could* be automated is not allowed. A named human review *is* — the test is "can someone else re-run this check from your bullet alone?"
+
+For the concrete shape of the Verification block, see `references/plan-template.md`.
+
+#### Ordering
+
+- Place test file generation first (colocated `<file>.test.tsx`, or `__tests__/` for App Router pages — see `CLAUDE.md` → Testing). If prerequisite work is needed, place it before with a reason
+- Order tasks starting with those that have the fewest dependencies
+- Place high-risk tasks early (fail fast)
+- Each task must leave the system in a working state
+
+#### Checkpoint Discipline
+
+Insert a checkpoint after every 2-3 tasks. A checkpoint verifies: all tests pass, build succeeds, and the vertical slice works end-to-end.
+
+#### Wireframe Integration
+
+- If wireframe.html exists, reflect component types in the task's implementation targets
+- For components identified in the wireframe that don't exist in the project, check package registry for installability before implementing directly
+
+#### Other
+
+- Reflect codebase exploration results in the Affected Files section
+- Task references include only external sources that the executor cannot find on their own (for skills, only name + keywords)
+
+Save as `artifacts/<feature>/plan.md`.
+
+## Step 7: Present for Human Review
+
+Before presenting, self-check:
+- All spec.md scenarios are listed in some task's **Covers**
+- Every Acceptance bullet has a matching Verification command/step
+- A Checkpoint appears every 2-3 tasks
+
+Present the complete plan.md to the user. Ask for approval or revision requests. Apply any requested changes. Do not proceed until the user approves.
+
+## Done
+
+Inform the user whether to proceed with `/execute-plan <feature>`.

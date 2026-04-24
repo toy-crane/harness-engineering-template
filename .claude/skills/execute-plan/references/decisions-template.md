@@ -1,37 +1,70 @@
-# decisions.md 작성 가이드
+# decisions.md Writing Guide
 
-`artifacts/<feature>/decisions.md`에 Team Lead의 판단을 기록한다.
+Record the Team Lead's judgment calls in `artifacts/<feature>/decisions.md`.
 
-## 엔트리 형식
+The primary purpose of this file is to give **future harness updates** enough context to improve the skill. Prefer clarity over strict form — capture the signal that matters.
 
-```markdown
-## <제목>
-
-- 내용: <무엇이 있었는가>
-- 판단: <어떻게 결정했는가>
-- 근거: <왜 그렇게 결정했는가>
-- 결과: 미정
-```
-
-## 결과 갱신
-
-실행이 진행되면 `미정`을 아래 상태값 중 하나로 갱신한다:
-
-| 상태값 | 의미 |
-|--------|------|
-| 성공 | 판단이 의도대로 작동함 |
-| 부분 | 작동했으나 추가 수정이 필요했음 |
-| 실패 | 다른 접근이 필요했음 |
-
-상태값 뒤에 자유 형식으로 구체적 결과를 기술한다.
+## Entry Format
 
 ```markdown
-- 결과: 성공 — 1회 Builder 위임으로 Reviewer pass
-- 결과: 부분 — 기능 동작하나 shadcn 패턴 미준수로 2차 수정
-- 결과: 실패 — 동일 barrel import 위반이 다음 feature에서도 재발
+## <Title>
+
+**When**: <which Step / what situation triggered the decision>
+**Decision**: <what was decided>
+**Why**: <reasoning — cite spec path, prior cases, constraints>
+**Harness Signal**: <if this judgment is likely to recur, what rule could be added to SKILL.md — or which part of the current rules was unclear. Write "N/A" if nothing generalizable>
+**Result**: Pending → Success / Partial / Failure + specific observation
+
+<Optional free notes: alternatives considered, trade-offs, follow-ups>
 ```
 
-## 갱신 시점
+### Example
 
-- Step 5(평가 루프) 완료 후: Step 2-3 판단의 결과 갱신
-- Step 7(완료) 시: 남은 `미정` 결과를 모두 갱신
+```markdown
+## Ordered auth-login before submit-project
+
+**When**: Step 2, Task ordering
+**Decision**: Execute `auth-login` first, then `submit-project`. Both share the `profiles` schema.
+**Why**: `submit-project` imports `profiles` types that `auth-login` introduces. Reversed order would force a throwaway stub.
+**Harness Signal**: plan.md does not currently mark entity-level dependencies between Tasks. Consider adding a "Depends on" field per Task so ordering does not require manual dependency analysis.
+**Result**: Pending
+```
+
+## When to Record
+
+Log a decision whenever a judgment call is made. Typical triggers:
+
+| Event | Step |
+|---|---|
+| Task execution order (dependencies) | Step 2 |
+| Spec ambiguity — chose one interpretation | Step 3 |
+| Task scope changed (added / removed / merged) | Step 3 |
+| Build or test failure — recovery path | Step 3 |
+| User feedback judgment (accept / reject / partial) | Step 4 |
+| User escalation | any Step |
+
+Do not log self-evident decisions (e.g. "followed plan.md exactly, no alternatives considered").
+
+## Result Updates
+
+Start each entry with `Result: Pending`. Update as execution progresses:
+
+| Status | Meaning |
+|--------|---------|
+| Success | The decision worked as intended |
+| Partial | It worked but required additional fixes |
+| Failure | A different approach was needed |
+
+After the status, describe the specific outcome in free-form text.
+
+```markdown
+- Result: Success — Tests passed and user approved on first review
+- Result: Partial — Feature works but required a second pass for shadcn token compliance
+- Result: Failure — Reversed ordering introduced a circular import; switched back mid-Task
+```
+
+### Update Timing
+
+- **During Step 3**: Update Pending → Partial / Failure early when a decision's impact Task completes
+- **After Step 4 (human review)**: Finalize Step 2 (Task order) result and any user-feedback judgments
+- **At Step 5 (done)**: Resolve every remaining Pending entry and summarize all Harness Signal notes in the final report

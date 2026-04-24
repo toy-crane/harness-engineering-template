@@ -1,9 +1,19 @@
-# <Feature> 구현 계획
+# <Feature> Implementation Plan
 
 ## Architecture Decisions
 
-| 결정 사항 | 선택 | 사유 |
-|-----------|------|------|
+| Decision | Choice | Reason |
+|----------|--------|--------|
+
+## Infrastructure Resources
+
+Runtime resources outside application code that this feature needs to exist. Leave empty with "None" if nothing applies.
+
+| Resource | Type | Declared in | Creation Task |
+|----------|------|-------------|---------------|
+|          |      |             |               |
+
+Type examples: Storage bucket · Cron job · Edge function · Env var · OAuth provider · Webhook · Email sender
 
 ## Data Model
 
@@ -13,33 +23,45 @@
 
 ## Required Skills
 
-| 스킬 | 적용 Task | 용도 |
-|------|-----------|------|
+| Skill | Applicable Task | Purpose |
+|-------|-----------------|---------|
 
 ## Affected Files
 
-| 파일 경로 | 변경 유형 | 관련 Task |
-|-----------|----------|-----------|
+| File Path | Change Type | Related Task |
+|-----------|-------------|--------------|
 
-변경 유형: 신규 | 수정 | 삭제
+Change Type: New | Modify | Delete
 
 ## Tasks
 
-### Task 1: (제목)
+### Task 1: (Title — one vertical slice, no "and")
 
-- **시나리오**: FEATURE-XXX, FEATURE-YYY
-- **의존성**: 없음 | Task N (사유), Task M (사유)
-- **참조**:
-  - (스킬명 — 키워드)
-  - (외부 문서 URL)
-  - (프로젝트 내 파일 경로)
-- **구현 대상**:
-  - `파일/경로.tsx`
-    - 완료 시 존재해야 하는 것 1
-    - 완료 시 존재해야 하는 것 2
-- **수용 기준**:
-  - [ ] (구체적 입력 -> 기대 출력)
+- **Covers**: Scenario 1 (full) | Scenario 2 (partial — happy path only)
+- **Size**: S (1-2 files) | M (3-5 files)
+- **Dependencies**: None | Task N (reason), Task M (reason)
+- **References**:
+  - (skill name — keywords)
+  - (external document URL)
+  - (project file path)
+- **Implementation targets**:
+  - `features/<slice>/ui/<component>.tsx`
+  - `features/<slice>/ui/<component>.test.tsx` (colocated; `app/**/__tests__/` for App Router pages)
+- **Acceptance**:
+  - [ ] Concrete input → observable result (one line per Success Criteria covered)
+  - [ ] Concrete input → observable result
+- **Verification**:
+  - `bun run test:unit -- <pattern>` (or `bun run test:db` for DB-only changes)
+  - `bun run build`
+  - Browser MCP (`mcp__claude-in-chrome__*`) — for tasks with user-visible UI changes; navigate the affected route(s), assert observable outcomes, save evidence to `artifacts/<feature>/evidence/<task-N>.<ext>`
 
 ---
 
-## 미결정 사항
+### Checkpoint: After Tasks 1-N
+- [ ] All tests pass: `bun run test`
+- [ ] Build succeeds: `bun run build`
+- [ ] (vertical slice description) works end-to-end
+
+---
+
+## Undecided Items
