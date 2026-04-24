@@ -55,7 +55,7 @@ argument-hint: "feature name"
 
 규칙:
 - 시나리오 번호는 `data-scenario` 속성에 `scenario-N` 형식으로 지정한다 (본문 텍스트에 번호를 쓰지 않는다)
-- 각 시나리오의 Success Criteria에 있는 구체적 값을 예시 데이터로 사용한다
+- 각 시나리오의 성공 기준에 있는 구체적 값을 예시 데이터로 사용한다
 - Screen Notes: 화면 흐름만 쓴다 (진입 조건, 전환, 요소 역할). 유효성 규칙과 비즈니스 로직은 spec.md에 속한다
 
 같은 피드백 루프로 검증한다.

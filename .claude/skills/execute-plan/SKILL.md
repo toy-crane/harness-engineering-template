@@ -10,7 +10,7 @@ argument-hint: "feature name"
 
 ## Core Principles
 
-- **Spec 준수가 목표, 프로세스는 수단이다** — 유일한 목표는 spec.md의 Success Criteria를 충족하는 것이다. 그 목표를 위해 프로세스는 자유롭게 조정할 수 있다
+- **Spec 준수가 목표, 프로세스는 수단이다** — 유일한 목표는 spec.md의 성공 기준을 충족하는 것이다. 그 목표를 위해 프로세스는 자유롭게 조정할 수 있다
 - **Team Lead가 구현하고 조정한다** — Team Lead가 코드를 직접 쓰고, 사용자 피드백에 대응하는 책임을 진다. 모든 판단은 Team Lead에게 있다
 - **유연한 판단의 범위** — 상황에 따라 Team Lead가 결정한다: Task 재정렬/병합, spec 범위 밖 피드백 무시, 접근 전환, 사용자에게 escalate 등
 - **판단을 Harness Signal과 함께 기록한다** — 판단은 `artifacts/<feature>/decisions.md`에 `references/decisions-template.md` 형식으로 기록한다 (항목은 `Pending`으로 시작해 효과가 관찰 가능해지면 `Success` / `Partial` / `Failure`로 마무리된다). **Harness Signal** 필드를 강조해 미래 하네스 업데이트가 각 실행에서 배울 수 있게 한다

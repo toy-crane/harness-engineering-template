@@ -85,7 +85,7 @@ Task 3: 사용자가 할 일을 만들 수 있다 (할 일 스키마 + API + 생
 
 #### Acceptance
 
-각 Task의 **Acceptance** 섹션은 **Covers**에 나열된 시나리오의 Success Criteria에서 파생된 자연어 결과의 체크리스트다. 이 Task가 커버하는 Success Criteria 하나당 한 항목. spec의 구체적 값을 사용한다 — 의역은 허용되지만 결과는 외부에서 관찰 가능해야 한다.
+각 Task의 **Acceptance** 섹션은 **Covers**에 나열된 시나리오의 성공 기준에서 파생된 자연어 결과의 체크리스트다. 이 Task가 커버하는 성공 기준 하나당 한 항목. spec의 구체적 값을 사용한다 — 의역은 허용되지만 결과는 외부에서 관찰 가능해야 한다.
 
 **각 acceptance 항목은 이를 증명하는 테스트 케이스에 1:1로 매핑되어야 한다.** 수용 기준이 실제로 증명되는 가장 낮은 경계를 선택한다. mock이 기준을 가린다면 거기서 mock하지 않는다 (`CLAUDE.md` → Testing 참조).
 
