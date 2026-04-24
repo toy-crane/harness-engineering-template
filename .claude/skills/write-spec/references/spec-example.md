@@ -1,54 +1,54 @@
 ## Overview
-Allow users to submit their own project to Project Board so other users can discover and upvote it.
+사용자가 자신의 프로젝트를 Project Board에 제출해 다른 사용자가 발견하고 업보트할 수 있도록 한다.
 
 ## Scope
 
 ### Included
-- A "Submit" entry point on the home page
-- A form capturing project title, URL, and a short tagline
-- Newly submitted projects appear at the top of the list
+- 홈 페이지의 "제출" 진입점
+- 프로젝트 제목, URL, 짧은 태그라인을 받는 폼
+- 새로 제출된 프로젝트는 리스트 최상단에 표시된다
 
 ### Excluded
-- Editing or deleting an existing submission — out of scope this round; will be revisited after launch
-- Image upload — first version is URL-only; reduces moderation surface
-- Duplicate-URL detection — handled later via a separate moderation pass
+- 기존 제출 수정/삭제 — 이번 라운드 범위 밖. 런칭 후 다시 본다
+- 이미지 업로드 — 첫 버전은 URL만. 모더레이션 면적을 줄인다
+- 중복 URL 탐지 — 이후 별도 모더레이션 패스로 처리한다
 
 ## Scenarios
 
-### 1. Submit a project successfully
-**Given** a logged-in user is on the home page
-**When** the user clicks "Submit", fills in title and URL, and presses Send
-**Then** the new project appears at the top of the list
+### 1. 프로젝트 제출 성공
+**Given** 로그인한 사용자가 홈 페이지에 있다
+**When** 사용자가 "제출"을 클릭하고 제목과 URL을 입력한 뒤 Send를 누른다
+**Then** 새 프로젝트가 리스트 최상단에 나타난다
 
 Success Criteria:
-- [ ] title="My App", url="https://example.com" → a card with that title and URL renders at the top of the list
-- [ ] After submit, the form clears and the modal closes
-- [ ] The submitter's display name appears on the new card
+- [ ] title="My App", url="https://example.com" → 해당 제목과 URL의 카드가 리스트 최상단에 렌더된다
+- [ ] 제출 후 폼이 초기화되고 모달이 닫힌다
+- [ ] 새 카드에 제출자의 표시 이름이 나타난다
 
-### 2. Reject an invalid submission
-**Given** a logged-in user has the submit form open
-**When** the user submits with missing or malformed values
-**Then** the submission is rejected and the user sees a clear error
-
-Success Criteria:
-- [ ] empty title → "Title is required" appears under the title field
-- [ ] url not starting with http(s) → "URL must start with http or https" appears under the url field
-- [ ] On error, previously entered values are preserved
-
-### 3. Block submission for unauthenticated visitors
-**Given** a visitor without a logged-in session
-**When** the visitor clicks "Submit" on the home page
-**Then** the submit form does not open and the visitor is prompted to log in
+### 2. 잘못된 제출 거부
+**Given** 로그인한 사용자가 제출 폼을 열어 둔 상태
+**When** 사용자가 빈 값이나 형식이 잘못된 값으로 제출한다
+**Then** 제출이 거부되고 사용자에게 명확한 에러가 보인다
 
 Success Criteria:
-- [ ] Click "Submit" while logged out → login prompt appears, no form opens
-- [ ] After successful login, the visitor lands back on the home page (no auto-submit)
+- [ ] 빈 제목 → 제목 필드 아래 "제목을 입력하세요" 가 나타난다
+- [ ] http(s)로 시작하지 않는 url → url 필드 아래 "URL은 http 또는 https로 시작해야 합니다" 가 나타난다
+- [ ] 에러 시 이전에 입력한 값은 보존된다
+
+### 3. 비로그인 방문자의 제출 차단
+**Given** 로그인 세션이 없는 방문자
+**When** 방문자가 홈 페이지에서 "제출"을 클릭한다
+**Then** 제출 폼이 열리지 않고 방문자에게 로그인하라는 안내가 표시된다
+
+Success Criteria:
+- [ ] 로그아웃 상태에서 "제출" 클릭 → 로그인 프롬프트가 나타나고 폼이 열리지 않는다
+- [ ] 로그인 성공 후 방문자는 홈 페이지로 돌아온다 (자동 제출 없음)
 
 ## Invariants
-- A user cannot submit a project on behalf of another user. The submitter recorded on a card is always the currently logged-in account, regardless of how the submission was triggered.
+- 사용자는 다른 사용자를 대신해 프로젝트를 제출할 수 없다. 카드에 기록되는 제출자는 어떻게 트리거되었든 항상 현재 로그인한 계정이다.
 
 ## Dependencies
-- Authentication (the visitor must be able to log in before submitting)
+- 인증 (방문자는 제출 전에 로그인할 수 있어야 한다)
 
 ## Undecided Items
-- Whether to allow markdown in the tagline field (deferred until first user feedback)
+- 태그라인 필드에 마크다운을 허용할지 (첫 사용자 피드백까지 보류)
