@@ -1,3 +1,5 @@
+> 이 template는 형식이다. 원칙과 Why는 `SKILL.md` Step 4를 본다.
+
 # <Feature> 구현 계획
 
 ## 아키텍처 결정
