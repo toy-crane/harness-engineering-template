@@ -1,25 +1,27 @@
 #!/bin/bash
-# PostToolUse hook (Write|Edit): lint auto-fix
-# exit 0 = continue, exit 2 = block (Claude retries)
+# PostToolUse hook (Write|Edit): ESLint auto-fix
+# exit 0 = continue, exit 2 = claude sees stderr and retries, exit 1 = hard failure
 
 set -eo pipefail
 
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+FILE_PATH=$(jq -r '.tool_input.file_path // empty')
 [ -z "$FILE_PATH" ] && exit 0
 
-# Only lint supported file types
-case "$FILE_PATH" in
-  *.js|*.jsx|*.ts|*.tsx|*.mjs|*.json|*.css) ;;
-  *) exit 0 ;;
-esac
+if [[ ! "$FILE_PATH" =~ \.(js|jsx|ts|tsx|mjs)$ ]]; then
+  exit 0
+fi
 
 [ ! -f "$FILE_PATH" ] && exit 0
 
-# Run lint fix
-if ! bun run lint --fix "$FILE_PATH" 2>&1; then
-  echo "Lint auto-fix failed for $FILE_PATH"
-  exit 2
-fi
+RESULT=$(bunx eslint --fix "$FILE_PATH" 2>&1)
+ESLINT_EXIT=$?
 
-exit 0
+if [ $ESLINT_EXIT -eq 0 ]; then
+  exit 0
+elif [ $ESLINT_EXIT -eq 1 ]; then
+  echo "$RESULT" >&2
+  exit 2
+else
+  echo "$RESULT" >&2
+  exit 1
+fi
