@@ -48,7 +48,7 @@ Change Type: New | Modify | Delete
   - `components/<feature>/<component>.tsx`
   - `components/<feature>/<component>.test.tsx` (colocated; App Router 페이지는 `app/**/__tests__/`)
 - **Acceptance**:
-  - [ ] 구체적 입력 → 관찰 가능한 결과 (커버되는 Success Criteria 하나당 한 줄)
+  - [ ] 구체적 입력 → 관찰 가능한 결과 (커버되는 성공 기준 하나당 한 줄)
   - [ ] 구체적 입력 → 관찰 가능한 결과
 - **Verification**:
   - `bun run test -- <pattern>`
@@ -64,4 +64,4 @@ Change Type: New | Modify | Delete
 
 ---
 
-## Undecided Items
+## 미결정 항목
