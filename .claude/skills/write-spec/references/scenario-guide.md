@@ -1,78 +1,88 @@
-# 시나리오 작성 가이드
+# Scenario Writing Guide
 
-## 체크 기준
+## The single criterion
 
-> "이 문장만 읽고 테스트 코드를 작성할 수 있는가?"
+> "Can a developer write a test from this sentence alone?"
 
-given/when/then과 examples의 expect 모두 **화면에서 확인 가능한 값**이라는 동일 원칙을 따른다.
+If the answer is no, the scenario is too vague or describes implementation rather than observable behavior.
 
 ---
 
-## 1. given/when/then 작성 기준
+## 1. Given / When / Then
 
-| 필드 | 작성 기준 | 허용 | 금지 |
+| Field | Write | Allowed | Prohibited |
 |---|---|---|---|
-| given | 화면 상태, 데이터 개수, 적용된 조건 등 **관찰 가능한 전제** | "할 일 3개가 표시된 목록", "검색어 '우유'가 입력된 상태" | "todos 배열에 3개 존재", "isLoading이 true" |
-| when | **구체적 UI 요소 + 동작** (클릭, 입력, 드래그 등) | "'삭제' 버튼을 클릭한다", "'제목' 입력란에 '회의록'을 입력한다" | "삭제 함수를 호출한다", "상태를 변경한다" |
-| then | 화면에서 **단언 가능한 결과** | "'할 일 2개' 텍스트가 표시된다", "빈 목록 안내 문구가 나타난다" | "todos.length가 2이다", "API가 호출된다" |
+| **Given** | Observable preconditions: screen state, data count, applied filters | "A list showing 3 to-do items", "The search field contains 'milk'" | "todos.length === 3", "isLoading is true" |
+| **When** | A specific UI element and the action on it (click, type, drag) | "Click the 'Delete' button", "Enter 'Meeting notes' in the Title field" | "Call deleteTodo()", "Dispatch the SUBMIT action" |
+| **Then** | A result that can be asserted from outside the component | "'2 to-do items' text is displayed", "Empty list message appears" | "todos.length === 2", "The API was called" |
 
-### Good/Bad 예시
-
-**Good:**
-```yaml
-given: "'제목' 입력란이 비어 있는 할 일 추가 폼"
-when: "'추가' 버튼을 클릭한다"
-then: "'제목을 입력해주세요' 오류 메시지가 표시된다"
+### Good
+```
+Given  A to-do form with the title field empty
+When   Click the "Add" button
+Then   "Please enter a title" error message is displayed
 ```
 
-**Bad:**
-```yaml
-given: "formState.title이 빈 문자열"
-when: "submit 이벤트를 발생시킨다"
-then: "validation error가 설정된다"
+### Bad
+```
+Given  formState.title is an empty string
+When   Trigger a submit event
+Then   The validation error is set
+```
+
+The bad version describes internal state and function calls. A test written from it would have to mock the component's internals, which is brittle and tells you nothing about user behavior.
+
+---
+
+## 2. Success Criteria
+
+Each Success Criteria bullet is a concrete pair: **input → observable output**. One bullet should map cleanly to one (or a small number of) test assertions.
+
+### Allowed observable outputs
+
+| Type | Example |
+|---|---|
+| Visible text | `"Item added"` appears |
+| Element count | 3 cards render |
+| Element existence | The "Delete" button is shown |
+| Field value | Title field contains "Buy milk" |
+| Visual state expressible in a class or attribute | Strikethrough on completed items |
+| API response shape (when the feature exposes an API) | `200 { id: <new-id> }` |
+
+### Prohibited outputs
+
+| Type | Why |
+|---|---|
+| Internal state (Zustand store, React state, signals) | A user cannot observe it |
+| Function-call assertions (`mockFn was called`) | Implementation-coupled, breaks on refactor |
+| Raw DB rows or service-layer return values | Server internals, not user-observable behavior |
+
+### Good
+```
+Success Criteria:
+- [ ] title="Buy milk" → an item with text "Buy milk" appears, list count becomes 1
+- [ ] empty title → "Please enter a title" appears under the field
+```
+
+### Bad
+```
+Success Criteria:
+- [ ] title="Buy milk" → todos array becomes [{ id: 1, title: "Buy milk", done: false }]
+- [ ] title="Buy milk" → addTodo() was called once with { title: "Buy milk" }
 ```
 
 ---
 
-## 2. examples 작성 기준
+## 3. When to use Invariants instead of a Scenario
 
-### expect에 허용되는 값
+Some rules cannot be expressed as a single Given/When/Then because they apply to *every* path. Three categories belong in the Invariants section, not as scenarios:
 
-화면에서 직접 확인(assert)할 수 있는 값만 쓴다.
-
-| 유형 | 예시 |
+| Category | Example |
 |---|---|
-| 화면 텍스트 | `{ message: "할 일이 추가되었습니다" }` |
-| 요소 개수 | `{ cardCount: 3 }` |
-| 존재 여부 | `{ deleteButton: true }` |
-| 입력 필드 값 | `{ titleField: "회의록 작성" }` |
-| CSS 상태 | `{ status: "completed", opacity: "0.5" }` |
-| 목록/순서 | `{ columns: ["To Do", "In Progress", "Done"] }` |
+| **Security / privacy** | "Another user's private drafts are never visible through any path (UI, URL, search, RSS)" |
+| **Performance** | "Every page reaches first contentful paint within 2 seconds on a 4G connection" |
+| **Data consistency** | "The displayed upvote count always matches the number of votes recorded" |
 
-### expect에 금지되는 값
+If you find yourself writing a near-identical Then in three or more scenarios, that rule probably belongs in Invariants.
 
-| 유형 | 이유 |
-|---|---|
-| 내부 상태 (state, store) | 사용자가 화면에서 확인 불가 |
-| 함수 호출 여부 | 구현 종속적 |
-| DB/API 원본 데이터 | 화면이 아닌 서버 내부 값 |
-
-### Good/Bad 예시
-
-**Good:**
-```yaml
-examples:
-  - input: { title: "우유 사기" }
-    expect: { itemText: "우유 사기", itemCount: 1 }
-  - input: { title: "" }
-    expect: { errorMessage: "제목을 입력해주세요" }
-```
-
-**Bad:**
-```yaml
-examples:
-  - input: { title: "우유 사기" }
-    expect: { todos: [{ id: 1, title: "우유 사기", done: false }] }
-  - input: { title: "우유 사기" }
-    expect: { addTodoCalled: true, apiResponse: 201 }
-```
+If a feature has none of these cross-cutting rules, omit the Invariants section entirely.

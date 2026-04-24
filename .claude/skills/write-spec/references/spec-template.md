@@ -1,36 +1,55 @@
 ## Overview
-이 기능이 해결하는 문제를 1-2문장으로 설명
+Explain in 1-2 sentences the problem this feature solves and the observable change for the user.
 
-## 시나리오
+## Scope
 
-### 1. 시나리오 제목
-[상황] 사용자가 ~하면
-[동작] 시스템이 ~한다
+### Included
+- What the user will experience this time
 
-성공 기준:
-- [ ] 구체적 입력 -> 기대 출력
-- [ ] 구체적 입력 -> 기대 출력
+### Excluded
+- What is intentionally left out and the reason why
 
-### 2. 시나리오 제목
-[상황] 사용자가 ~하면
-[동작] 시스템이 ~한다
+## Scenarios
 
-성공 기준:
-- [ ] 구체적 입력 -> 기대 출력
-- [ ] 구체적 입력 -> 기대 출력
+### 1. Scenario Title
+- **Given** — initial state of the user or system
+- **When** — the user takes an action
+- **Then** — an observable result occurs
 
-(3-5개 시나리오)
+Success Criteria:
+- [ ] Concrete input → observable output (in UI, API response, or persisted state)
+- [ ] Concrete input → observable output
 
-## 범위
+### 2. Scenario Title
+- **Given** — ...
+- **When** — ...
+- **Then** — ...
 
-### 포함
-- 이번에 구현할 것
+Success Criteria:
+- [ ] ...
 
-### 제외
-- 의도적으로 빼는 것과 그 이유
+(3-5 scenarios)
 
-## 전제 조건
-- 전제 조건 나열
+## Invariants (optional)
+Rules that must hold across all scenarios. Typical categories:
+- **Security / privacy**: rules about who can or cannot see what, regardless of access path
+- **Performance**: response time or load thresholds that apply system-wide
+- **Data consistency**: invariants that must remain true after any operation
 
-## 미결정 사항
-- 질문했으나 사용자가 결정하지 못한 항목
+Omit this section if no such rules apply to this feature.
+
+## Dependencies
+Features or external systems that must exist before this work begins. (Environment setup belongs in plan.md, not here.)
+
+## Undecided Items
+- Items that were asked but the user could not decide on
+
+---
+
+## Writing Rules
+
+- **WHAT only, no HOW.** Do not mention FSD slices, file paths, table or column names, test types, or implementation libraries. Those decisions belong in plan.md.
+- **Success Criteria must be observable.** Internal state, function calls, or DB row shape are not allowed — only what the user, an API consumer, or a test harness can observe externally.
+- **Each Success Criteria bullet maps to at least one test case.** Keep them concrete (real values, not placeholders).
+- **Excluded items need a reason.** Future readers must understand why something was deferred.
+- **Undecided Items only record items the user explicitly could not decide.** Do not silently fill ambiguous requirements.
