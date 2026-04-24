@@ -3,8 +3,6 @@
 Ideate → Define → Sketch → Plan → Build → Improve
 
 ### Spec-Driven Development
-- 모호하거나, 여러 파일에 걸치거나, 30분 이상 걸리는 product feature에만 사용한다
-- 한 줄 수정, 명백한 변경, 메타 도구(skills/rules/hooks/repo config)는 건너뛴다
 
 | Phase | Skill | 산출물 |
 |---|---|---|
@@ -15,29 +13,28 @@ Ideate → Define → Sketch → Plan → Build → Improve
 | Build | `/execute-plan` | `artifacts/<feature>/decisions.md` |
 | Improve | `/self-improve` | — |
 
-각 phase는 human review gate를 가진다. 현재 phase가 검증되기 전에는 다음으로 넘어가지 않는다.
-
 ## Development Workflow
 
 - 패키지 매니저: `bun`
 
 ### 커밋 규칙
-- 기능 단위로 커밋, 여러 기능을 섞지 않는다
-- Conventional Commits: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`
+- Conventional 규칙을 따르고, feature 단위로 커밋한다.
 
 ## Testing
 
 ### 원칙
 **수용 기준을 정의한다. 검증될 때까지 반복한다.**
 
-모든 변경에는 측정 가능한 수용 기준이 필요하다 — 구체적 입력 → 관찰 가능한 결과. 각 기준은 이를 증명하는 테스트를 가진다. 수용 기준이 실제로 증명되는 가장 낮은 경계를 선택한다. mock이 기준을 가린다면 거기서 mock하지 않는다.
+- 모든 변경에는 측정 가능한 수용 기준(구체적인 입력, 관찰 가능한 결과)이 필요하다
+- 각 기준은 이를 증명하는 테스트를 가진다. 
+- 수용 기준이 실제로 증명되는 가장 낮은 경계를 선택한다. mock이 기준을 가린다면 거기서 mock하지 않는다.
 
 ### Stack & 파일 배치
 
 | 도구 | 용도 | 위치 |
 |---|---|---|
 | Vitest (jsdom, `@testing-library/react`) | 단위·통합·수용 기준 | `<file>.test.tsx` colocated |
-| Playwright | E2E | `e2e/*.spec.ts` |
+| Playwright | E2E | `e2e/*.spec.ts` | global
 
 ### Commands
 
