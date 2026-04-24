@@ -1,16 +1,6 @@
 {
   "version": 1,
   "skills": {
-    "design-md": {
-      "source": "google-labs-code/stitch-skills",
-      "sourceType": "github",
-      "computedHash": "d3a4c7d2f2715a33662c8b06ffc16035d01965a8b4ed81c2958fb22ae94760f8"
-    },
-    "enhance-prompt": {
-      "source": "google-labs-code/stitch-skills",
-      "sourceType": "github",
-      "computedHash": "71cc23e9ec5fc6361e12453495fa8c683f6cf26f3efaf9b230b0f43e0a32cc96"
-    },
     "find-skills": {
       "source": "vercel-labs/skills",
       "sourceType": "github",
@@ -21,30 +11,15 @@
       "sourceType": "github",
       "computedHash": "515ba75178bd44875812d9a560bdf14651f86709f89cf1d4f209638e879807f3"
     },
-    "react:components": {
-      "source": "google-labs-code/stitch-skills",
-      "sourceType": "github",
-      "computedHash": "7c1dc22f37f2b1bebd7f37c75c2f0251a7c76feca5325955c0e6a68b68216bcf"
-    },
     "shadcn": {
       "source": "shadcn/ui",
       "sourceType": "github",
       "computedHash": "1ec42c9b918b315d8e5c6c856b78c3c4725fc93dea30b9b7e9975c69848fcce6"
     },
-    "shadcn-ui": {
-      "source": "google-labs-code/stitch-skills",
-      "sourceType": "github",
-      "computedHash": "dadbca54d35a33fe73e40018611af2179689305bf6da812ab2643987fefd9da3"
-    },
     "skill-creator": {
       "source": "anthropics/skills",
       "sourceType": "github",
       "computedHash": "b122f4d1e91aa1d83027e050b5b37c3156203ee85458d7b1360bc48167c9e02a"
-    },
-    "stitch-loop": {
-      "source": "google-labs-code/stitch-skills",
-      "sourceType": "github",
-      "computedHash": "a19e5bd3a534f8b375b3094137585b4f44a964eed2e521e659f828040cca0a4f"
     },
     "vercel-composition-patterns": {
       "source": "vercel-labs/agent-skills",
