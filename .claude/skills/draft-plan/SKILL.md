@@ -103,12 +103,16 @@ Task 2-3개마다 체크포인트를 삽입한다. 체크포인트는 다음을 
 
 `artifacts/<feature>/plan.md`로 저장한다.
 
-## Step 7: Human Review 제시
+## Step 7: 독립 검토 (plan-reviewer)
 
-제시하기 전에 자체 점검:
-- spec.md의 모든 시나리오가 어느 Task의 **담당 시나리오**에 포함되어 있는가
-- 모든 수용 기준 항목에 대응하는 Verification 명령/단계가 있는가
-- 2-3 Task마다 Checkpoint가 있는가
+`plan-reviewer` 에이전트를 호출해 plan.md를 검증한다. 입력으로 다음 경로를 전달한다:
+- `artifacts/<feature>/spec.md`
+- `artifacts/<feature>/plan.md`
+- `artifacts/<feature>/wireframe.html` (있으면)
+
+리뷰어는 네 축 — 시나리오/성공 기준 커버리지, wireframe 컴포넌트 일관성, plan 내부 정합성, 불변 규칙 커버리지 — 으로 검증한다. 불일치가 보고되면 사용자에게 제시하고, 어느 것을 수용해 plan.md에 반영할지 결정받는다.
+
+## Step 8: Human Review 제시
 
 완성된 plan.md를 사용자에게 제시한다. 승인 또는 수정 요청을 받는다. 요청된 변경을 반영한다. 사용자가 승인할 때까지 진행하지 않는다.
 
