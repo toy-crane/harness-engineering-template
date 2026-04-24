@@ -1,37 +1,37 @@
 ---
 name: self-improve
-description: Detect repeated patterns during execution and propose Skill/Hook/Rule changes. Triggered by "/self-improve", "improve harness", "promote repeated patterns", etc.
+description: 실행 중 반복된 패턴을 감지하고 Skill/Hook/Rule 변경을 제안한다. "/self-improve", "하네스 개선", "반복 패턴 승격" 등으로 실행한다.
 ---
 
-# Harness Improvement
+# Harness 개선
 
-## Step 1: Collect Repeated Patterns
+## Step 1: 반복된 패턴 수집
 
-Read all `artifacts/*/decisions.md` files. Prioritize analysis of `fail`/`partial` results, and look for recurring decisions across multiple features.
+모든 `artifacts/*/decisions.md` 파일을 읽는다. `fail`/`partial` 결과를 우선 분석하고, 여러 feature에 걸쳐 반복되는 판단을 찾는다. 단일 feature 안에서 반복되는 판단도 포함한다.
 
-Additionally, reference the following sources:
-- Repeated types of feedback from the Evaluator
-- Cases that required manual intervention
-- The same mistakes repeated across multiple Tasks
+추가로 다음 소스를 참조한다:
+- Human Review에서 반복되는 피드백 유형
+- 수동 개입이 필요했던 케이스
+- 여러 Task에 걸쳐 반복된 동일한 실수
 
-## Step 2: Classify Promotion Targets
+## Step 2: 승격 대상 분류
 
-Classify each pattern into the appropriate mechanism:
+각 패턴을 적절한 메커니즘으로 분류한다:
 
-| Repetition Type | Promotion Target |
-|-----------------|-----------------|
-| Same constraint violation repeated | Rule |
-| Something that must be caught 100% mechanically | Hook |
-| Incorrect usage pattern (needs to teach the correct method) | Skill |
-| Architecture decision change | CLAUDE.md |
+| 반복 유형 | 승격 대상 |
+|---|---|
+| 같은 제약 위반이 반복됨 | Rule |
+| 100% 기계적으로 잡아야 하는 것 | Hook |
+| 잘못된 사용 패턴 (올바른 방법을 가르쳐야 함) | Skill |
+| 아키텍처 결정 변경 | CLAUDE.md |
 
-Propose new Skills per library/tool unit (separate detailed topics into references/).
+새 Skill은 라이브러리/도구 단위로 제안한다 (상세 주제는 `references/`로 분리).
 
-## Step 3: Propose Changes
+## Step 3: 변경 제안
 
-Present each proposal to the user:
-- What was repeated (evidence)
-- Which mechanism to promote to
-- Specific content (file path + content draft)
+각 제안을 사용자에게 제시한다:
+- 무엇이 반복되었는가 (근거)
+- 어느 메커니즘으로 승격할지
+- 구체적 내용 (파일 경로 + 내용 초안)
 
-Apply only user-approved proposals (Ask-first).
+사용자가 승인한 것만 적용한다 (Ask-first).

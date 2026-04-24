@@ -1,88 +1,88 @@
-# Scenario Writing Guide
+# Scenario 작성 가이드
 
-## The single criterion
+## 단일 판정 기준
 
-> "Can a developer write a test from this sentence alone?"
+> "이 한 문장만으로 개발자가 테스트를 쓸 수 있는가?"
 
-If the answer is no, the scenario is too vague or describes implementation rather than observable behavior.
+대답이 No라면 시나리오가 너무 모호하거나, 관찰 가능한 행동이 아니라 구현을 기술하고 있다.
 
 ---
 
 ## 1. Given / When / Then
 
-| Field | Write | Allowed | Prohibited |
+| 필드 | 무엇을 쓰는가 | 허용 | 금지 |
 |---|---|---|---|
-| **Given** | Observable preconditions: screen state, data count, applied filters | "A list showing 3 to-do items", "The search field contains 'milk'" | "todos.length === 3", "isLoading is true" |
-| **When** | A specific UI element and the action on it (click, type, drag) | "Click the 'Delete' button", "Enter 'Meeting notes' in the Title field" | "Call deleteTodo()", "Dispatch the SUBMIT action" |
-| **Then** | A result that can be asserted from outside the component | "'2 to-do items' text is displayed", "Empty list message appears" | "todos.length === 2", "The API was called" |
+| **Given** | 관찰 가능한 선행 조건: 화면 상태, 데이터 개수, 적용된 필터 | "할 일 3개가 표시된 리스트", "검색창에 'milk' 입력됨" | "todos.length === 3", "isLoading is true" |
+| **When** | 구체적인 UI 요소와 그 위의 행동 (click, type, drag) | "'삭제' 버튼 클릭", "제목 필드에 'Meeting notes' 입력" | "deleteTodo() 호출", "SUBMIT 액션 디스패치" |
+| **Then** | 컴포넌트 바깥에서 단언 가능한 결과 | "'할 일 2개' 텍스트가 표시됨", "빈 리스트 메시지 출현" | "todos.length === 2", "API가 호출됨" |
 
-### Good
+### 좋은 예
 ```
-Given  A to-do form with the title field empty
-When   Click the "Add" button
-Then   "Please enter a title" error message is displayed
-```
-
-### Bad
-```
-Given  formState.title is an empty string
-When   Trigger a submit event
-Then   The validation error is set
+Given  제목 필드가 비어 있는 할 일 폼
+When   "추가" 버튼 클릭
+Then   "제목을 입력하세요" 에러 메시지가 표시된다
 ```
 
-The bad version describes internal state and function calls. A test written from it would have to mock the component's internals, which is brittle and tells you nothing about user behavior.
+### 나쁜 예
+```
+Given  formState.title이 빈 문자열
+When   submit 이벤트 발생
+Then   유효성 에러가 설정된다
+```
+
+나쁜 버전은 내부 상태와 함수 호출을 기술한다. 이걸 보고 쓴 테스트는 컴포넌트 내부를 mock해야 하고, 취약하며, 사용자 행동에 대해 아무것도 알려주지 않는다.
 
 ---
 
 ## 2. Success Criteria
 
-Each Success Criteria bullet is a concrete pair: **input → observable output**. One bullet should map cleanly to one (or a small number of) test assertions.
+각 Success Criteria 항목은 구체적인 쌍이다: **입력 → 관찰 가능한 출력**. 한 항목은 하나(혹은 소수의) 테스트 단언에 깔끔하게 매핑된다.
 
-### Allowed observable outputs
+### 허용되는 관찰 출력
 
-| Type | Example |
+| 유형 | 예시 |
 |---|---|
-| Visible text | `"Item added"` appears |
-| Element count | 3 cards render |
-| Element existence | The "Delete" button is shown |
-| Field value | Title field contains "Buy milk" |
-| Visual state expressible in a class or attribute | Strikethrough on completed items |
-| API response shape (when the feature exposes an API) | `200 { id: <new-id> }` |
+| 보이는 텍스트 | `"항목 추가됨"` 이 나타난다 |
+| 요소 개수 | 카드 3개가 렌더된다 |
+| 요소 존재 | "삭제" 버튼이 보인다 |
+| 필드 값 | 제목 필드에 "우유 사기" 가 있다 |
+| 클래스/속성으로 표현 가능한 시각 상태 | 완료된 항목에 취소선 |
+| API 응답 형태 (feature가 API를 노출하는 경우) | `200 { id: <new-id> }` |
 
-### Prohibited outputs
+### 금지되는 출력
 
-| Type | Why |
+| 유형 | 이유 |
 |---|---|
-| Internal state (Zustand store, React state, signals) | A user cannot observe it |
-| Function-call assertions (`mockFn was called`) | Implementation-coupled, breaks on refactor |
-| Raw DB rows or service-layer return values | Server internals, not user-observable behavior |
+| 내부 상태 (Zustand store, React state, signals) | 사용자가 관찰할 수 없다 |
+| 함수 호출 단언 (`mockFn was called`) | 구현에 결합됨, 리팩터링 시 깨짐 |
+| 원시 DB 행이나 서비스 계층 반환값 | 서버 내부. 사용자가 관찰 가능한 행동이 아니다 |
 
-### Good
+### 좋은 예
 ```
 Success Criteria:
-- [ ] title="Buy milk" → an item with text "Buy milk" appears, list count becomes 1
-- [ ] empty title → "Please enter a title" appears under the field
+- [ ] title="우유 사기" → 텍스트 "우유 사기" 항목이 나타나고 리스트 개수가 1이 된다
+- [ ] 빈 제목 → 필드 아래 "제목을 입력하세요" 가 나타난다
 ```
 
-### Bad
+### 나쁜 예
 ```
 Success Criteria:
-- [ ] title="Buy milk" → todos array becomes [{ id: 1, title: "Buy milk", done: false }]
-- [ ] title="Buy milk" → addTodo() was called once with { title: "Buy milk" }
+- [ ] title="우유 사기" → todos 배열이 [{ id: 1, title: "우유 사기", done: false }] 가 된다
+- [ ] title="우유 사기" → addTodo() 가 { title: "우유 사기" } 로 한 번 호출된다
 ```
 
 ---
 
-## 3. When to use Invariants instead of a Scenario
+## 3. 시나리오 대신 Invariants를 쓸 때
 
-Some rules cannot be expressed as a single Given/When/Then because they apply to *every* path. Three categories belong in the Invariants section, not as scenarios:
+어떤 규칙은 *모든* 경로에 적용되므로 단일 Given/When/Then으로 표현할 수 없다. 세 범주는 시나리오가 아니라 Invariants 섹션에 속한다:
 
-| Category | Example |
+| 범주 | 예시 |
 |---|---|
-| **Security / privacy** | "Another user's private drafts are never visible through any path (UI, URL, search, RSS)" |
-| **Performance** | "Every page reaches first contentful paint within 2 seconds on a 4G connection" |
-| **Data consistency** | "The displayed upvote count always matches the number of votes recorded" |
+| **Security / privacy** | "다른 사용자의 비공개 드래프트는 어떤 경로(UI, URL, 검색, RSS)로도 보이지 않는다" |
+| **Performance** | "모든 페이지가 4G 연결에서 2초 안에 first contentful paint에 도달한다" |
+| **Data consistency** | "표시되는 업보트 수는 기록된 투표 수와 항상 일치한다" |
 
-If you find yourself writing a near-identical Then in three or more scenarios, that rule probably belongs in Invariants.
+세 개 이상의 시나리오에 거의 동일한 Then을 쓰고 있다면, 그 규칙은 아마 Invariants에 속한다.
 
-If a feature has none of these cross-cutting rules, omit the Invariants section entirely.
+이런 교차 규칙이 없는 feature라면 Invariants 섹션을 통째로 생략한다.

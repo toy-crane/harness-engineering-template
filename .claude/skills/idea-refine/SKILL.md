@@ -1,108 +1,108 @@
 ---
 name: idea-refine
-description: Refines ideas iteratively. Refine ideas through structured divergent and convergent thinking. Use "idea-refine" or "ideate" to trigger.
+description: 아이디어를 반복적으로 다듬는다. 구조화된 확산적/수렴적 사고로 아이디어를 날카롭게 만든다. "/idea-refine", "idea-refine", "아이디어 정리", "ideate" 등으로 실행한다.
 ---
 
 # Idea Refine
 
-Refines raw ideas into sharp, actionable concepts worth building through structured divergent and convergent thinking.
+날것의 아이디어를 구조화된 확산적/수렴적 사고를 통해 만들 가치가 있는, 행동 가능한 개념으로 다듬는다.
 
-## How It Works
+## 동작 방식
 
-1. **Understand & Expand (Divergent):** Restate the idea, ask sharpening questions, and generate variations.
-2. **Evaluate & Converge:** Cluster ideas, stress-test them, and surface hidden assumptions.
-3. **Sharpen & Ship:** Produce a concrete markdown one-pager moving work forward.
+1. **Understand & Expand (확산적):** 아이디어를 재진술하고, 날카롭게 하는 질문을 던지고, 변형을 만든다.
+2. **Evaluate & Converge (수렴적):** 아이디어를 묶고, 스트레스 테스트하고, 숨은 가정을 드러낸다.
+3. **Sharpen & Ship:** 일을 앞으로 밀어 줄 구체적인 마크다운 one-pager를 만든다.
 
-## Process
+## 프로세스
 
-Guide the user through three phases. This is a conversation, not a template — adapt based on what they say.
+사용자를 3개 Phase로 안내한다. 이것은 대화이지 템플릿이 아니다 — 사용자의 반응에 따라 적응한다.
 
 ### Phase 1: Understand & Expand
 
-1. **Restate the idea** as a crisp "How Might We" problem statement. This forces clarity on what's actually being solved.
+1. **아이디어를 "How Might We" 형식의 명료한 문제 진술로 재진술한다.** 재진술은 틀 자체를 바꿔야 한다. 사용자의 말을 다르게 표현하는 것이 아니다.
 
-2. **Ask 3-5 sharpening questions** using `AskUserQuestion`. Focus on: who is this for, what does success look like, what are the real constraints, what's been tried before, why now. If the user's invocation already answers these, confirm and move on — don't re-ask what's already clear.
+2. **3-5개의 날카로운 질문을 `AskUserQuestion`으로 던진다.** 초점: 누구를 위한 것인가, 성공은 어떤 모습인가, 진짜 제약은 무엇인가, 이전에 시도된 것은 무엇인가, 왜 지금인가. 사용자의 처음 요청에서 이미 답이 나왔으면 확인만 하고 넘어간다. 이미 명확한 것을 다시 묻지 않는다.
 
-3. **Generate 5-8 variations** using these lenses. Each variation must have a named lens and a reason it exists — don't just list ideas.
-   - **Inversion:** What if we did the opposite?
-   - **Constraint removal:** What if budget/time/tech weren't factors?
-   - **Audience shift:** What if this were for a different user?
-   - **Combination:** What if we merged this with an adjacent idea?
-   - **Simplification:** What's the version that's 10x simpler?
-   - **10x version:** What would this look like at massive scale?
-   - **Expert lens:** What would domain experts find obvious?
+3. **다음 렌즈로 5-8개의 변형을 만든다.** 각 변형에는 렌즈 이름과 존재 이유가 있어야 한다. 단순히 아이디어를 나열하지 않는다.
+   - **Inversion (반전):** 정반대로 한다면?
+   - **Constraint removal (제약 제거):** 예산/시간/기술이 문제가 아니라면?
+   - **Audience shift (대상 전환):** 다른 사용자를 위한 것이라면?
+   - **Combination (결합):** 인접한 아이디어와 합친다면?
+   - **Simplification (단순화):** 10배 단순한 버전이라면?
+   - **10x version (10배 버전):** 엄청난 규모에서는 어떤 모습일까?
+   - **Expert lens (전문가 렌즈):** 해당 분야 전문가라면 당연하다고 볼 것은?
 
-4. **If inside a codebase:** Use `Glob`, `Grep`, and `Read` to scan for existing architecture, patterns, and constraints. Ground variations in what actually exists.
+4. **코드베이스 안이라면:** `Glob`, `Grep`, `Read`로 기존 아키텍처·패턴·제약을 훑는다. 변형은 실제로 존재하는 것에 발을 붙여야 한다.
 
-Additional frameworks to draw from selectively:
-- **SCAMPER** — best for improving existing products
-- **First Principles** — best for breaking out of incremental thinking
-- **JTBD** — best for understanding the real problem
-- **Pre-mortem** — best for stress-testing in Phase 2
+선택적으로 참고할 프레임워크:
+- **SCAMPER** — 기존 제품을 개선할 때 적합
+- **First Principles** — 점진적 사고에서 벗어날 때 적합
+- **JTBD** — 진짜 문제를 이해할 때 적합
+- **Pre-mortem** — Phase 2 스트레스 테스트에 적합
 
 ### Phase 2: Evaluate & Converge
 
-After the user reacts to Phase 1:
+사용자가 Phase 1에 반응한 후:
 
-1. **Cluster** the ideas that resonated into 2-3 distinct directions.
+1. **공감된 아이디어를 2-3개의 뚜렷한 방향으로 Cluster한다.**
 
-2. **Stress-test** each direction on three axes:
-   - **User value:** Painkiller (acute, frequent, people seek it out) or vitamin (nice-to-have, won't change behavior)? What's the current workaround?
-   - **Feasibility:** Technical cost, resource requirements, time-to-value. What's the hardest part?
-   - **Differentiation** (strongest to weakest): new capability → 10x improvement → new audience → new context → better UX → cheaper
+2. **각 방향을 세 축으로 스트레스 테스트한다:**
+   - **User value (사용자 가치):** Painkiller인가(급하고, 빈번하고, 사람들이 찾는다) Vitamin인가(있으면 좋지만 행동을 바꾸지 못한다)? 지금의 대안(workaround)은 무엇인가?
+   - **Feasibility (실현 가능성):** 기술적 비용, 필요한 자원, 가치 실현까지의 시간. 가장 어려운 부분은?
+   - **Differentiation (차별성) (강함 → 약함):** 새로운 역량 → 10배 개선 → 새로운 대상 → 새로운 맥락 → 더 나은 UX → 저렴함
 
-3. **Surface hidden assumptions** in three categories:
-   - **Must Be True** — if wrong, kills the idea. Validate before building.
-   - **Should Be True** — significantly impacts success. Adjust approach if wrong.
-   - **Might Be True** — secondary. Don't validate until core is proven.
+3. **숨은 가정을 세 범주로 드러낸다:**
+   - **Must Be True (반드시 참)** — 틀리면 아이디어를 죽인다. 만들기 전에 검증한다.
+   - **Should Be True (참이어야 바람직)** — 성공에 큰 영향을 미친다. 틀리면 접근을 조정한다.
+   - **Might Be True (참일 수 있음)** — 부차적. 핵심이 증명될 때까지 검증하지 않는다.
 
-Be honest, not supportive. If an idea is weak, say so with kindness. Push back on complexity, question real value.
+지지하지 말고 정직하게 말한다. 약한 아이디어는 약하다고, 친절하게 말한다. 복잡성을 밀어내고, 진짜 가치를 의심한다.
 
 ### Phase 3: Sharpen & Ship
 
-Produce a markdown one-pager. The MVP should test the **riskiest assumption first**.
+마크다운 one-pager를 만든다. MVP는 **가장 위험한 가정을 먼저** 검증해야 한다.
 
 ```markdown
-# [Idea Name]
+# [아이디어 이름]
 
 ## Problem Statement
-[One-sentence "How Might We" framing]
+[한 문장의 "How Might We" 프레이밍]
 
 ## Recommended Direction
-[The chosen direction and why — 2-3 paragraphs max]
+[선택한 방향과 이유 — 2-3 문단]
 
 ## Key Assumptions to Validate
-- [ ] [Assumption 1 — how to test it]
-- [ ] [Assumption 2 — how to test it]
-- [ ] [Assumption 3 — how to test it]
+- [ ] [가정 1 — 검증 방법]
+- [ ] [가정 2 — 검증 방법]
+- [ ] [가정 3 — 검증 방법]
 
 ## MVP Scope
-[The minimum version that tests the core assumption. What's in, what's out.]
+[핵심 가정을 검증하는 최소 버전. 무엇이 포함되고, 무엇이 빠지는지.]
 
 ## Not Doing (and Why)
-- [Thing 1] — [reason]
-- [Thing 2] — [reason]
-- [Thing 3] — [reason]
+- [항목 1] — [이유]
+- [항목 2] — [이유]
+- [항목 3] — [이유]
 
 ## Open Questions
-- [Question that needs answering before building]
+- [만들기 전에 답해야 할 질문]
 ```
 
-The **"Not Doing" list is the most valuable part.** Focus is about saying no to good ideas. Make the trade-offs explicit.
+**"Not Doing" 리스트가 가장 가치 있는 부분이다.** 집중은 좋은 아이디어에 No라고 말하는 것이다. 트레이드오프를 명시적으로 드러낸다.
 
-Ask the user if they'd like to save to `artifacts/[feature-name]/idea.md`. Only save if they confirm.
+사용자에게 `artifacts/[feature-name]/idea.md`에 저장할지 묻는다. 사용자가 확인했을 때만 저장한다.
 
 ## Quality Standards
 
-1. Restatement changes the frame — not just rephrasing the user's words
-2. Questions diagnose before prescribing — each question determines which type of problem this is
-3. Variations have reasons — each explains why it exists via its named lens
-4. The skill has opinions — recommend directions, don't just list neutral options
-5. Phase 2 is honest — call out low differentiation or high complexity
-6. Output is actionable — things to do, not things to think about
-7. "Not Doing" list is specific and reasoned — not vague deferrals
-8. Adapts to context — reference codebase architecture when inside a project
+1. 재진술이 틀을 바꾼다 — 말을 다시 표현하는 것이 아니다
+2. 질문이 진단을 먼저 한다 — 각 질문은 이것이 어떤 유형의 문제인지 결정한다
+3. 변형에는 이유가 있다 — 각 변형은 렌즈를 통해 존재 이유를 설명한다
+4. 스킬은 의견을 가진다 — 중립적 옵션을 나열하지 말고 방향을 추천한다
+5. Phase 2는 정직하다 — 낮은 차별성이나 높은 복잡도를 지적한다
+6. 출력은 행동 가능하다 — 생각할 것이 아니라 할 것을 담는다
+7. "Not Doing" 리스트는 구체적이고 이유가 있다 — 막연한 연기가 아니다
+8. 맥락에 적응한다 — 프로젝트 안이라면 코드베이스 아키텍처를 참조한다
 
-## Tone
+## 톤
 
-Direct, thoughtful, slightly provocative.
+직설적이고, 사려 깊되, 약간 도발적이다.

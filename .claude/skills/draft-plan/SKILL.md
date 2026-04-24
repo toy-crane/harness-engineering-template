@@ -1,143 +1,143 @@
 ---
 name: draft-plan
-description: Create an implementation plan (artifacts/<feature>/plan.md) based on spec.md. **Use only for product features that are ambiguous, multi-file, or take over 30 minutes — NOT for meta-tooling (skills, rules, hooks, repo config), single-line fixes, or unambiguous changes.** Discover related skills and generate a TDD-based task list with vertical slicing and dependency ordering. Triggered by "/draft-plan", "create plan", "implementation plan", etc.
+description: spec.md를 기반으로 구현 계획(artifacts/<feature>/plan.md)을 작성한다. **모호하거나, 여러 파일에 걸치거나, 30분 이상 걸리는 product feature에만 사용한다 — meta-tooling(skills/rules/hooks/repo config), 한 줄 수정, 명백한 변경에는 쓰지 않는다.** 관련 스킬을 찾아내고 vertical slicing과 의존성 순서로 TDD 기반 Task 목록을 생성한다. "/draft-plan", "draft plan", "계획 작성", "구현 계획" 등으로 실행한다.
 argument-hint: "feature name"
 ---
 
-# Create Implementation Plan
+# 구현 계획 작성
 
-## Step 1: Check Prerequisites
+## Step 1: 전제 조건 확인
 
-Extract the feature name from $ARGUMENTS.
+`$ARGUMENTS`에서 feature 이름을 추출한다.
 
-Required (per-feature):
-- `artifacts/<feature>/spec.md` -- If missing, output "Please run `/write-spec <feature>` first." and stop
+Feature별 필수:
+- `artifacts/<feature>/spec.md` — 없으면 "`/write-spec <feature>`를 먼저 실행하세요." 출력 후 중단
 
-Optional (per-feature):
+Feature별 선택:
 - `artifacts/<feature>/wireframe.html`
 
-## Step 2: Enter Plan Mode
+## Step 2: Plan Mode 진입
 
-Operate in read-only mode. Do not create, modify, or delete any project files.
+읽기 전용 모드로 동작한다. 프로젝트 파일을 생성/수정/삭제하지 않는다.
 
-The only file output from this skill is `artifacts/<feature>/plan.md`.
+이 스킬의 유일한 출력 파일은 `artifacts/<feature>/plan.md` 다.
 
-## Step 3: Codebase Exploration
+## Step 3: 코드베이스 탐색
 
-Explore the existing code to understand the architecture and related patterns.
+기존 코드를 탐색하여 아키텍처와 관련 패턴을 이해한다.
 
-- Check project structure, existing components, and state management approach
-- Identify files this feature will affect and their dependency relationships
-- Map dependencies between components — what depends on what
-- If similar existing functionality exists, reference its implementation
-- Note risks and unknowns
+- 프로젝트 구조, 기존 컴포넌트, 상태 관리 방식을 확인한다
+- 이 feature가 영향을 줄 파일과 그 의존성 관계를 식별한다
+- 컴포넌트 간 의존성을 맵핑한다 — 무엇이 무엇에 의존하는가
+- 유사한 기존 기능이 있다면 그 구현을 참조한다
+- 위험과 미지수를 기록한다
 
-## Step 4: Discover Skills
+## Step 4: 스킬 탐색
 
-Scan `.claude/skills/` and select every skill that has even a slight connection to this feature.
-When in doubt, include it — the implementer can ignore what isn't needed.
+`.claude/skills/`를 스캔하여 이 feature와 조금이라도 연관이 있는 모든 스킬을 선택한다.
+망설여지면 포함한다 — 구현자는 필요 없는 것을 무시할 수 있다.
 
-**Always follow** (regardless of feature):
-- See `CLAUDE.md` → Testing — any task that adds or modifies behavior must follow RED → GREEN discipline and map each acceptance bullet to a test case. CLAUDE.md defines the project's success-criteria principle, stack, and placement rules.
+**항상 따른다** (feature와 무관하게):
+- `CLAUDE.md` → Testing 참조 — 행동을 추가하거나 수정하는 모든 Task는 RED → GREEN 규율을 따르고 각 acceptance 항목을 테스트 케이스에 매핑한다. CLAUDE.md가 프로젝트의 success-criteria 원칙, 스택, 배치 규칙을 정의한다.
 
-## Step 5: Fill in the Blanks
+## Step 5: 빈칸 채우기
 
-Read the above inputs and find items that are needed for implementation but not yet decided.
+위 입력을 읽고 구현에 필요하지만 아직 결정되지 않은 항목을 찾는다.
 
-- Only ask about decisions with high cost of change
-- One question at a time, present 2-4 options
+- 변경 비용이 높은 결정만 묻는다
+- 한 번에 하나씩, 2-4개 선택지를 제시한다
 
-## Step 6: Generate Plan Document
+## Step 6: 계획 문서 생성
 
-Read each confirmed skill's SKILL.md. The plan must not contradict rules that will be loaded during execution.
+확정된 각 스킬의 SKILL.md를 읽는다. plan은 실행 중 로드될 규칙과 모순되지 않아야 한다.
 
-Read `references/plan-template.md` and write following its format.
+`references/plan-template.md`를 읽고 그 형식을 따른다.
 
-### Task Writing Principles
+### Task 작성 원칙
 
 #### Vertical Slicing
 
-Each task must be a vertical slice delivering working, testable functionality through one complete path — not a horizontal layer.
+각 Task는 하나의 완전한 경로를 통해 동작하고 테스트 가능한 기능을 전달하는 vertical slice여야 한다. horizontal layer가 아니다.
 
-Bad (horizontal slicing):
+나쁜 예 (horizontal slicing):
 ```
-Task 1: Build entire database schema
-Task 2: Build all API endpoints
-Task 3: Build all UI components
-Task 4: Connect everything
+Task 1: 전체 데이터베이스 스키마 구축
+Task 2: 모든 API 엔드포인트 구축
+Task 3: 모든 UI 컴포넌트 구축
+Task 4: 전부 연결
 ```
 
-Good (vertical slicing):
+좋은 예 (vertical slicing):
 ```
-Task 1: User can create an account (schema + API + UI for registration)
-Task 2: User can log in (auth schema + API + UI for login)
-Task 3: User can create a task (task schema + API + UI for creation)
+Task 1: 사용자가 계정을 생성할 수 있다 (스키마 + API + 가입 UI)
+Task 2: 사용자가 로그인할 수 있다 (auth 스키마 + API + 로그인 UI)
+Task 3: 사용자가 할 일을 만들 수 있다 (할 일 스키마 + API + 생성 UI)
 ```
 
 #### Task Sizing
 
-Target S (1-2 files) or M (3-5 files). Never L or larger.
+목표: S (1-2 파일) 또는 M (3-5 파일). L 이상은 금지.
 
-Break a task down further when:
-- Acceptance criteria need more than 3 bullets
-- It touches 2 or more independent subsystems
-- The title contains "and" (sign it is two tasks)
+다음의 경우 Task를 더 쪼갠다:
+- Acceptance criteria가 3개를 초과한다
+- 독립적인 서브시스템 2개 이상에 닿는다
+- 제목에 "and"가 있다 (두 개의 Task라는 신호)
 
 #### Acceptance
 
-Each task's **Acceptance** section is a flat checklist of natural-language outcomes derived from the Success Criteria of the scenarios listed in **Covers**. One bullet per Success Criteria covered by this task. Use concrete values from the spec — paraphrasing is allowed but the outcome must remain externally observable.
+각 Task의 **Acceptance** 섹션은 **Covers**에 나열된 시나리오의 Success Criteria에서 파생된 자연어 결과의 체크리스트다. 이 Task가 커버하는 Success Criteria 하나당 한 항목. spec의 구체적 값을 사용한다 — 의역은 허용되지만 결과는 외부에서 관찰 가능해야 한다.
 
-**Each acceptance bullet must map 1:1 to a test case that proves it.** Pick the lowest boundary where the criterion is actually provable — if a mock would obscure what the criterion is about, don't mock there (see `CLAUDE.md` → Testing).
+**각 acceptance 항목은 이를 증명하는 테스트 케이스에 1:1로 매핑되어야 한다.** 수용 기준이 실제로 증명되는 가장 낮은 경계를 선택한다. mock이 기준을 가린다면 거기서 mock하지 않는다 (`CLAUDE.md` → Testing 참조).
 
-The task's **Covers** line names which scenarios are addressed and whether coverage is full or partial. If partial, note which subset (e.g. "happy path only", "validation only").
+Task의 **Covers** 줄은 어떤 시나리오가 다뤄지는지와 커버가 완전한지 부분적인지를 명시한다. 부분적이라면 어떤 부분인지 적는다 (예: "happy path only", "validation only").
 
 #### Verification
 
-Each Acceptance bullet must name **how it will be verified** — a command, an MCP step, or a specific human review. The bullet is not done until a future reader can re-run that check independently. Pick the lowest provable boundary.
+각 Acceptance 항목은 **어떻게 검증되는지**를 명시해야 한다 — 명령, MCP 단계, 또는 구체적 human review. 미래의 독자가 그 점검을 독립적으로 재실행할 수 있어야 완료다. 가장 낮은 증명 가능 경계를 선택한다.
 
-| Provable in | Use |
+| 증명 가능한 곳 | 사용 |
 |---|---|
-| Code (DOM, function, DB, HTTP) | Vitest / pgTAP / `bun run build` |
-| Real browser, repeatable in CI | Playwright (`bun run test:e2e`) |
-| Real browser, one-shot with evidence | Browser MCP (`mcp__claude-in-chrome__*`) |
-| Cannot be automated (design judgment, screen-reader AT, cross-browser feel, perf threshold absent from tooling) | Human review — state the reviewer/role, the artifact, and the criterion. Save evidence (screenshot/video/note) to `artifacts/<feature>/evidence/`. |
+| 코드 (DOM, 함수, DB, HTTP) | Vitest / `bun run build` |
+| 실제 브라우저, CI에서 반복 가능 | Playwright (`bun run test:e2e`) |
+| 실제 브라우저, 일회성 증거 | Browser MCP (`mcp__claude-in-chrome__*`) |
+| 자동화 불가능 (디자인 판단, 스크린 리더 AT, cross-browser 느낌, 도구에 없는 성능 임계값) | Human review — 리뷰어/역할, 산출물, 기준을 명시한다. 증거(스크린샷/영상/노트)를 `artifacts/<feature>/evidence/`에 저장한다. |
 
-`manual: visit X` as a placeholder for a check that *could* be automated is not allowed. A named human review *is* — the test is "can someone else re-run this check from your bullet alone?"
+`manual: visit X`를 *자동화 가능한* 점검의 자리표로 쓰는 것은 허용되지 않는다. 명명된 human review는 허용된다 — 판정 기준은 "다른 사람이 이 항목만 보고 같은 점검을 다시 할 수 있는가?" 다.
 
-For the concrete shape of the Verification block, see `references/plan-template.md`.
+Verification 블록의 구체적 형태는 `references/plan-template.md`를 본다.
 
 #### Ordering
 
-- Place test file generation first (colocated `<file>.test.tsx`, or `__tests__/` for App Router pages — see `CLAUDE.md` → Testing). If prerequisite work is needed, place it before with a reason
-- Order tasks starting with those that have the fewest dependencies
-- Place high-risk tasks early (fail fast)
-- Each task must leave the system in a working state
+- 테스트 파일 생성을 먼저 둔다 (colocated `<file>.test.tsx`, App Router 페이지는 `app/**/__tests__/` — `CLAUDE.md` → Testing 참조). 선행 작업이 필요하면 이유와 함께 앞에 둔다
+- 의존성이 적은 Task부터 순서를 잡는다
+- 고위험 Task를 앞에 둔다 (fail fast)
+- 각 Task는 시스템을 동작 가능한 상태로 두어야 한다
 
 #### Checkpoint Discipline
 
-Insert a checkpoint after every 2-3 tasks. A checkpoint verifies: all tests pass, build succeeds, and the vertical slice works end-to-end.
+Task 2-3개마다 체크포인트를 삽입한다. 체크포인트는 다음을 검증한다: 모든 테스트 통과, 빌드 성공, vertical slice가 end-to-end로 동작.
 
 #### Wireframe Integration
 
-- If wireframe.html exists, reflect component types in the task's implementation targets
-- For components identified in the wireframe that don't exist in the project, check package registry for installability before implementing directly
+- wireframe.html이 있으면 Task의 implementation targets에 컴포넌트 유형을 반영한다
+- wireframe에서 식별된 컴포넌트 중 프로젝트에 없는 것은 직접 구현하기 전에 패키지 레지스트리에서 설치 가능 여부를 확인한다
 
-#### Other
+#### 기타
 
-- Reflect codebase exploration results in the Affected Files section
-- Task references include only external sources that the executor cannot find on their own (for skills, only name + keywords)
+- Affected Files 섹션에 코드베이스 탐색 결과를 반영한다
+- Task references에는 실행자가 스스로 찾을 수 없는 외부 소스만 포함한다 (스킬은 이름 + 키워드만)
 
-Save as `artifacts/<feature>/plan.md`.
+`artifacts/<feature>/plan.md`로 저장한다.
 
-## Step 7: Present for Human Review
+## Step 7: Human Review 제시
 
-Before presenting, self-check:
-- All spec.md scenarios are listed in some task's **Covers**
-- Every Acceptance bullet has a matching Verification command/step
-- A Checkpoint appears every 2-3 tasks
+제시하기 전에 자체 점검:
+- spec.md의 모든 시나리오가 어느 Task의 **Covers**에 포함되어 있는가
+- 모든 Acceptance 항목에 대응하는 Verification 명령/단계가 있는가
+- 2-3 Task마다 Checkpoint가 있는가
 
-Present the complete plan.md to the user. Ask for approval or revision requests. Apply any requested changes. Do not proceed until the user approves.
+완성된 plan.md를 사용자에게 제시한다. 승인 또는 수정 요청을 받는다. 요청된 변경을 반영한다. 사용자가 승인할 때까지 진행하지 않는다.
 
 ## Done
 
-Inform the user whether to proceed with `/execute-plan <feature>`.
+사용자에게 `/execute-plan <feature>`로 진행할지 안내한다.
