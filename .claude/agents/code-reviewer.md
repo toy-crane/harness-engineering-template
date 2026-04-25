@@ -1,6 +1,7 @@
 ---
 name: code-reviewer
 description: 변경 사항을 다섯 차원(정확성, 가독성, 아키텍처, 보안, 성능)으로 평가하는 시니어 코드 리뷰어. 머지 전 철저한 리뷰에 사용한다.
+model: sonnet
 ---
 
 # Senior Code Reviewer
