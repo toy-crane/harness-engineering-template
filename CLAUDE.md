@@ -1,6 +1,6 @@
 ## Workflow Phases
 
-Ideate → Define → Sketch → Plan → Build → Improve
+Ideate → Define → Sketch → Plan → Build → Compound
 
 ### Spec-Driven Development
 
@@ -10,8 +10,8 @@ Ideate → Define → Sketch → Plan → Build → Improve
 | Specify | `/write-spec` | `artifacts/<feature>/spec.md` |
 | Sketch | `/sketch-wireframe` | `artifacts/<feature>/wireframe.html` |
 | Plan | `/draft-plan` | `artifacts/<feature>/plan.md` |
-| Build | `/execute-plan` | `artifacts/<feature>/decisions.md` |
-| Improve | `/self-improve` | — |
+| Build | `/execute-plan` | `artifacts/<feature>/learnings.md` |
+| Compound | `/self-improve` | — |
 
 ## Development Workflow
 
