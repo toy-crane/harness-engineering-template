@@ -52,10 +52,10 @@
 - **수용 기준**:
   - [ ] 구체적 입력 → 관찰 가능한 결과 (담당하는 성공 기준 하나당 한 줄)
   - [ ] 구체적 입력 → 관찰 가능한 결과
-- **검증**:
-  - `bun run test -- <pattern>`
-  - `bun run build`
-  - Browser MCP (`mcp__claude-in-chrome__*`) — 사용자에게 보이는 UI 변경이 있는 Task. 영향받는 라우트로 이동해 관찰 가능한 결과를 단언하고, 증거를 `artifacts/<feature>/evidence/<task-N>.<ext>`에 저장한다
+- **검증**: SKILL.md Step 4의 Verification 표에서 적합한 도구·명령을 선택해 적는다
+  - 예: `bun run test -- <pattern>`
+  - 예: `bun run build`
+  - 예: Browser MCP — 영향받는 라우트로 이동, 결과 단언, 증거 `artifacts/<feature>/evidence/<task-N>.<ext>` 저장
 
 ---
 
