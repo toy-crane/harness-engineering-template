@@ -11,7 +11,7 @@ Ideate → Define → Sketch → Plan → Build → Compound
 | Sketch | `/sketch-wireframe` | `artifacts/<feature>/wireframe.html` |
 | Plan | `/draft-plan` | `artifacts/<feature>/plan.md` |
 | Build | `/execute-plan` | `artifacts/<feature>/learnings.md` |
-| Compound | `/self-improve` | — |
+| Compound | `/compound` | — |
 
 ## Development Workflow
 
