@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": "\"$(git rev-parse --show-toplevel)\"/.claude/hooks/lint-fix.sh",
+        "timeoutSec": 30
+      }
+    ]
+  }
+}
