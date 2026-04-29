@@ -22,5 +22,8 @@
         ]
       }
     ]
+  },
+  "enabledPlugins": {
+    "playbook-essentials@claude-code-playbook": true
   }
 }
